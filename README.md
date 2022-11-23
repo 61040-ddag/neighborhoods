@@ -114,3 +114,102 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 
 - `403` if the user is not logged in
+
+#### `GET /api/neighborhoods?name=name&city=city&state=state` 
+
+**Returns**
+- A success message
+- An object with the neighborhood
+
+**Throws**
+
+- `403` if user is not logged in
+- `404` if `name`, `city`, `state` of a neighborhood is not a recognized neighborhood
+
+#### `GET /api/neighborhoods?lat1=lat1&long1=long1&lat2=lat2&long2=long`
+
+**Returns**
+- A success message
+- An array of neighborhoods within latitude1, longtitude1, latitude2, longtitude2
+
+**Throws**
+- `403` if user is not logged in
+- `406` if one or more of `lat1`, `long1`, `lat2`, `long2` 
+
+#### `POST /api/neighborhoods/`
+
+**Body**
+
+- `name` _{string}_ - The name of the neighborhood
+- `latitude` _{string}_ - The latitude of the neighborhood's location
+- `longtitude` _{string}_ - The longtitude of the neighborhood's location
+- `crimeRate` _{string}_ - The crime rate in the neighborhood
+- `averagePrice` _{string}_ - The average price of a home in the neighborhood
+- `averageAge` _{string}_ - The average age of the residents in the neighborhood
+
+**Returns**
+
+- A success message
+- An object with the created neighborhood
+
+**Throws**
+- `400` if any neighborhood information provided is in the wrong format
+- `401` if user making the request is not the admin
+- `403` if user is not logged in
+- `409` if neighboorhood already exists
+
+#### `PATCH /api/neighborhoods?name=name&city=city&state=state`
+
+**Body**
+
+- `crimeRate` _{string}_ - The new crime rate in the neighborhood
+- `averagePrice` _{string}_ - The new average price of a home in the neighborhood
+- `averageAge` _{string}_ - The new average age of the residents in the neighborhood
+
+**Returns**
+
+- A success message
+- An object with the updated neighborhood
+
+**Throws**
+- `400` if any updated neighborhood information is in the wrong format
+- `401` if user making the request is not the admin
+- `403` if user is not logged in
+- `404` if `name`, `city`, `state` of a neighborhood is not a recognized neighborhood
+
+#### `DELETE /api/neighborhoods?name=name&city=city&state=state`
+
+**Returns**
+
+- A success message
+
+**Throws**
+- `401` if user making the request is not the admin
+- `403` if user is not logged in
+- `404` if `name`, `city`, `state` of a neighborhood is not a recognized neighborhood
+
+#### `GET /api/reviews?neighborhood=neighborhood`
+
+#### `GET /api/reviews?author=username`
+
+#### `POST /api/reviews`
+
+#### `DELETE /api/reviews/:reviewId?`
+
+#### `POST /api/certifiedResidency`
+
+#### `DELETE /api/certifiedResidency/:neighborhood?`
+
+#### `POST /api/vibeCheck/interviews`
+
+#### `POST /api/vibeCheck/availability`
+
+#### `DELETE /api/vibeCheck/availability/:dateTime?`
+
+#### `GET /api/neighborhoodStroll/:strollId?`
+
+#### `GET /api/neighoborhoodStroll?neighborhood=neighborhood`
+
+#### `POST /api/neighborhoodStroll`
+
+#### `DELETE /api/neighborhoodStroll/:strollId?`
