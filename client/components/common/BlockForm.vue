@@ -60,6 +60,8 @@ export default {
       method: 'GET', // Form request method
       hasBody: false, // Whether or not form request has a body
       setUsername: false, // Whether or not stored username should be updated after form submission
+      deleteNeighborhood: false, // Whether or not we are deleting a nbhood
+      updateNeighborhood: false,
       alerts: {}, // Displays success/error messages encountered during form submission
       callback: null // Function to run after successful form submission
     };
@@ -74,18 +76,37 @@ export default {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'same-origin' // Sends express-session credentials with request
       };
+      if(this.updateNeighborhood || this.deleteNeighborhood){
+        var extra = '';
+        console.log(this.fields);
+        for(const field of this.fields){          
+          const {id, value} = field;
+          if(id == "name" || id == "city" || id == "state"){
+            const val = value.trim().replace(" ", "_");
+            extra+=`&${id}=${val}`;
+          }
+        }
+        extra = extra.substring(1);
+      }
       if (this.hasBody) {
         options.body = JSON.stringify(Object.fromEntries(
           this.fields.map(field => {
             const { id, value } = field;
             field.value = '';
-            return [id, value];
+            return [id, value.trim().replace(" ", "_")];
           })
         ));
       }
 
       try {
-        const r = await fetch(this.url, options);
+        let url = "";
+        if(this.updateNeighborhood || this.deleteNeighborhood){
+          url = this.url + extra;
+        }else{
+          url = this.url;
+        }
+        console.log(url);
+        const r = await fetch(url, options);
         if (!r.ok) {
           // If response is not okay, we throw an error and enter the catch block
           const res = await r.json();
