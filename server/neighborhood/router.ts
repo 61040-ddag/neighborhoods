@@ -7,148 +7,173 @@ import * as util from './util';
 
 const router = express.Router();
 
-
 /**
- * Create a neighborhood.
- *
- * @name POST /api/neighborhoods
- *
- * @param {string} name - the name of the neighborhood
- * @param {string} city - the city the neighborhood is in
- * @param {string} state - the state the neighborhood is in
- * @param {number} latitude - the latitude of the neighborhood
- * @param {number} longitude - the longitude of the neighborhood
- * @param {number} crimeRate - the crimeRate of the neighborhood
- * @param {number} averatePrice - the averatePrice of the neighborhood
- * @param {number} averageAge - the averageAge of the neighborhood
- * @return {NeighborhoodResponse} - The created neighborhood
- * @throws {403} - If user is not logged in
- * @throws {409} - If neighborhood already exists
- * @throws {401} - If user making the request is not the admin
- * @throws {400} - if any information provided is invalid
- *
- */
- router.post(
-    '/',
-    [
-      userValidator.isUserLoggedIn,
-      neighborhoodValidator.isUserAdmin,
-      neighborhoodValidator.isCreateInfoValid,
-      neighborhoodValidator.isNeighborhoodAlreadyExists,
-    ],
-    async (req: Request, res: Response) => {
-      const neighborhood = await NeighborhoodCollection.addOne(req.body.name, req.body.city, req.body.state, req.body.latitude, req.body.longitude, req.body.crimeRate, req.body.averagePrice, req.body.averageAge);
-      res.status(201).json({
-        message: `Neighborhood ${neighborhood.name} was created successfully`,
-        user: util.constructNeighborhoodResponse(neighborhood)
-      });
-    }
-  );
-
-
-/**
- * Get the a neighborhood with neighborhood with name city state
+ * Get the neighborhood with given name, city, and state
  *
  * @name GET /api/neighborhoods?name=name&city=city&state=state
  *
- * @return - the neighborhodd with neighborhoodId
- * @throws {404} - neighborhood with neighborhood name, city, state doesn't exist
- * @throws {403} - user is not logged in
-*/
- router.get(
-    '',
-    [
-      userValidator.isUserLoggedIn,
-      neighborhoodValidator.isNeighborhoodExists
-    
-    ],
-    async (req: Request, res: Response) => {
-      const neighborhood = await NeighborhoodCollection.findOneByName(req.query.name as string, req.query.city as string, req.query.state as string);
-      res.status(200).json({
-        message: 'Your session info was found successfully.',
-        neighborhood: util.constructNeighborhoodResponse(neighborhood)
-      });
-    }
-  );
+ * @return {NeighborhoodResponse} - The neighborhodd with given name, city, and state
+ * @throws {403} - If the user is not logged in
+ * @throws {404} - if name, city, state of a neighborhood is not a recognized neighborhood
+ */
+router.get(
+  '/',
+  [
+    userValidator.isUserLoggedIn,
+    neighborhoodValidator.isNeighborhoodExists
+
+  ],
+  async (req: Request, res: Response) => {
+    const name = req.query.name as string;
+    const city = req.query.city as string;
+    const state = req.query.state as string;
+
+    const neighborhood = await NeighborhoodCollection.findOneByInfo(name, city, state);
+    res.status(200).json({
+      message: `Neighborhood ${neighborhood.name} was found.`,
+      neighborhood: util.constructNeighborhoodResponse(neighborhood)
+    });
+  }
+);
 
 /**
  * Get all the neighborhoods within bounds lat1, lat2, long1, long2
  *
  * @name GET /api/neighborhoods?lat1=lat1&long1=long1&lat2=lat2&long2=long2
  *
- * @return - all the neighborhoods within the bounds
- * @throws {403} - user is not logged in
- * @throws {406} - one or more of lat1, lat2, long1, long2, are invalid
+ * @return {NeighborhoodResponse[]} - An array of the neighborhoods within the latitude and longitude bounds
+ * @throws {403} - If the user is not logged in
+ * @throws {400} - If any of lat1, lat2, long1, and long2 are invalid
 */
- router.get(
-    '',
-    [
-      userValidator.isUserLoggedIn,
-      neighborhoodValidator.areCoordinatesValid
-    ],
-    async (req: Request, res: Response) => {
-        const allFreets = await NeighborhoodCollection.findAllInBox(Number(req.query.lat1), Number(req.query.long1), Number(req.query.lat2), Number(req.query.long2));
-        const response = allFreets.map(util.constructNeighborhoodResponse);
-        res.status(200).json(response);
-    }
-  );
+router.get(
+  '/',
+  [
+    userValidator.isUserLoggedIn,
+    neighborhoodValidator.isBoundsValid
+  ],
+  async (req: Request, res: Response) => {
+    const lat1 = Number(req.query.lat1);
+    const lat2 = Number(req.query.long1);
+    const long1 = Number(req.query.lat2);
+    const long2 = Number(req.query.long2);
 
+    const neighborhoods = await NeighborhoodCollection.findAllInBound(lat1, long1, lat2, long2);
+    const response = neighborhoods.map(util.constructNeighborhoodResponse);
+    res.status(200).json({
+      message: 'Neighborhoods within bound were found.',
+      neighborhoods: response
+    });
+  }
+);
 
 /**
- * Delete a neighborhood.
+ * Create a new neighborhood
  *
- * @name DELETE /api/neighborhoods/?name=name&city=city&state=state'
+ * @name POST /api/neighborhoods
+ *
+ * @param {string} name - The name of the neighborhood
+ * @param {string} city - The city of the neighborhood's location
+ * @param {string} state - The state of the neighborhood's location
+ * @param {number} latitude - The latitude of the neighborhood's location
+ * @param {number} longitude - The longitude of the neighborhood's location
+ * @param {number} crimeRate - The crime rate in the neighborhood
+ * @param {number} averatePrice - The average price of a home in the neighborhood
+ * @param {number} averageAge - The average age of the residents in the neighborhood
+ * @return {NeighborhoodResponse} - The created neighborhood
+ * @throws {400} - If any neighborhood information provided is in the wrong format
+ * @throws {401} - If user making the request is not the admin
+ * @throws {403} - If user is not logged in
+ * @throws {409} - If neighborhood already exists
+ */
+router.post(
+  '/',
+  [
+    userValidator.isUserLoggedIn,
+    userValidator.isUserAdmin,
+    neighborhoodValidator.isCreateInfoValid,
+    neighborhoodValidator.isNeighborhoodAlreadyExists,
+  ],
+  async (req: Request, res: Response) => {
+    const name = req.body.name;
+    const city = req.body.city;
+    const state = req.body.state;
+    const latitude = req.body.latitude;
+    const longitude = req.body.longitude;
+    const crimeRate = req.body.crimeRate;
+    const averagePrice = req.body.averagePrice;
+    const averageAge = req.body.averageAge;
+
+    const neighborhood = await NeighborhoodCollection.addOne(name, city, state, latitude, longitude, crimeRate, averagePrice, averageAge);
+    res.status(201).json({
+      message: `Neighborhood ${neighborhood.name} was created successfully.`,
+      neighborhood: util.constructNeighborhoodResponse(neighborhood)
+    });
+  }
+);
+
+/**
+ * Update a neighborhood's information
+ *
+ * @name PATCH /api/neighborhoods?name=name&city=city&state=state
+ *
+ * @param {number} crimeRate - The new crime rate in the neighborhood
+ * @param {number} averatePrice - The new average price of a home in the neighborhood
+ * @param {number} averageAge - The new average age of the residents in the neighborhood
+ * @return {NeighborhoodResponse} - The updated neighborhood
+ * @throws {400} - any updated neighborhood information is in the wrong format
+ * @throws {401} - If user making the request is not the admin
+ * @throws {403} - If user is not logged in
+ * @throws {404} - If name, city, state of a neighborhood is not a recognized neighborhood
+ */
+router.patch(
+  '/',
+  [
+    userValidator.isUserLoggedIn,
+    userValidator.isUserAdmin,
+    neighborhoodValidator.isNeighborhoodExists,
+    neighborhoodValidator.isUpdatedInfoValid,
+  ],
+  async (req: Request, res: Response) => {
+    const name = req.query.name as string;
+    const city = req.query.city as string;
+    const state = req.query.state as string;
+    const neighborhoodDetails = { crimeRate: req.body.crimeRate, averagePrice: req.body.averagePrice, averageAge: req.body.averageAge };
+
+    const neighborhood = await NeighborhoodCollection.updateOne(name, city, state, neighborhoodDetails);
+    res.status(200).json({
+      message: `Neighborhood ${neighborhood.name} was updated successfully.`,
+      neighborhood: util.constructNeighborhoodResponse(neighborhood)
+    });
+  }
+);
+
+/**
+ * Delete a neighborhood
+ *
+ * @name DELETE /api/neighborhoods?name=name&city=city&state=state
  *
  * @return {string} - A success message
  * @throws {401} - If user making the request is not the admin
  * @throws {403} - If the user is not logged in
- * @throws {404} - If the neighborhood doesn't exist
+ * @throws {404} - If name, city, state of a neighborhood is not a recognized neighborhood
  */
 router.delete(
-    '',
-    [
-      userValidator.isUserLoggedIn,
-      neighborhoodValidator.isUserAdmin,
-      neighborhoodValidator.isNeighborhoodExists
-    ],
-    async (req: Request, res: Response) => {
-      const neighborhood = (req.params.neighborhood as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-      await NeighborhoodCollection.deleteOneByName(req.query.name as string, req.query.city as string, req.query.state as string);
-      res.status(200).json({
-        message: 'Neighborhood has been deleted successfully'
-      });
-    }
-  );
+  '/',
+  [
+    userValidator.isUserLoggedIn,
+    userValidator.isUserAdmin,
+    neighborhoodValidator.isNeighborhoodExists
+  ],
+  async (req: Request, res: Response) => {
+    const name = req.query.name as string;
+    const city = req.query.city as string;
+    const state = req.query.state as string;
 
-
-/**
- * Update a neighborhoods information
- *
- * @name PATCH /api/neighborhoods?name=name&city=city&state=state
- *
- * @param {string} CrimeRate - the new crimeRate
- * @param {string} averageAge - the new averageAge
- * @param {string} averagePrice - the new averagePrice
- * @return {UserResponse} - The updated user
- * @throws {403} - If user is not logged in
- * @throws {401} - If user is not admin
- * @throws {400} - If updated info are not int the correct format
- * @throws {404} - neighborhood  does not exist
- */
-router.patch(
-    '/',
-    [
-      userValidator.isUserLoggedIn,
-      neighborhoodValidator.isUserAdmin,
-      neighborhoodValidator.isUpdatedInfoValid,
-    ],
-    async (req: Request, res: Response) => {
-      const neighborhood = await NeighborhoodCollection.updateOne(req.query.name as string, req.query.city as string, req.query.state as string, {crimeRate: req.body.crimeRate, averagePrice: req.body.averagePrice, averageAge: req.body.averageAge});
-      res.status(200).json({
-        message: 'Neighborhood was updated successfully',
-        user: util.constructNeighborhoodResponse(neighborhood)
-      });
-    }
-  );
+    await NeighborhoodCollection.deleteOneByInfo(name, city, state);
+    res.status(200).json({
+      message: `Neighborhood ${name} has been deleted successfully.`
+    });
+  }
+);
 
 export { router as neighborhoodRouter };

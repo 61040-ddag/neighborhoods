@@ -4,7 +4,13 @@ import type { Neighborhood } from './model';
 
 type NeighborhoodResponse = {
     _id: string;
-
+    name: string;
+    state: string;
+    latitude: number;
+    longitude: number;
+    crimeRate: number;
+    averagePrice: number;
+    averageAge: number;
 };
 
 /**
@@ -23,8 +29,7 @@ type NeighborhoodResponse = {
     
     return {
       ...neighborhoodCopy,
-      _id: neighborhoodCopy._id.toString(),
-      
+      _id: neighborhoodCopy._id.toString()
     };
   };
   

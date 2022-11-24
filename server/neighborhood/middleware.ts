@@ -1,66 +1,77 @@
 import type { Request, Response, NextFunction } from 'express';
-import { nextTick } from 'vue/types/umd';
 import NeighborhoodCollection from '../neighborhood/collection';
-import UserCollection from '../user/collection';
 
 const isNeighborhoodAlreadyExists = async (req: Request, res: Response, next: NextFunction) => {
-    const neighborhood = await NeighborhoodCollection.findOneByName(req.query.name as string, req.query.city as string, req.query.state as string);
-    if (neighborhood){
+    const name = req.query.name as string;
+    const city = req.query.city as string;
+    const state = req.query.state as string;
+    
+    const neighborhood = await NeighborhoodCollection.findOneByInfo(name, city, state);
+    if (neighborhood) {
         res.status(409).json({
-            error: 'Neighborhood already exists'
+            error: `This neighborhood ${neighborhood.name} already exists.`
         });
         return;
     }
     next();
-}
-
-const isUserAdmin = async (req: Request, res: Response, next: NextFunction) => {
-    const user = await UserCollection.findOneByUserId(req.session.userId);
-    if (! user.isAdmin){
-        res.status(401).json({
-            error: 'Only admin can perform this action'
-          });
-        return;
-    }
-    next();
-}
+};
 
 const isNeighborhoodExists = async (req: Request, res: Response, next: NextFunction) => {
-    const neighborhood = await NeighborhoodCollection.findOneByName(req.query.name as string, req.query.city as string, req.query.state as string);
+    const name = req.query.name as string;
+    const city = req.query.city as string;
+    const state = req.query.state as string;
+    
+    const neighborhood = await NeighborhoodCollection.findOneByInfo(name, city, state);
     if (!neighborhood) {
         res.status(404).json({
-            error: 'This neighborhood does not exists'
+            error: `This neighborhood ${name} does not exists.`
         });
         return;
     }
     next();
-}
+};
 
-const areCoordinatesValid = async (req: Request, res: Response, next: NextFunction) => {
+const isBoundsValid = async (req: Request, res: Response, next: NextFunction) => {
     const lat1 = req.query.lat1;
     const long1 = req.query.long1;
     const lat2 = req.query.lat2;
     const long2 = req.query.long2;
 
-    if (!lat1 || !lat2 || !long1 || !long2){
-        res.status(406).json({
-            error: "Invalid data where given"
+    if (!lat1 || !lat2 || !long1 || !long2) {
+        res.status(400).json({
+            error: "Missing input coordinates."
         });
         return;
     }
-    try{
+
+    try {
         Number(lat1);
         Number(lat2);
         Number(long1);
         Number(long2);
-    }catch{
-        res.status(406).json({
-            error: "coordinates given are not numbers"
+    } catch {
+        res.status(400).json({
+            error: "The input coordinates given are not numbers."
         });
         return;
     }
+
+    if (!(lat1 < lat2)) {
+        res.status(400).json({
+            error: 'Latitude 1 must be less than Latitude 2.'
+        });
+        return;
+    }
+
+    if (!(long1 < long2)) {
+        res.status(400).json({
+            error: 'Longitude 1 must be less than Longitude 2.'
+        });
+        return;
+    }
+
     next();
-}
+};
 
 const isCreateInfoValid = async (req: Request, res: Response, next: NextFunction) => {
     const name = req.body.name;
@@ -73,83 +84,66 @@ const isCreateInfoValid = async (req: Request, res: Response, next: NextFunction
     const averageAge = req.body.averageAge;
     const stringRegex = /^\S+$/;
 
-    if(!stringRegex.test(name) || !stringRegex.test(city) || !stringRegex.test(state)){
+    if (!(stringRegex.test(name) && stringRegex.test(city) && stringRegex.test(state))) {
         res.status(400).json({
-            error: "string data need to be nonempty"
+            error: "Neighborhood meta data needs to be nonempty."
         });
         return;
     }
-    if (!latitude || !longitude || !crimeRate || !averageAge || !averagePrice){
+    
+    if (!(latitude && longitude && crimeRate && averageAge && averagePrice)) {
         res.status(400).json({
-            error: "Data need to be nonempty"
+            error: "Missing residential data."
         });
         return;
     }
-    try{
+
+    try {
         Number(latitude);
         Number(longitude);
         Number(crimeRate);
         Number(averageAge);
         Number(averagePrice);
-    }catch{
+    } catch {
         res.status(400).json({
-            error: "data given are not numbers"
+            error: "Residential data given are not numbers."
         });
         return;
     }
+
     next();
-    
-}
+};
 
 const isUpdatedInfoValid = async (req: Request, res: Response, next: NextFunction) => {
-    const name = req.query.name as string;
-    const city = req.query.city as string;
-    const state = req.query.state as string;
     const crimeRate = req.body.crimeRate;
     const averagePrice = req.body.averagePrice;
     const averageAge = req.body.averageAge;
-    const stringRegex = /^\S+$/;
 
-    if(!name || !city || !state) {
+    if (!crimeRate || !averageAge || !averagePrice) {
         res.status(400).json({
-            error: "no neighborhood specified"
+            error: "Updated residential data must be nonempty."
         });
         return;
     }
-
-    const neighborhood = await NeighborhoodCollection.findOneByName(name, city, state);
-    if (!neighborhood){
-        res.status(404).json({
-            error: "Neighborhood doesn't exist"
-        });
-        return;
-    }
-    if (!crimeRate || !averageAge || !averagePrice){
-        res.status(400).json({
-            error: "Data need to be nonempty"
-        });
-        return;
-    }
-    try{
+    try {
         Number(crimeRate);
         Number(averageAge);
         Number(averagePrice);
-    }catch{
+    } catch {
         res.status(400).json({
-            error: "data given are not numbers"
+            error: "Residential data given are not numbers."
         });
         return;
     }
 
     next();
-}
+};
 
 
 export {
     isCreateInfoValid,
     isNeighborhoodAlreadyExists,
-    isUserAdmin,
     isNeighborhoodExists,
-    areCoordinatesValid,
+    isBoundsValid,
     isUpdatedInfoValid,
 };
