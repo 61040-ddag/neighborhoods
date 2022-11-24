@@ -141,6 +141,8 @@ This renders the `index.html` file that will be used to interact with the backen
 **Body**
 
 - `name` _{string}_ - The name of the neighborhood
+- `city` _{string}_ - The city of the neighborhood's location
+- `state` _{string}_ - The state of the neighborhood's location
 - `latitude` _{string}_ - The latitude of the neighborhood's location
 - `longtitude` _{string}_ - The longtitude of the neighborhood's location
 - `crimeRate` _{string}_ - The crime rate in the neighborhood
