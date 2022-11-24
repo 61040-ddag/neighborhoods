@@ -2,23 +2,22 @@ import type { HydratedDocument, Types } from 'mongoose';
 import type { User } from './model';
 import UserModel from './model';
 
-class UserCollection {
+class UserCollection { 
   /**
-   * Add a new user
-   *
-   * @param {string} username - The username of the user
-   * @param {string} password - The password of the user
-   * @return {Promise<HydratedDocument<User>>} - The newly created user
-   */
+  * Add a new user
+  *
+  * @param {string} username - The username of the user
+  * @param {string} password - The password of the user
+  * @return {Promise<HydratedDocument<User>>} - The newly created user
+  */
   static async addOne(username: string, password: string): Promise<HydratedDocument<User>> {
-    const dateJoined = new Date();
-    const isAdmin = false;
+  const dateJoined = new Date();
+  const isAdmin = false;
 
-    const user = new UserModel({ username, password, dateJoined, isAdmin });
-    await user.save(); // Saves user to MongoDB
-    return user;
+  const user = new UserModel({ username, password, dateJoined, isAdmin });
+  await user.save(); // Saves user to MongoDB
+  return user;
   }
-
   /**
    * Get all the users not including the current session user in the database
    *
