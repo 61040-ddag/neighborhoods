@@ -11,7 +11,6 @@ export type Neighborhood = {
     crimeRate: number;
     averagePrice: number;
     averageAge: number;
-    dateModified: Date;
 };
 
 const NeighborhoodSchema = new Schema({
@@ -46,12 +45,7 @@ const NeighborhoodSchema = new Schema({
     averageAge: {
         type: Number,
         required: true
-    },
-    dateModified: {
-        type: Date,
-        required: true
-    },
-      
+    }
 });
 
 const NeighborhoodModel = model<Neighborhood>('Neighborhood', NeighborhoodSchema);

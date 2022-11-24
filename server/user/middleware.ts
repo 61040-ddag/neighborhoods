@@ -144,6 +144,17 @@ const isAuthorExists = async (req: Request, res: Response, next: NextFunction) =
   next();
 };
 
+const isUserAdmin = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await UserCollection.findOneByUserId(req.session.userId);
+  if (!user.isAdmin){
+      res.status(401).json({
+          error: 'Only an admin can perform this action'
+        });
+      return;
+  }
+  next();
+};
+
 export {
   isCurrentSessionUserExists,
   isUserLoggedIn,
@@ -151,6 +162,7 @@ export {
   isUsernameNotAlreadyInUse,
   isAccountExists,
   isAuthorExists,
+  isUserAdmin,
   isValidUsername,
   isValidPassword
 };
