@@ -134,7 +134,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Throws**
 - `403` if user is not logged in
-- `406` if one or more of `lat1`, `long1`, `lat2`, `long2` 
+- `400` if any of `lat1`, `lat2`, `long1`, and `long2` are invalid
 
 #### `POST /api/neighborhoods/`
 

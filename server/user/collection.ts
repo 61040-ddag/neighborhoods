@@ -18,7 +18,6 @@ class UserCollection {
     await user.save(); // Saves user to MongoDB
     return user;
   }
-
   /**
    * Get all the users not including the current session user in the database
    *

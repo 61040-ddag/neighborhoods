@@ -19,6 +19,14 @@
                     🏠 Home
                 </router-link>
             </button>
+            <button v-if="$store.state.isAdmin">
+                <router-link
+                    to="/neighborhoods"
+                    class="link"
+                >
+                    🏘️ Neighborhoods
+                </router-link>
+            </button>
             <button v-if="$store.state.username">
                 <router-link 
                     to="/account" 

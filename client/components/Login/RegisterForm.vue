@@ -13,8 +13,8 @@ export default {
       hasBody: true,
       setUsername: true,
       fields: [
-        { id: 'username', label: 'Username', value: '' },
-        { id: 'password', label: 'Password', value: '' }
+        { id: 'username', type: 'body', label: 'Username', value: '' },
+        { id: 'password', type: 'body', label: 'Password', value: '' }
       ],
       title: 'Create account',
       callback: () => {

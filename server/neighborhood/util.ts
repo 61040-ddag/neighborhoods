@@ -4,8 +4,25 @@ import type { Neighborhood } from './model';
 
 type NeighborhoodResponse = {
     _id: string;
-
+    name: string;
+    city: string;
+    state: string;
+    latitude: number;
+    longitude: number;
+    crimeRate: number;
+    averagePrice: number;
+    averageAge: number;
 };
+
+/**
+ * Encode a readable word
+ * 
+ * @param {string} word - The database version of the word
+ * @returns {string} - Readable version of the word
+ */
+const formatWord = (word: string): string => {
+  return word.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+}
 
 /**
  * Transform a raw Neighborhood object from the database into an object
@@ -24,11 +41,14 @@ type NeighborhoodResponse = {
     return {
       ...neighborhoodCopy,
       _id: neighborhoodCopy._id.toString(),
-      
+      name: formatWord(neighborhoodCopy.name),
+      city: formatWord(neighborhoodCopy.city),
+      state: formatWord(neighborhoodCopy.state)
     };
   };
   
   export {
-    constructNeighborhoodResponse
+    constructNeighborhoodResponse,
+    formatWord
   };
   

@@ -10,6 +10,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import * as userValidator from '../server/user/middleware';
 import { userRouter } from '../server/user/router';
+import { neighborhoodRouter } from '../server/neighborhood/router';
 import MongoStore from 'connect-mongo';
 
 // Load environmental variables
@@ -51,10 +52,10 @@ app.use(express.json());
 // Parse incoming requests with urlencoded payloads ('content-type: application/x-www-form-urlencoded' in header)
 app.use(express.urlencoded({ extended: false }));
 
-const store = MongoStore.create({ 
+const store = MongoStore.create({
     clientPromise: client,
     dbName: 'sessions',
-    autoRemove: 'interval', 
+    autoRemove: 'interval',
     autoRemoveInterval: 10 // Minutes
 });
 
@@ -72,17 +73,16 @@ app.use(userValidator.isCurrentSessionUserExists);
 
 // Add routers from routes folder
 app.use('/api/users', userRouter);
-
+app.use('/api/neighborhoods', neighborhoodRouter);
 // Catch all the other routes and display error message
 app.all('*', (req: Request, res: Response) => {
     res.status(404).json({
-      error: 'Page not found'
+        error: 'Page not found'
     });
-  });
-  
-  // Create server to listen to request at specified port
-  const server = http.createServer(app);
-  server.listen(app.get('port'), () => {
+});
+
+// Create server to listen to request at specified port
+const server = http.createServer(app);
+server.listen(app.get('port'), () => {
     console.log(`Express server running at http://localhost:${app.get('port') as number}`);
-  });
-  
+});
