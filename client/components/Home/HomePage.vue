@@ -4,6 +4,12 @@
             <header>
                 <h2>Welcome @{{ $store.state.username }}!</h2>
             </header>
+            <GetNeighborhoodsForm
+                neighborhoodPlaceholder="aaa"
+                cityPlaceholder="bbb"
+                statePlaceholder="MA, NY,..."
+                button="Get Neighborhood"
+            />
         </section>
         <section v-else>
             <header>
@@ -22,12 +28,12 @@
 </template>
 
 <script>
-
+import GetNeighborhoodsForm from '@/components/Neighborhood/GetNeighborhoodsForm.vue';
 
 export default {
     name: 'HomePage',
     components: {
-
+        GetNeighborhoodsForm
     }
 };
 </script>

@@ -1,4 +1,4 @@
-<!-- Form for adding a neighborhood (block style) -->
+<!-- Form for updating a neighborhood (block style) -->
 
 <script>
 import BlockForm from '@/components/common/BlockForm.vue';

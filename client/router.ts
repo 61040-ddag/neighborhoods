@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import HomePage from './components/Home/HomePage.vue';
 import NeighborhoodPage from './components/Neighborhood/NeighborhoodPage.vue'
+import MapPage from './components/Map/MapPage.vue';
 import AccountPage from './components/Account/AccountPage.vue';
 import SignupPage from './components/Login/SignupPage.vue';
 import LoginPage from './components/Login/LoginPage.vue';
@@ -15,6 +16,7 @@ const routes = [
     { path: '/account', name: 'Account', component: AccountPage },
     { path: '/login', name: 'Login', component: LoginPage },
     { path: '/signup', name: 'Signup', component: SignupPage },
+    { path: '/map', name: 'Map', component: MapPage },
     { path: '*', name: 'Not Found', component: NotFound }
 ];
 
