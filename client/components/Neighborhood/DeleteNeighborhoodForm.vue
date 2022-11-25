@@ -8,22 +8,22 @@ export default {
   mixins: [BlockForm],
   data() {
     return {
-      url: `/api/neighborhoods?`,
+      url: `/api/neighborhoods`,
       method: 'DELETE',
-      title: 'Delete Neighborhood',
-      deleteNeighborhood: true,
+      hasQueryParams: true,
       fields: [
-      { id: 'name', label: 'Neighborhood Name', value: ''},
-      { id: 'city', label: 'City', value: ''},
-      { id: 'state', label: 'State', value: ''},
+        { id: 'name', type: 'queryParam', label: 'Neighborhood Name', value: '' },
+        { id: 'city', type: 'queryParam', label: 'City', value: '' },
+        { id: 'state', type: 'queryParam', label: 'State', value: '' },
       ],
+      title: 'Delete Neighborhood',
       callback: () => {
-        this.$store.commit('alert', {
-          message: 'You have successfully deleted this neighborhood!', status: 'success'
-        });
+        const message = 'Successfully deleted a neighborhood!';
+        this.$set(this.alerts, message, 'success');
+        setTimeout(() => this.$delete(this.alerts, message), 3000);
       }
     };
   }
-  
+
 };
 </script>

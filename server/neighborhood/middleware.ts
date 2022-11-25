@@ -1,15 +1,16 @@
 import type { Request, Response, NextFunction } from 'express';
 import NeighborhoodCollection from '../neighborhood/collection';
+import { formatWord } from './util';
 
 const isNeighborhoodAlreadyExists = async (req: Request, res: Response, next: NextFunction) => {
-    const name = req.query.name as string;
-    const city = req.query.city as string;
-    const state = req.query.state as string;
+    const name = req.body.name as string;
+    const city = req.body.city as string;
+    const state = req.body.state as string;
     
     const neighborhood = await NeighborhoodCollection.findOneByInfo(name, city, state);
     if (neighborhood) {
         res.status(409).json({
-            error: `This neighborhood ${neighborhood.name} already exists.`
+            error: `This neighborhood ${formatWord(neighborhood.name)} already exists.`
         });
         return;
     }
@@ -24,7 +25,7 @@ const isNeighborhoodExists = async (req: Request, res: Response, next: NextFunct
     const neighborhood = await NeighborhoodCollection.findOneByInfo(name, city, state);
     if (!neighborhood) {
         res.status(404).json({
-            error: `This neighborhood ${name} does not exists.`
+            error: `This neighborhood ${formatWord(name)} does not exists.`
         });
         return;
     }
@@ -82,11 +83,11 @@ const isCreateInfoValid = async (req: Request, res: Response, next: NextFunction
     const crimeRate = req.body.crimeRate;
     const averagePrice = req.body.averagePrice;
     const averageAge = req.body.averageAge;
-    const stringRegex = /^\S+$/;
+    const stringRegex = /^[A-Za-z_]*$/;
 
     if (!(stringRegex.test(name) && stringRegex.test(city) && stringRegex.test(state))) {
         res.status(400).json({
-            error: "Neighborhood meta data needs to be nonempty."
+            error: "Neighborhood meta data needs all be nonempty alphabet string."
         });
         return;
     }
@@ -98,13 +99,8 @@ const isCreateInfoValid = async (req: Request, res: Response, next: NextFunction
         return;
     }
 
-    try {
-        Number(latitude);
-        Number(longitude);
-        Number(crimeRate);
-        Number(averageAge);
-        Number(averagePrice);
-    } catch {
+    const residentialData = [latitude, longitude, crimeRate, averagePrice, averageAge];
+    if (residentialData.some(data => Number.isNaN(Number(data)))) {
         res.status(400).json({
             error: "Residential data given are not numbers."
         });
@@ -125,11 +121,9 @@ const isUpdatedInfoValid = async (req: Request, res: Response, next: NextFunctio
         });
         return;
     }
-    try {
-        Number(crimeRate);
-        Number(averageAge);
-        Number(averagePrice);
-    } catch {
+
+    const residentialData = [crimeRate, averagePrice, averageAge];
+    if (residentialData.some(data => Number.isNaN(Number(data)))) {
         res.status(400).json({
             error: "Residential data given are not numbers."
         });

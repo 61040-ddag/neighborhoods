@@ -59,9 +59,8 @@ export default {
       url: '', // Url to submit form to
       method: 'GET', // Form request method
       hasBody: false, // Whether or not form request has a body
+      hasQueryParams: false, // Whether or not form request has query parameters
       setUsername: false, // Whether or not stored username should be updated after form submission
-      deleteNeighborhood: false, // Whether or not we are deleting a nbhood
-      updateNeighborhood: false,
       alerts: {}, // Displays success/error messages encountered during form submission
       callback: null // Function to run after successful form submission
     };
@@ -69,50 +68,57 @@ export default {
   methods: {
     async submit() {
       /**
-        * Submits a form with the specified options from data().
-        */
+       * Submits a form with the specified options from data().
+       */
+      let url = this.url;
+
       const options = {
         method: this.method,
         headers: { 'Content-Type': 'application/json' },
         credentials: 'same-origin' // Sends express-session credentials with request
       };
-      if(this.updateNeighborhood || this.deleteNeighborhood){
-        var extra = '';
-        console.log(this.fields);
-        for(const field of this.fields){          
-          const {id, value} = field;
-          if(id == "name" || id == "city" || id == "state"){
-            const val = value.trim().replace(" ", "_");
-            extra+=`&${id}=${val}`;
-          }
+      
+      if (this.hasQueryParams) {
+        let queryParams = '?';
+        const params = [];
+        
+        for (const field of this.fields) {
+          const { id, type, value } = field;
+          if (type === 'queryParam') {
+            let val = value.trim();
+            if (id === 'name' || id === 'city' || id === 'state') {
+              val = val.replace(' ', '_').toLowerCase();
+            }
+            params.push(`${id}=${val}`)
+          }          
         }
-        extra = extra.substring(1);
+        queryParams += params.join('&');
+        url += queryParams;
       }
+
       if (this.hasBody) {
         options.body = JSON.stringify(Object.fromEntries(
-          this.fields.map(field => {
+          this.fields.filter(field => field.type === 'body').map(field => {
             const { id, value } = field;
+            let val = value;
+            if (id === 'name' || id === 'city' || id === 'state') {
+              val = val.replace(' ', '_').toLowerCase();
+            }
+
             field.value = '';
-            return [id, value.trim().replace(" ", "_")];
+            return [id, val];
           })
         ));
       }
-
+      
       try {
-        let url = "";
-        if(this.updateNeighborhood || this.deleteNeighborhood){
-          url = this.url + extra;
-        }else{
-          url = this.url;
-        }
-        console.log(url);
         const r = await fetch(url, options);
         if (!r.ok) {
           // If response is not okay, we throw an error and enter the catch block
           const res = await r.json();
           throw new Error(res.error);
         }
-
+        
         if (this.setUsername) {
           const text = await r.text();
           const res = text ? JSON.parse(text) : { user: null };

@@ -12,16 +12,16 @@ export default {
       method: 'POST',
       hasBody: true,
       fields: [
-        { id: 'name', label: 'Neighborhood Name', value: '' },
-        { id: 'city', label: 'City', value: '' },
-        { id: 'state', label: 'state', value: '' },
-        { id: 'latitude', label: 'latitude', value: '' },
-        { id: 'longitude', label: 'longitude', value: '' },
-        { id: 'crimeRate', label: 'Crime Rate', value: '' },
-        { id: 'averagePrice', label: 'Average Price', value: '' },
-        { id: 'averageAge', label: 'Average Age', value: '' }   
+        { id: 'name', type: 'body', label: 'Neighborhood Name', value: '' },
+        { id: 'city', type: 'body', label: 'City', value: '' },
+        { id: 'state', type: 'body', label: 'State', value: '' },
+        { id: 'latitude', type: 'body', label: 'Latitude', value: '' },
+        { id: 'longitude', type: 'body', label: 'Longitude', value: '' },
+        { id: 'crimeRate', type: 'body', label: 'Crime Rate', value: '' },
+        { id: 'averagePrice', type: 'body', label: 'Average Price', value: '' },
+        { id: 'averageAge', type: 'body', label: 'Average Age', value: '' }
       ],
-      title: 'Add Neighborhood',
+      title: 'Create Neighborhood',
       callback: () => {
         const message = 'Successfully added a neighborhood!';
         this.$set(this.alerts, message, 'success');

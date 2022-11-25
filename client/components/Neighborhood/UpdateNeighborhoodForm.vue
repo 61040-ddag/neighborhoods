@@ -1,4 +1,4 @@
-<!-- Form for adding a neighborhood an account (block style) -->
+<!-- Form for adding a neighborhood (block style) -->
 
 <script>
 import BlockForm from '@/components/common/BlockForm.vue';
@@ -8,17 +8,17 @@ export default {
   mixins: [BlockForm],
   data() {
     return {
-      url: '/api/neighborhoods?',
+      url: '/api/neighborhoods',
       method: 'PATCH',
       hasBody: true,
-      updateNeighborhood: true,
+      hasQueryParams: true,
       fields: [
-        { id: 'name', label: 'Name', value: '' },
-        { id: 'city', label: 'City', value: '' },
-        { id: 'state', label: 'State', value: '' },   
-        { id: 'crimeRate', label: 'Crime Rate', value: '' },
-        { id: 'averagePrice', label: 'Average Price', value: '' },
-        { id: 'averageAge', label: 'Average Age', value: '' }   
+        { id: 'name', type: 'queryParam', label: 'Neighborhood Name', value: '' },
+        { id: 'city', type: 'queryParam', label: 'City', value: '' },
+        { id: 'state', type: 'queryParam', label: 'State', value: '' },
+        { id: 'crimeRate', type: 'body', label: 'Crime Rate', value: '' },
+        { id: 'averagePrice', type: 'body', label: 'Average Price', value: '' },
+        { id: 'averageAge', type: 'body', label: 'Average Age', value: '' }
       ],
       title: 'Update Neighborhood',
       callback: () => {

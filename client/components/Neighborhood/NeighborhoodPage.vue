@@ -3,16 +3,16 @@
         <section>
             <section>
             <header>
-                <h2> Neighborhood Management </h2>
+                <h2>Neighborhood Management</h2>
             </header>
             <CreateNeighborhoodForm
                 button="Create Neighborhood"
             />
-            <DeleteNeighborhoodForm
-                button="Delete Neighborhood"
-            />
             <UpdateNeighborhoodForm
                 button="Update Neighborhood"
+            />
+            <DeleteNeighborhoodForm
+                button="Delete Neighborhood"
             />
             </section>
         </section>

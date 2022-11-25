@@ -12,7 +12,7 @@ export default {
       method: 'PATCH',
       hasBody: true,
       fields: [
-        { id: 'password', label: 'Password', value: '' }
+        { id: 'password', type: 'body', label: 'Password', value: '' }
       ],
       title: 'Change password',
       callback: () => {
