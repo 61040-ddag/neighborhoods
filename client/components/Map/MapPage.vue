@@ -115,6 +115,7 @@ export default {
   initMap() {
       let centerLat = 0;
       let centerLong = 0;
+      console.log(this.$store.state.neighborhoods);
       const numOfNbhoods = this.$store.state.neighborhoods.length;
       for(const nbhood of this.$store.state.neighborhoods){
         centerLat+=nbhood.latitude;

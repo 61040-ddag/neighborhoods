@@ -103,7 +103,7 @@ export default {
         const neighborhoodFilter = neighborhood ? { name: neighborhood, city: city, state: state } : { city: city, state: state };
         this.$store.commit('updateNeighborhoodFilter', neighborhoodFilter);
 
-        const neighborhoods = this.neighborhood ? res.neighborhood : res.neighborhoods;
+        const neighborhoods = this.neighborhood ? [res.neighborhood] : res.neighborhoods;
         this.$store.commit('updateNeighborhoods', neighborhoods);
     
         this.$router.push({ name: 'Map' });
