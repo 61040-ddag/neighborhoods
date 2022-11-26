@@ -83,11 +83,13 @@ export default {
         if (!r.ok) {
           throw new Error(res.error);
         }
+        
         const neighborhoodFilter = this.neighborhood ? { name: this.neighborhood, city: this.city, state: this.state } : { city: this.city, state: this.state };
         this.$store.commit('updateNeighborhoodFilter', neighborhoodFilter);
-
+        
         const neighborhoods = this.neighborhood ? res.neighborhood : res.neighborhoods;
         this.$store.commit('updateNeighborhoods', neighborhoods);
+    
         this.$router.push({ name: 'Map' });
       } catch (e) {
         this.$set(this.alerts, e, 'error');

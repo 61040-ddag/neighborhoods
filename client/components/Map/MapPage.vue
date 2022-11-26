@@ -113,12 +113,21 @@ export default {
   },
   methods: {
   initMap() {
+      let centerLat = 0;
+      let centerLong = 0;
+      const numOfNbhoods = this.$store.state.neighborhoods.length;
+      for(const nbhood of this.$store.state.neighborhoods){
+        centerLat+=nbhood.latitude;
+        centerLong+=nbhood.longitude;
+      }
+      centerLat = centerLat/numOfNbhoods;
+      centerLong = centerLong/numOfNbhoods;
       mapboxgl.accessToken = "pk.eyJ1IjoiZGRhZyIsImEiOiJjbGF4MGJtNmEwa3k2M29ucDZveXlrYzAwIn0.TbztEorLFsbqFilStlji0g";
       this.map = new mapboxgl.Map({
         container: "map",
         style: "mapbox://styles/mapbox/streets-v11",
-        center: [42.351811, -71.078640],
-        zoom: 15,
+        center: [centerLong, centerLat],
+        zoom: 12,
         // zoom: -5,
       });
       this.map.on("load", () => {
@@ -146,35 +155,28 @@ export default {
           this.updateMarkers();
         }
       });
-
-      const markerContainer = document.createElement("div");
-      markerContainer.className = "marker-container";
-      const infoContainer = document.createElement("div");
-      infoContainer.className = "info-container";
-      // const el = document.createElement("div");
-      // el.className = "marker";
-      markerContainer.appendChild(infoContainer);
-      // markerContainer.appendChild(el);
-      
-      const x = [
-        [103.811279, 1.345399],
-        [104.811279, 1.345399],
-        [104.811279, 2.345399],
-        [-71.078640, 42.351811]
-      ]
-      for(const xi of x) {
-        console.log(xi);
+      // add markers
+      for (const nbhood of this.$store.state.neighborhoods){
         const el = document.createElement("div");
         el.className = "marker";
-        markerContainer.appendChild(el);
-        const popup = this.featurePopup();
-        const marker = new mapboxgl.Marker(el).setLngLat(xi).setPopup(popup).addTo(this.map);
+        const popup = this.featurePopup(nbhood.name, nbhood.city, nbhood.state, new Map([["crime Rate", nbhood.crimeRate], ["Average Price", nbhood.averagePrice], ["Average Age", nbhood.averageAge]]));
+        const marker = new mapboxgl.Marker(el).setLngLat([nbhood.longitude, nbhood.latitude]).setPopup(popup).addTo(this.map);
       }
-      console.log(markerContainer);
+
     },
-    featurePopup() {
+    featurePopup(name, city, state, info) {
       const card = document.createElement("div");
-      
+      const p = document.createElement("p");
+      p.innerHTML = name+", "+city+", "+state
+      card.appendChild(p);
+      const ul = document.createElement("ul");
+      for (const [key, value] of info){
+        console.log(key, value);
+        const li = document.createElement("li");
+        li.innerHTML=key+": " + value;
+        ul.appendChild(li);
+      }
+      card.append(ul);
       const button = document.createElement("button");
       button.onclick = this.callf;
       button.innerHTML = "View Reviews";
@@ -183,7 +185,7 @@ export default {
       );
     },
     callf(){
-      this.$router.push({name: 'Login'}); // Goes to Home page after deleting account
+      // show reviews
     }
   }
   
