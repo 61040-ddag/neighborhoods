@@ -43,7 +43,7 @@ const formatWord = (word: string): string => {
       _id: neighborhoodCopy._id.toString(),
       name: formatWord(neighborhoodCopy.name),
       city: formatWord(neighborhoodCopy.city),
-      state: formatWord(neighborhoodCopy.state)
+      state: neighborhoodCopy.state.toUpperCase()
     };
   };
   

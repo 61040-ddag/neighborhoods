@@ -55,7 +55,7 @@ router.get(
     const neighborhoods = await NeighborhoodCollection.findAllByLocation(city, state);
     const response = neighborhoods.map(util.constructNeighborhoodResponse);
     res.status(200).json({
-      message: `Neighborhoods in ${city}, ${state} was found.`,
+      message: `Neighborhoods in ${util.formatWord(city)}, ${state.toUpperCase()} was found.`,
       neighborhoods: response
     });
   }
