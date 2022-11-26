@@ -12,6 +12,7 @@ const store = new Vuex.Store({
     username: null, // Username of the logged in user
     dateJoined: null, // Date joined of the logged in user
     isAdmin: null, // Whether or not logged in user is admin account
+    neighborhoods: [{}, {}],
     alerts: {} // global success/error messages encountered during submissions to non-visible forms
   },
   mutations: {
