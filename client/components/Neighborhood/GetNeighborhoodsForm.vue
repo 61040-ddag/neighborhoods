@@ -65,44 +65,34 @@ export default {
   },
   methods: {
     async submit() {
-      // const data = { name: this.neighborhood, city: this.city, state: this.state };
-      // console.log(data)
-        // const url = this.value ? `/api/freets?author=${this.value}` : '/api/freets';
-        try {
-          if (!this.state) {
-            throw new Error('State of desired location is required.')
-          }
-
-          if (!this.city) {
-            throw new Error('City of desired location is required.');
-          }
-
-          const neighborhoodURL = `/api/neighborhoods?name=${this.neighborhood}&city=${this.city}&state=${this.state}`;
-          const locationURL = `/api/neighborhoods/location?city=${this.city}&state=${this.state}`;
-          const url = this.neighborhood ?  neighborhoodURL : locationURL;
-          console.log(url);
-
-          // const r = await fetch(url);
-          // const res = await r.json();
-          // if (!r.ok) {
-          //   throw new Error(res.error);
-          // }
-          // this.$store.commit('updateFilter', this.value);
-          // this.$store.commit('updateFreets', res);
-        } catch (e) {
-          // if (this.value === this.$store.state.filter) {
-          //   // This section triggers if you filter to a user but they
-          //   // change their username when you refresh
-          //   this.$store.commit('updateFilter', null);
-          //   this.value = ''; // Clear filter to show all users' freets
-          //   this.$store.commit('refreshFreets');
-          // } else {
-          //   // Otherwise reset to previous fitler
-          //   this.value = this.$store.state.filter;
-          // }
-          this.$set(this.alerts, e, 'error');
-          setTimeout(() => this.$delete(this.alerts, e), 3000);
+      try {
+        if (!this.state) {
+          throw new Error('State of desired location is required.')
         }
+
+        if (!this.city) {
+          throw new Error('City of desired location is required.');
+        }
+
+        const neighborhoodURL = `/api/neighborhoods?name=${this.neighborhood}&city=${this.city}&state=${this.state}`;
+        const locationURL = `/api/neighborhoods/location?city=${this.city}&state=${this.state}`;
+        const url = this.neighborhood ? neighborhoodURL : locationURL;
+
+        const r = await fetch(url);
+        const res = await r.json();
+        if (!r.ok) {
+          throw new Error(res.error);
+        }
+        const neighborhoodFilter = this.neighborhood ? { name: this.neighborhood, city: this.city, state: this.state } : { city: this.city, state: this.state };
+        this.$store.commit('updateNeighborhoodFilter', neighborhoodFilter);
+
+        const neighborhoods = this.neighborhood ? res.neighborhood : res.neighborhoods;
+        this.$store.commit('updateNeighborhoods', neighborhoods);
+        this.$router.push({ name: 'Map' });
+      } catch (e) {
+        this.$set(this.alerts, e, 'error');
+        setTimeout(() => this.$delete(this.alerts, e), 3000);
+      }
     }
   }
 };
