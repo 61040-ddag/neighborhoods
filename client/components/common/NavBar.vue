@@ -64,6 +64,7 @@ nav {
     justify-content: space-between;
     align-items: center;
     position: relative;
+    z-index:100;
 }
 
 .title {
