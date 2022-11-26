@@ -74,8 +74,16 @@ export default {
           throw new Error('City of desired location is required.');
         }
 
-        const neighborhoodURL = `/api/neighborhoods?name=${this.neighborhood}&city=${this.city}&state=${this.state}`;
-        const locationURL = `/api/neighborhoods/location?city=${this.city}&state=${this.state}`;
+        const formatBackend = (word) => {
+          return word.trim().replace(' ', '_').toLowerCase();
+        };
+        
+        let neighborhood = formatBackend(this.neighborhood);
+        let city = formatBackend(this.city);
+        let state = formatBackend(this.state);
+
+        const neighborhoodURL = `/api/neighborhoods?name=${neighborhood}&city=${city}&state=${state}`;
+        const locationURL = `/api/neighborhoods/location?city=${city}&state=${state}`;
         const url = this.neighborhood ? neighborhoodURL : locationURL;
 
         const r = await fetch(url);
@@ -83,10 +91,18 @@ export default {
         if (!r.ok) {
           throw new Error(res.error);
         }
-        
-        const neighborhoodFilter = this.neighborhood ? { name: this.neighborhood, city: this.city, state: this.state } : { city: this.city, state: this.state };
+
+        const formatFrontend = (word) => {
+          return word.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        };
+
+        neighborhood = formatFrontend(neighborhood);
+        city = formatFrontend(city);
+        state = state.toUpperCase();
+
+        const neighborhoodFilter = neighborhood ? { name: neighborhood, city: city, state: state } : { city: city, state: state };
         this.$store.commit('updateNeighborhoodFilter', neighborhoodFilter);
-        
+
         const neighborhoods = this.neighborhood ? res.neighborhood : res.neighborhoods;
         this.$store.commit('updateNeighborhoods', neighborhoods);
     

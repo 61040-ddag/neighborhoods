@@ -13,7 +13,7 @@ const store = new Vuex.Store({
     dateJoined: null, // Date joined of the logged in user
     isAdmin: null, // Whether or not logged in user is admin account
     neighborhoodFilter: null, // Neighborhood, city, and/or state to filter shown neighborhoods
-    neighborhoods: null, // All neighborhoods created in app
+    neighborhoods: [], // All neighborhoods created in app
     alerts: {} // global success/error messages encountered during submissions to non-visible forms
   },
   mutations: {
