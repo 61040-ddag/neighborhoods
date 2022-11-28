@@ -7,7 +7,7 @@
     </section>
 </template>
 
-<script>
+<!-- <script>
 
 import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore/lite';
@@ -22,4 +22,4 @@ export default{
 
 }
 
-</script>
+</script> -->

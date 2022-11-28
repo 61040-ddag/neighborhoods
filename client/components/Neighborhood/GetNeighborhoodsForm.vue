@@ -77,7 +77,7 @@ export default {
         const formatBackend = (word) => {
           return word.trim().replace(' ', '_').toLowerCase();
         };
-        
+
         let neighborhood = formatBackend(this.neighborhood);
         let city = formatBackend(this.city);
         let state = formatBackend(this.state);
@@ -105,7 +105,7 @@ export default {
 
         const neighborhoods = this.neighborhood ? [res.neighborhood] : res.neighborhoods;
         this.$store.commit('updateNeighborhoods', neighborhoods);
-    
+
         this.$router.push({ name: 'Map' });
       } catch (e) {
         this.$set(this.alerts, e, 'error');

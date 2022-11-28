@@ -10,12 +10,6 @@
                 statePlaceholder="Req: Enter state. Ex: MA, NY"
                 button="🔄 Get neighborhood(s)"
             />
-            <div>
-                {{ $store.state.neighborhoodFilter }}
-            </div>
-            <div>
-                {{ $store.state.neighborhoods }}
-            </div>
         </section>
         <section v-else>
             <header>
