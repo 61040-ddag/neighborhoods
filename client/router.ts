@@ -6,6 +6,7 @@ import MapPage from './components/Map/MapPage.vue';
 import AccountPage from './components/Account/AccountPage.vue';
 import SignupPage from './components/Login/SignupPage.vue';
 import LoginPage from './components/Login/LoginPage.vue';
+import UploadStrollComponent from './components/Stroll/UploadStrollComponent.vue'
 import NotFound from './NotFound.vue';
 
 Vue.use(VueRouter);
@@ -17,6 +18,7 @@ const routes = [
     { path: '/login', name: 'Login', component: LoginPage },
     { path: '/signup', name: 'Signup', component: SignupPage },
     { path: '/map', name: 'Map', component: MapPage },
+    { path: '/stroll', name: 'Stroll', component: UploadStrollComponent },
     { path: '*', name: 'Not Found', component: NotFound }
 ];
 
