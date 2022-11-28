@@ -100,13 +100,22 @@ export default {
         city = formatFrontend(city);
         state = state.toUpperCase();
 
-        const neighborhoodFilter = neighborhood ? { name: neighborhood, city: city, state: state } : { city: city, state: state };
-        this.$store.commit('updateNeighborhoodFilter', neighborhoodFilter);
-
         const neighborhoods = this.neighborhood ? [res.neighborhood] : res.neighborhoods;
-        this.$store.commit('updateNeighborhoods', neighborhoods);
 
-        this.$router.push({ name: 'Map' });
+        if (neighborhoods.length !== 0) {
+          this.$store.commit('updateNeighborhoods', neighborhoods);
+
+          const neighborhoodFilter = neighborhood ? { name: neighborhood, city: city, state: state } : { city: city, state: state };
+          this.$store.commit('updateNeighborhoodFilter', neighborhoodFilter);
+
+          this.$router.push({ name: 'Map' });
+
+          this.$store.commit('alert', {
+            message: res.message, status: 'success'
+          });
+        } else {
+          throw new Error('Location does not exist yet!')
+        }
       } catch (e) {
         this.$set(this.alerts, e, 'error');
         setTimeout(() => this.$delete(this.alerts, e), 3000);

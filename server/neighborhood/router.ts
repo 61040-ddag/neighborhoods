@@ -29,7 +29,7 @@ router.get(
 
     const neighborhood = await NeighborhoodCollection.findOneByInfo(name, city, state);
     res.status(200).json({
-      message: `Neighborhood ${util.formatWord(neighborhood.name)} was found.`,
+      message: `Neighborhood ${util.formatWord(neighborhood.name)}, ${util.formatWord(neighborhood.city)}, ${neighborhood.state.toUpperCase()} was found.`,
       neighborhood: util.constructNeighborhoodResponse(neighborhood)
     });
   }
@@ -130,7 +130,7 @@ router.post(
 
     const neighborhood = await NeighborhoodCollection.addOne(name, city, state, latitude, longitude, crimeRate, averagePrice, averageAge);
     res.status(201).json({
-      message: `Neighborhood ${util.formatWord(neighborhood.name)} was created successfully.`,
+      message: `Neighborhood ${util.formatWord(neighborhood.name)}, ${util.formatWord(neighborhood.city)}, ${neighborhood.state.toUpperCase()} was created successfully.`,
       neighborhood: util.constructNeighborhoodResponse(neighborhood)
     });
   }
@@ -166,7 +166,7 @@ router.patch(
 
     const neighborhood = await NeighborhoodCollection.updateOne(name, city, state, neighborhoodDetails);
     res.status(200).json({
-      message: `Neighborhood ${util.formatWord(neighborhood.name)} was updated successfully.`,
+      message: `Neighborhood ${util.formatWord(neighborhood.name)}, ${util.formatWord(neighborhood.city)}, ${neighborhood.state.toUpperCase()} was updated successfully.`,
       neighborhood: util.constructNeighborhoodResponse(neighborhood)
     });
   }
@@ -196,7 +196,7 @@ router.delete(
 
     await NeighborhoodCollection.deleteOneByInfo(name, city, state);
     res.status(200).json({
-      message: `Neighborhood ${util.formatWord(name)} has been deleted successfully.`
+      message: `Neighborhood ${util.formatWord(name)}, ${util.formatWord(city)}, ${state.toUpperCase()} has been deleted successfully.`
     });
   }
 );
