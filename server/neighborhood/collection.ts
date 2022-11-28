@@ -45,6 +45,17 @@ class NeighborhoodCollection {
   }
 
   /**
+   * Find all neighborhoods within a given city and state
+   * 
+   * @param {string} city - The city of the neighborhoods' location
+   * @param {string} state - The state of the neighborhoods' location
+   * @returns {Promise<HydratedDocument<Neighborhood>[]>} - An array of the neighborhoods in a given city and state
+   */
+  static async findAllByLocation(city: string, state: string): Promise<Array<HydratedDocument<Neighborhood>>> {
+    return NeighborhoodModel.find({ city: city, state: state });
+  }
+
+  /**
    * Find all neighborhoods whose latitude and longitude coordinates are within lat1 < lat2 and long1 < long2
    * 
    * @param {number} lat1 - The lower latitude bound
@@ -56,16 +67,6 @@ class NeighborhoodCollection {
   static async findAllInBound(lat1: number, long1: number, lat2: number, long2: number): Promise<Array<HydratedDocument<Neighborhood>>> {
     const neighborhoods = await NeighborhoodModel.find({});
     return neighborhoods.filter(neighborhood => (lat1 < neighborhood.latitude && neighborhood.latitude < lat2) && (long1 < neighborhood.longitude && neighborhood.longitude < long2));
-  }
-
-  /**
-   * Find all neighborhoods within a given city
-   * 
-   * @param {string} city - The city of the neighborhoods' location
-   * @returns {Promise<HydratedDocument<Neighborhood>[]>} - An array of the neighborhoods in a given city
-   */
-  static async findAllByCity(city: string): Promise<Array<HydratedDocument<Neighborhood>>> {
-    return NeighborhoodModel.find({ city: city });
   }
 
   /**

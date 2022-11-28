@@ -45,12 +45,8 @@ const isBoundsValid = async (req: Request, res: Response, next: NextFunction) =>
         return;
     }
 
-    try {
-        Number(lat1);
-        Number(lat2);
-        Number(long1);
-        Number(long2);
-    } catch {
+    const coordinates = [lat1, lat2, long1, long2];
+    if (coordinates.some(coordinate => Number.isNaN(Number(coordinate)))) {
         res.status(400).json({
             error: "The input coordinates given are not numbers."
         });

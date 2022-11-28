@@ -126,6 +126,16 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if user is not logged in
 - `404` if `name`, `city`, `state` of a neighborhood is not a recognized neighborhood
 
+#### `GET /api/neighborhoods/location?city=city&state=state` 
+
+**Returns**
+- A success message
+- An array of neighborhoods in a city, state
+
+**Throws**
+
+- `403` if user is not logged in
+
 #### `GET /api/neighborhoods?lat1=lat1&long1=long1&lat2=lat2&long2=long`
 
 **Returns**

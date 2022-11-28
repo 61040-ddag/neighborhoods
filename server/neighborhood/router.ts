@@ -12,7 +12,7 @@ const router = express.Router();
  *
  * @name GET /api/neighborhoods?name=name&city=city&state=state
  *
- * @return {NeighborhoodResponse} - The neighborhodd with given name, city, and state
+ * @return {NeighborhoodResponse} - The neighborhood with given name, city, and state
  * @throws {403} - If the user is not logged in
  * @throws {404} - if name, city, state of a neighborhood is not a recognized neighborhood
  */
@@ -21,7 +21,6 @@ router.get(
   [
     userValidator.isUserLoggedIn,
     neighborhoodValidator.isNeighborhoodExists
-
   ],
   async (req: Request, res: Response) => {
     const name = req.query.name as string;
@@ -32,6 +31,32 @@ router.get(
     res.status(200).json({
       message: `Neighborhood ${util.formatWord(neighborhood.name)} was found.`,
       neighborhood: util.constructNeighborhoodResponse(neighborhood)
+    });
+  }
+);
+
+/**
+ * Get neighborhoods with given city, state
+ *
+ * @name GET /api/neighborhoods/location?city=city&state=state
+ *
+ * @return {NeighborhoodResponse} - The neighborhood with given name, city, and state
+ * @throws {403} - If the user is not logged in
+ */
+ router.get(
+  '/location',
+  [
+    userValidator.isUserLoggedIn
+  ],
+  async (req: Request, res: Response) => {
+    const city = req.query.city as string;
+    const state = req.query.state as string;
+
+    const neighborhoods = await NeighborhoodCollection.findAllByLocation(city, state);
+    const response = neighborhoods.map(util.constructNeighborhoodResponse);
+    res.status(200).json({
+      message: `Neighborhoods in ${util.formatWord(city)}, ${state.toUpperCase()} was found.`,
+      neighborhoods: response
     });
   }
 );
