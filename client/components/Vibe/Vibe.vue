@@ -1,14 +1,5 @@
 <script>
 
-const domain = 'meet.jit.si';
-const options = {
-    roomName: 'Neighborhood meeting',
-    width: 700,
-    height: 700,
-    parentNode: document.querySelector('#meet')
-};
-const api = new JitsiMeetExternalAPI(domain, options);
-
 export default {
   data() {
     return {
@@ -19,5 +10,38 @@ export default {
 </script>
 
 <template>
-  <h1>{{ message }}</h1>
+  <div class="customContainer container row col-md-8 mx-auto">
+    <h1 class="h1 text-center">Welcome to VibeCheck!</h1>
+    <button 
+    class="styledButton" 
+    onclick="
+    window.open('https://mit.zoom.us/s/91389409521','_blank');
+    ">
+    Launch Meeting
+  </button>
+  </div>
+  
 </template>
+
+<style>
+
+.customContainer {
+  margin-top: 5%;
+}
+
+.styledButton {
+  background: #0e72ed;
+  border-radius: 12px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 16px;
+  line-height: 32px;
+  margin-top: 40px;
+  padding: 8px 40px;
+  text-align: center;
+}
+
+</style>
