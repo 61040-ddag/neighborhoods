@@ -60,6 +60,7 @@ export default {
     },
     featurePopup(name, city, state, info) {
       const card = document.createElement("div");
+      card.setAttribute("id", "styled-div-parent");
       const p = document.createElement("p");
       p.innerHTML = name + ", " + city + ", " + state
       card.appendChild(p);
@@ -71,14 +72,31 @@ export default {
         ul.appendChild(li);
       }
       card.append(ul);
+
+      const newDiv = document.createElement("div");
+      newDiv.setAttribute("id", "styled-div");
+      card.append(newDiv);
+
       const button = document.createElement("button");
       button.onclick = this.callf;
       button.innerHTML = "View Neighborhood";
-      card.appendChild(button);
+      button.setAttribute("id", "neighborhood-button");
+      newDiv.appendChild(button);
+
+      const vibeButton = document.createElement("button");
+      vibeButton.onclick = this.showVibePage;
+      vibeButton.innerHTML = "Vibe Check";
+      vibeButton.setAttribute("id", "vibe-button")
+      newDiv.appendChild(vibeButton);
       return new mapboxgl.Popup({ offset: 25 }).setDOMContent(card);
     },
     callf() {
       // show neighborhood
+    },
+
+    // 
+    showVibePage() {
+
     }
   }
 
@@ -86,6 +104,32 @@ export default {
 </script>
 
 <style>
+
+#neighborhood-button {
+  display: inline-block;
+  margin: 5px;
+}
+
+#vibe-button {
+  display: inline-block;
+  margin: 5px;
+}
+
+#styled-div-parent {
+  height: 160px;
+}
+
+#styled-div {
+  height:150px;
+  line-height:5px;
+  display: inline-block;
+  position: absolute;
+  vertical-align: middle;
+}
+
+.stacked-div {
+  vertical-align: middle;
+}
 .map-container {
   position: relative;
   width: 100%;
