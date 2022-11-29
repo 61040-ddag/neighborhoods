@@ -8,6 +8,7 @@ import SignupPage from './components/Login/SignupPage.vue';
 import LoginPage from './components/Login/LoginPage.vue';
 import UploadStrollComponent from './components/Stroll/UploadStrollComponent.vue'
 import NotFound from './NotFound.vue';
+import Vibe from './components/Vibe/Vibe.vue'
 
 Vue.use(VueRouter);
 
@@ -18,6 +19,7 @@ const routes = [
     { path: '/login', name: 'Login', component: LoginPage },
     { path: '/signup', name: 'Signup', component: SignupPage },
     { path: '/map', name: 'Map', component: MapPage },
+    { path: '/vibe/:neighborhood', name: 'Vibe', component: Vibe }, // https://stackoverflow.com/a/40394184
     { path: '/stroll', name: 'Stroll', component: UploadStrollComponent },
     { path: '*', name: 'Not Found', component: NotFound }
 ];

@@ -100,7 +100,7 @@ export default {
 
     // 
     showVibePage() {
-
+      this.$router.replace({ name: "Vibe", params: {neighborhood:"123"} });
     }
   }
 
