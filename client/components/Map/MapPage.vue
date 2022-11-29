@@ -81,12 +81,16 @@ export default {
       button.onclick = this.callf;
       button.innerHTML = "View Neighborhood";
       button.setAttribute("id", "neighborhood-button");
+      button.classList.add('btn');
+      button.classList.add('btn-primary');
       newDiv.appendChild(button);
 
       const vibeButton = document.createElement("button");
       vibeButton.onclick = this.showVibePage;
       vibeButton.innerHTML = "Vibe Check";
       vibeButton.setAttribute("id", "vibe-button")
+      vibeButton.classList.add('btn');
+      vibeButton.classList.add('btn-primary');
       newDiv.appendChild(vibeButton);
       return new mapboxgl.Popup({ offset: 25 }).setDOMContent(card);
     },
@@ -108,15 +112,19 @@ export default {
 #neighborhood-button {
   display: inline-block;
   margin: 5px;
+  height: 35px;
+  font-size: 14px;
 }
 
 #vibe-button {
   display: inline-block;
   margin: 5px;
+  height: 35px;
+  font-size: 15px;
 }
 
 #styled-div-parent {
-  height: 160px;
+  height: 190px;
 }
 
 #styled-div {
