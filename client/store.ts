@@ -14,7 +14,9 @@ const store = new Vuex.Store({
     isAdmin: null, // Whether or not logged in user is admin account
     neighborhoodFilter: null, // Neighborhood, city, and/or state to filter shown neighborhoods
     neighborhoods: [], // All neighborhoods created in app
-    alerts: {} // global success/error messages encountered during submissions to non-visible forms
+    alerts: {}, // global success/error messages encountered during submissions to non-visible forms
+    neighborhood: null, // The neighborhood being viewed
+    strolls: [] // All the strolls
   },
   mutations: {
     alert(state, payload) {
@@ -47,6 +49,20 @@ const store = new Vuex.Store({
        */
       state.isAdmin = isAdmin;
     },
+    setStrolls(state, strolls) {
+      /**
+       * Update the stored strolls to the specified one
+       * @param strolls - new strolls to set
+       */
+      state.strolls = strolls;
+    },
+    setNeighborhood(state, neighborhood) {
+      /**
+       * Update the stored neighborhood to the specified one
+       * @param neighborhood - new neighborhood to set
+       */
+      state.neighborhood = neighborhood;
+    },
     updateNeighborhoodFilter(state, neighborhoodFilter) {
       /**
        * Update the stored neighborhoods filter to the specified one.
@@ -60,7 +76,8 @@ const store = new Vuex.Store({
        * @param neighborhood - Neighborhoods to store
        */
       state.neighborhoods = neighborhoods;
-    }
+    },
+
   },
   // Store data across page refreshes, only discard on browser close
   plugins: [createPersistedState()]

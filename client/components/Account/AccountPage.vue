@@ -24,6 +24,9 @@
       <DeleteAccountForm 
         button="Delete Account" 
       />
+      <CreateStrollForm
+        button="Create Stroll"
+      />
     </section>
   </main>
 </template>
@@ -33,6 +36,7 @@ import ChangeUsernameForm from '@/components/Account/ChangeUsernameForm.vue';
 import ChangePasswordForm from '@/components/Account/ChangePasswordForm.vue';
 import DeleteAccountForm from '@/components/Account/DeleteAccountForm.vue';
 import LogoutForm from '@/components/Account/LogoutForm.vue';
+import CreateStrollForm from '@/components/Stroll/CreateStrollForm.vue';
 
 export default {
   name: 'AccountPage',
@@ -40,7 +44,8 @@ export default {
     ChangeUsernameForm,
     ChangePasswordForm,
     DeleteAccountForm,
-    LogoutForm
+    LogoutForm,
+    CreateStrollForm
   }
 };
 </script>

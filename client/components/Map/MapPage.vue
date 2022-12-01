@@ -16,6 +16,7 @@ export default {
     return {
       map: null,
       markers: [],
+      alerts: {}
     };
   },
   methods: {
@@ -51,14 +52,15 @@ export default {
         }
       });
       // add markers
-      for (const nbhood of this.$store.state.neighborhoods) {
+      for (let i = 0; i< this.$store.state.neighborhoods.length; i++) {
+        const nbhood = this.$store.state.neighborhoods[i];
         const el = document.createElement("div");
         el.className = "marker";
-        const popup = this.featurePopup(nbhood.name, nbhood.city, nbhood.state, new Map([["Crime Rate", nbhood.crimeRate], ["Average Price", nbhood.averagePrice], ["Average Age", nbhood.averageAge]]));
+        const popup = this.featurePopup(i, nbhood.name, nbhood.city, nbhood.state, new Map([["Crime Rate", nbhood.crimeRate], ["Average Price", nbhood.averagePrice], ["Average Age", nbhood.averageAge]]));
         const marker = new mapboxgl.Marker(el).setLngLat([nbhood.longitude, nbhood.latitude]).setPopup(popup).addTo(this.map);
       }
     },
-    featurePopup(name, city, state, info) {
+    featurePopup(index, name, city, state, info) {
       const card = document.createElement("div");
       const p = document.createElement("p");
       p.innerHTML = name + ", " + city + ", " + state
@@ -72,13 +74,30 @@ export default {
       }
       card.append(ul);
       const button = document.createElement("button");
-      button.onclick = this.callf;
+      button.id = index;
+      button.addEventListener("click", this.callf);
       button.innerHTML = "View Neighborhood";
       card.appendChild(button);
       return new mapboxgl.Popup({ offset: 25 }).setDOMContent(card);
     },
-    callf() {
-      // show neighborhood
+    async callf(e) {
+      try{
+        const nbhood = this.$store.state.neighborhoods[e.target.id];
+        const url = `/api/strolls/${nbhood._id}`;
+        console.log(url);
+        const r = await fetch(url);
+        const res = await r.json();
+        if(r.ok){
+          console.log(res.strolls);
+          this.$store.commit('setStrolls', res.strolls);  
+          this.$router.push({ name: 'Stroll' });
+        }else{
+          throw new Error(res.error);
+        }
+      } catch (error) {
+        this.$set(this.alerts, error, 'error');
+        setTimeout(() => this.$delete(this.alerts, error), 3000);
+      }
     }
   }
 
