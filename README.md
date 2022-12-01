@@ -123,6 +123,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Throws**
 
+- `400` if `name`, `city` or `state` is not given
 - `403` if user is not logged in
 - `404` if `name`, `city`, `state` of a neighborhood is not a recognized neighborhood
 
@@ -134,6 +135,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Throws**
 
+- `400` if `city` or `state` is not given
 - `403` if user is not logged in
 
 #### `GET /api/neighborhoods?lat1=lat1&long1=long1&lat2=lat2&long2=long`
@@ -184,6 +186,7 @@ This renders the `index.html` file that will be used to interact with the backen
 - An object with the updated neighborhood
 
 **Throws**
+- `400` if `name`, `city` or `state` is not given
 - `400` if any updated neighborhood information is in the wrong format
 - `401` if user making the request is not the admin
 - `403` if user is not logged in
@@ -196,17 +199,64 @@ This renders the `index.html` file that will be used to interact with the backen
 - A success message
 
 **Throws**
+- `400` if `name`, `city` or `state` is not given
 - `401` if user making the request is not the admin
 - `403` if user is not logged in
 - `404` if `name`, `city`, `state` of a neighborhood is not a recognized neighborhood
 
-#### `GET /api/reviews?neighborhood=neighborhood`
+#### `GET /api/reviews/neighborhoods?name=name&city=city&state=state`
 
-#### `GET /api/reviews?author=username`
+**Returns**
+
+- An array of reviews of a neighborhood with `name`, `city`, `state`
+
+**Throws**
+
+- `400` if `name`, `city` or `state` is not given
+- `403` if the user is not logged in
+- `404` if `name`, `city`, `state` of a neighborhood is not a recognized neighborhood
+
+#### `GET /api/reviews/authors?author=username`
+
+**Returns**
+
+- An array of reviews created by user with username `author`
+
+**Throws**
+
+- `400` if `author` is not given
+- `403` if the user is not logged in
+- `404` if `author` is not a recognized username of any user
 
 #### `POST /api/reviews`
 
+**Body**
+
+- `locationId` _{string}_ - The id of the location of the review
+- `content` _{string}_ - The content of the review
+
+**Returns**
+
+- A success message
+- A object with the created review
+
+**Throws**
+
+- `400` if the review `content` is empty or a stream of empty spaces
+- `403` if the user is not logged in
+- `413` If the review `content` is more than 4096 characters long
+
 #### `DELETE /api/reviews/:reviewId?`
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `403` if the user is not the author of the review
+- `404` if the `reviewId` is invalid
 
 #### `POST /api/certifiedResidency`
 

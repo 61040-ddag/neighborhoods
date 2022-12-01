@@ -114,7 +114,7 @@ export default {
             message: res.message, status: 'success'
           });
         } else {
-          throw new Error('Location does not exist yet!')
+          throw new Error('Location does not exist yet. Check again later!')
         }
       } catch (e) {
         this.$set(this.alerts, e, 'error');
