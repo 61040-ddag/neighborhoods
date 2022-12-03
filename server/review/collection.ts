@@ -9,15 +9,17 @@ class ReviewCollection {
      *
      * @param {string} authorId - The id of the author of the review
      * @param {string} locationId - The id of location of the review
+     * @param {number} rating - The rating of the review
      * @param {string} content - The content of the review
      * @return {Promise<HydratedDocument<Review>>} - The newly created review
      */
-    static async addOne(authorId: Types.ObjectId | string, locationId: Types.ObjectId | string, content: string): Promise<HydratedDocument<Review>> {
+    static async addOne(authorId: Types.ObjectId | string, locationId: Types.ObjectId | string, rating: number, content: string): Promise<HydratedDocument<Review>> {
         const date = new Date();
         const review = new ReviewModel({
             authorId,
             dateCreated: date,
             locationId,
+            rating,
             content
         });
         await review.save();

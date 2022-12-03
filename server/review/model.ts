@@ -8,6 +8,7 @@ export type Review = {
     authorId: Types.ObjectId;
     dateCreated: Date;
     locationId: Types.ObjectId;
+    rating: number;
     content: string;
 };
 
@@ -16,6 +17,7 @@ export type PopulatedReview = {
     authorId: User;
     dateCreated: Date;
     locationId: Neighborhood;
+    rating: number;
     content: string;
 };
 
@@ -33,6 +35,10 @@ const ReviewSchema = new Schema<Review>({
         type: Schema.Types.ObjectId,
         required: true,
         ref: 'Neighborhood'
+    },
+    rating: {
+        type: Number,
+        required: true
     },
     content: {
         type: String,

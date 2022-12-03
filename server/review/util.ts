@@ -13,6 +13,7 @@ type ReviewResponse = {
     author: string;
     dateCreated: string;
     location: location;
+    rating: number;
     content: string;
 }
 

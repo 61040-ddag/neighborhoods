@@ -69,6 +69,7 @@ router.get(
  * @name POST /api/reviews
  *
  * @param {string} locationId - The id of the location of the review
+ * @param {number} rating - The rating of the review
  * @param {string} content - The content of the review
  * @return {ReviewResponse} - The created review
  * @throws {400} - If the review content is empty or a stream of empty spaces
@@ -83,7 +84,7 @@ router.post(
     ],
     async (req: Request, res: Response) => {
         const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-        const review = await ReviewCollection.addOne(userId, req.body.locationId, req.body.content);
+        const review = await ReviewCollection.addOne(userId, req.body.locationId, req.body.rating, req.body.content);
 
         res.status(201).json({
             message: 'Your review was created successfully.',

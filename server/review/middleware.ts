@@ -24,6 +24,8 @@ const isReviewExists = async (req: Request, res: Response, next: NextFunction) =
  */
 const isValidReviewContent = (req: Request, res: Response, next: NextFunction) => {
     const { content } = req.body as { content: string };
+    const rating = req.body.rating;
+
     if (!content.trim()) {
         res.status(400).json({
             error: 'Review content must be at least one character long.'
@@ -34,6 +36,20 @@ const isValidReviewContent = (req: Request, res: Response, next: NextFunction) =
     if (content.length > 4096) {
         res.status(413).json({
             error: 'Review content must be no more than 4096 characters.'
+        });
+        return;
+    }
+
+    if (Number.isNaN(Number(rating))) {
+        res.status(400).json({
+            error: "Review rating is not a number."
+        });
+        return;
+    }
+
+    if (rating < 0 || rating > 10) {
+        res.status(400).json({
+            error: "Review rating must be between 0 and 10."
         });
         return;
     }

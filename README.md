@@ -233,6 +233,7 @@ This renders the `index.html` file that will be used to interact with the backen
 **Body**
 
 - `locationId` _{string}_ - The id of the location of the review
+- `rating` _{string}_ - The rating of the review
 - `content` _{string}_ - The content of the review
 
 **Returns**
@@ -243,6 +244,7 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 
 - `400` if the review `content` is empty or a stream of empty spaces
+- `400` if the review `rating` is not a number or between 0 and 10
 - `403` if the user is not logged in
 - `413` If the review `content` is more than 4096 characters long
 
