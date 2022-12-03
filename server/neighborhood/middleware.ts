@@ -6,7 +6,7 @@ const isNeighborhoodAlreadyExists = async (req: Request, res: Response, next: Ne
     const name = req.body.name as string;
     const city = req.body.city as string;
     const state = req.body.state as string;
-    
+
     const neighborhood = await NeighborhoodCollection.findOneByInfo(name, city, state);
     if (neighborhood) {
         res.status(409).json({
@@ -21,7 +21,7 @@ const isNeighborhoodExists = async (req: Request, res: Response, next: NextFunct
     const name = req.query.name as string;
     const city = req.query.city as string;
     const state = req.query.state as string;
-    
+
     const neighborhood = await NeighborhoodCollection.findOneByInfo(name, city, state);
     if (!neighborhood) {
         res.status(404).json({
@@ -87,7 +87,7 @@ const isCreateInfoValid = async (req: Request, res: Response, next: NextFunction
         });
         return;
     }
-    
+
     if (!(latitude && longitude && crimeRate && averageAge && averagePrice)) {
         res.status(400).json({
             error: "Missing residential data."
@@ -128,7 +128,6 @@ const isUpdatedInfoValid = async (req: Request, res: Response, next: NextFunctio
 
     next();
 };
-
 
 export {
     isCreateInfoValid,
