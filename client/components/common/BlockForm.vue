@@ -5,7 +5,7 @@
     <h3>{{ title }}</h3>
     <article v-if="fields.length">
       <div 
-        v-for="field in fields" 
+        v-for="field in filteredFields" 
         :key="field.id"
       >
         <label :for="field.id">{{ field.label }}:</label>
@@ -80,11 +80,17 @@ export default {
       hasBody: false, // Whether or not form request has a body
       hasQueryParams: false, // Whether or not form request has query parameters
       setUsername: false, // Whether or not stored username should be updated after form submission
+      refreshReviews: false, // Whether or not stored reviews should be updated after form submission
       alerts: {}, // Displays success/error messages encountered during form submission
       callback: null, // Function to run after successful form submission
       isVideoUpload: false,
       fileContent: null,
     };
+  },
+  computed: {
+    filteredFields() {
+      return this.fields.filter(field => field.id !== 'locationId');
+    }
   },
   methods: {
     commitFile(e){
@@ -176,6 +182,10 @@ export default {
           this.$store.commit('setUsername', res.user ? res.user.username : null);
           this.$store.commit('setDateJoined', res.user ? res.user.dateJoined : null);
           this.$store.commit('setIsAdmin', res.user ? res.user.isAdmin : null);
+        }
+
+        if (this.refreshReviews) {
+          this.$store.commit('refreshReviews');
         }
 
         if (this.callback) {

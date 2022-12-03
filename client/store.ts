@@ -14,9 +14,10 @@ const store = new Vuex.Store({
     isAdmin: null, // Whether or not logged in user is admin account
     neighborhoodFilter: null, // Neighborhood, city, and/or state to filter shown neighborhoods
     neighborhoods: [], // All neighborhoods created in app
-    alerts: {}, // global success/error messages encountered during submissions to non-visible forms
     neighborhood: null, // The neighborhood being viewed
-    strolls: [] // All the strolls
+    reviews: [], // All reviews for the neighborhood being viewed
+    strolls: [], // All the strolls
+    alerts: {} // global success/error messages encountered during submissions to non-visible forms
   },
   mutations: {
     alert(state, payload) {
@@ -49,13 +50,6 @@ const store = new Vuex.Store({
        */
       state.isAdmin = isAdmin;
     },
-    setStrolls(state, strolls) {
-      /**
-       * Update the stored strolls to the specified one
-       * @param strolls - new strolls to set
-       */
-      state.strolls = strolls;
-    },
     setNeighborhood(state, neighborhood) {
       /**
        * Update the stored neighborhood to the specified one
@@ -77,7 +71,35 @@ const store = new Vuex.Store({
        */
       state.neighborhoods = neighborhoods;
     },
+    updateReviews(state, reviews) {
+      /**
+       * Update the stored reviews to the provided reviews.
+       * @param reviews - Reviews to store
+       */
+      state.reviews = reviews;
+    },
+    async refreshReviews(state) {
+      /**
+       * Request the server for the currently available reviews.
+       */
+      const formatBackend = (word) => {
+        return word.trim().replace(' ', '_').toLowerCase();
+      };
+      const name = formatBackend(state.neighborhood.name);
+      const city = formatBackend(state.neighborhood.city);
+      const neighborhoodState = formatBackend(state.neighborhood.state);
 
+      const url = `/api/reviews/neighborhoods?name=${name}&city=${city}&state=${neighborhoodState}`;
+      const res = await fetch(url).then(async r => r.json());
+      state.reviews = res;
+    },
+    setStrolls(state, strolls) {
+      /**
+       * Update the stored strolls to the specified one
+       * @param strolls - new strolls to set
+       */
+      state.strolls = strolls;
+    },
   },
   // Store data across page refreshes, only discard on browser close
   plugins: [createPersistedState()]

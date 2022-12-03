@@ -17,13 +17,12 @@ export default {
       map: null,
       markers: [],
       alerts: {}
-    };
   },
   methods: {
     initMap() {
       let centerLat = 0;
       let centerLong = 0;
-      
+
       const numOfNbhoods = this.$store.state.neighborhoods.length;
       for (const nbhood of this.$store.state.neighborhoods) {
         centerLat += nbhood.latitude;
@@ -52,7 +51,8 @@ export default {
         }
       });
       // add markers
-      for (let i = 0; i< this.$store.state.neighborhoods.length; i++) {
+
+      for (let i = 0; i < this.$store.state.neighborhoods.length; i++) {
         const nbhood = this.$store.state.neighborhoods[i];
         const el = document.createElement("div");
         el.className = "marker";
@@ -62,42 +62,58 @@ export default {
     },
     featurePopup(index, name, city, state, info) {
       const card = document.createElement("div");
+      card.setAttribute("id", "styled-div-parent");
       const p = document.createElement("p");
       p.innerHTML = name + ", " + city + ", " + state
       card.appendChild(p);
       const ul = document.createElement("ul");
       for (const [key, value] of info) {
-        console.log(key, value);
         const li = document.createElement("li");
         li.innerHTML = key + ": " + value;
         ul.appendChild(li);
       }
       card.append(ul);
+
+      const newDiv = document.createElement("div");
+      newDiv.setAttribute("id", "styled-div");
+      card.append(newDiv);
+
       const button = document.createElement("button");
-      button.id = index;
-      button.addEventListener("click", this.callf);
+
+      button.index = index;
+      button.addEventListener('click', this.viewNeighborhood);
       button.innerHTML = "View Neighborhood";
-      card.appendChild(button);
+      button.setAttribute("id", "neighborhood-button");
+      button.classList.add('btn');
+      button.classList.add('btn-primary');
+      newDiv.appendChild(button);
+
       return new mapboxgl.Popup({ offset: 25 }).setDOMContent(card);
     },
-    async callf(e) {
-      try{
-        const nbhood = this.$store.state.neighborhoods[e.target.id];
-        const url = `/api/strolls/${nbhood._id}`;
-        console.log(url);
-        const r = await fetch(url);
-        const res = await r.json();
-        if(r.ok){
-          console.log(res.strolls);
-          this.$store.commit('setStrolls', res.strolls);  
-          this.$router.push({ name: 'Stroll' });
-        }else{
-          throw new Error(res.error);
-        }
-      } catch (error) {
-        this.$set(this.alerts, error, 'error');
-        setTimeout(() => this.$delete(this.alerts, error), 3000);
-      }
+    // async callf(e) {
+    //   try{
+    //     const nbhood = this.$store.state.neighborhoods[e.target.id];
+    //     const url = `/api/strolls/${nbhood._id}`;
+    //     console.log(url);
+    //     const r = await fetch(url);
+    //     const res = await r.json();
+    //     if(r.ok){
+    //       console.log(res.strolls);
+    //       this.$store.commit('setStrolls', res.strolls);  
+    //       this.$router.push({ name: 'Stroll' });
+    //     }else{
+    //       throw new Error(res.error);
+    //     }
+    //   } catch (error) {
+    //     this.$set(this.alerts, error, 'error');
+    //     setTimeout(() => this.$delete(this.alerts, error), 3000);
+    //   }
+
+    viewNeighborhood(e) {
+      const neighborhood = this.$store.state.neighborhoods[e.target.index];
+      this.$store.commit('setNeighborhood', neighborhood);  
+
+      this.$router.push({ name: 'Neighborhood' });
     }
   }
 

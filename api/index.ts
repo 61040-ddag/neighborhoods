@@ -12,6 +12,7 @@ import * as userValidator from '../server/user/middleware';
 import { userRouter } from '../server/user/router';
 import { neighborhoodRouter } from '../server/neighborhood/router';
 import { strollRouter } from '../server/stroll/router';
+import { reviewRouter } from '../server/review/router';
 import MongoStore from 'connect-mongo';
 
 // Load environmental variables
@@ -76,7 +77,7 @@ app.use(userValidator.isCurrentSessionUserExists);
 app.use('/api/users', userRouter);
 app.use('/api/neighborhoods', neighborhoodRouter);
 app.use('/api/strolls', strollRouter);
-
+app.use('/api/reviews', reviewRouter);
 // Catch all the other routes and display error message
 app.all('*', (req: Request, res: Response) => {
     res.status(404).json({
