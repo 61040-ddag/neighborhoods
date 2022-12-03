@@ -19,6 +19,9 @@
                     <b-tab title="Review" active>
                         <ReviewPage />
                     </b-tab>
+                    <b-tab title="Scroll" active>
+                        <ViewStrollPage />
+                    </b-tab>
                 </b-tabs>
             </b-card>
         </div>
@@ -26,7 +29,8 @@
 </template>
 
 <script>
-import ReviewPage from '@/components/Review/ReviewPage.vue'
+import ReviewPage from '@/components/Review/ReviewPage.vue';
+import ViewStrollPage from '@/components/Stroll/ViewStrollPage.vue';
 
 export default {
     name: 'NeighborhoodPage',

@@ -17,6 +17,7 @@ export default {
       map: null,
       markers: [],
       alerts: {}
+    };
   },
   methods: {
     initMap() {
