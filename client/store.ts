@@ -14,6 +14,8 @@ const store = new Vuex.Store({
     isAdmin: null, // Whether or not logged in user is admin account
     neighborhoodFilter: null, // Neighborhood, city, and/or state to filter shown neighborhoods
     neighborhoods: [], // All neighborhoods created in app
+    neighborhood: null, // The neighborhood being viewed
+    reviews: [], // All reviews for the neighborhood being viewed
     alerts: {} // global success/error messages encountered during submissions to non-visible forms
   },
   mutations: {
@@ -47,6 +49,13 @@ const store = new Vuex.Store({
        */
       state.isAdmin = isAdmin;
     },
+    setNeighborhood(state, neighborhood) {
+      /**
+       * Update the stored neighborhood to the specified one.
+       * @param neighborhood - new neighborhood to set
+       */
+      state.neighborhood = neighborhood;
+    },
     updateNeighborhoodFilter(state, neighborhoodFilter) {
       /**
        * Update the stored neighborhoods filter to the specified one.
@@ -60,7 +69,29 @@ const store = new Vuex.Store({
        * @param neighborhood - Neighborhoods to store
        */
       state.neighborhoods = neighborhoods;
-    }
+    },
+    updateReviews(state, reviews) {
+      /**
+       * Update the stored reviews to the provided reviews.
+       * @param reviews - Reviews to store
+       */
+      state.reviews = reviews;
+    },
+    async refreshReviews(state) {
+      /**
+       * Request the server for the currently available reviews.
+       */
+      const formatBackend = (word) => {
+        return word.trim().replace(' ', '_').toLowerCase();
+      };
+      const name = formatBackend(state.neighborhood.name);
+      const city = formatBackend(state.neighborhood.city);
+      const neighborhoodState = formatBackend(state.neighborhood.state);
+
+      const url = `/api/reviews/neighborhoods?name=${name}&city=${city}&state=${neighborhoodState}`;
+      const res = await fetch(url).then(async r => r.json());
+      state.reviews = res;
+    },
   },
   // Store data across page refreshes, only discard on browser close
   plugins: [createPersistedState()]

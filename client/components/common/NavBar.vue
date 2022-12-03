@@ -100,7 +100,6 @@ button {
   background-color: white;
   padding: 0px 10px;
   border-radius: 20px;
-  height: 2.5em;
   border: 2px solid grey;
 }
 button:hover {
