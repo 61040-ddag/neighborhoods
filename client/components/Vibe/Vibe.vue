@@ -6,9 +6,8 @@ export default {
   components: { DatePicker },
   data() {
     return {
-      time1: null,
-      time2: null,
-      time3: null,
+      inputtedTime: null,
+      availabilities: []
     }
   },
   mounted() {
@@ -22,19 +21,18 @@ export default {
         if (!r.ok) {
           throw new Error(response.error);
         }
+        this.availabilities = response.Vibes;
       } catch (e) {
         this.$set(this.alerts, e, "error");
         setTime(() => this.$delete(this.alerts, e), 3000);
       }
-      console.log(response);
-
     },
     async addAvailability() {
       const options = {
         method: 'POST',
         body: JSON.stringify({
-          username: "",
-          date: ""
+          username: `${this.$store.state.username}`,
+          date: `${this.inputtedTime}`
         }),
         headers: { 'Content-Type': 'application/json' }
       };
@@ -52,10 +50,12 @@ export default {
 <template>
   <div class="customContainer container row col-md-8 mx-auto">
     <h1 class="h1 text-center">Welcome to VibeCheck!</h1>
-    <DatePicker v-model="date" />
+    <DatePicker v-model="inputtedTime" type="datetime"/>
+    <h1 v-if="(inputtedTime !== null)">{{ inputtedTime }}</h1>
+    <h2 v-for="avail in availabilities">{{ avail.time }}</h2>
     <button 
     class="styledButton" 
-    @click="getAvailability">
+    @click="addAvailability">
     Add availability
     </button>
   </div>

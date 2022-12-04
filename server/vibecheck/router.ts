@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import express from 'express';
-import VibeCollection from './collection';
+import { VibeCollection, AvailabilityCollection } from './collection';
 import * as userValidator from '../user/middleware';
 import * as VibeValidator from './middleware';
 import * as neighborhoodValidator from '../neighborhood/middleware';
@@ -27,7 +27,6 @@ const router = express.Router();
     '/',
     [
       userValidator.isUserLoggedIn,
-      neighborhoodValidator.isNeighborhoodExists,
       VibeValidator.areInfoValid,
     ],
     async (req: Request, res: Response) => {
@@ -66,16 +65,13 @@ const router = express.Router();
     '/addAvailability',
     [
       userValidator.isUserLoggedIn,
-      neighborhoodValidator.isNeighborhoodExists,
       VibeValidator.isAvailabilityInfoValid,
     ],
     async (req: Request, res: Response) => {
         const username = req.body.username as string;
         const date = req.body.date as string;
-        
-        const dateObj = new Date(date);
-        const userObj = await UserCollection.findOneByUsername(username);
-        const Availability = await VibeCollection.addAvailability(userObj.id, dateObj);
+
+        const Availability = await AvailabilityCollection.addAvailability(username, date);
         res.status(201).json({
             message: `Availability was created successfully`,
             user: util.constructAvailabilityResponse(Availability)
@@ -102,7 +98,6 @@ const router = express.Router();
     '/deleteAvailability',
     [
       userValidator.isUserLoggedIn,
-      neighborhoodValidator.isNeighborhoodExists,
       VibeValidator.isAvailabilityInfoValid,
     ],
     async (req: Request, res: Response) => {
@@ -111,7 +106,7 @@ const router = express.Router();
         
         const dateObj = new Date(date);
         const userObj = await UserCollection.findOneByUsername(username);
-        await VibeCollection.deleteAvailabilty(userObj.id, dateObj);
+        await AvailabilityCollection.deleteAvailabilty(userObj.id, dateObj);
         res.status(200).json({
             message: `Availability was deleted successfully`,
         });
@@ -148,7 +143,7 @@ const router = express.Router();
  *
  * @name GET /api/vibe/getAvailability?user=user
  *
- * @return {VibeResponse} - All the Vibes of the signed in user
+ * @return {AvailabilityResponse} - All the Vibes of the signed in user
  * @throws {403} - If the user is not logged in
  */
  router.get(
@@ -157,42 +152,16 @@ const router = express.Router();
       userValidator.isUserLoggedIn,
     ],
     async (req: Request, res: Response) => {
-        const Vibes = await VibeCollection.findAllByUserId(req.session.userId);
-        const response = Vibes.map(util.constructVibeResponse);
+        const userId = req.session.userId;
+        const userObj = await UserCollection.findOneByUserId(userId);
+        const username = userObj.username;
+        const availabilities = await AvailabilityCollection.findAllByUsername(username);
+        const response = availabilities.map(util.constructAvailabilityResponse);
         res.status(200).json({
-            message: `Vibes were found`,
+            message: `Availabilities were found`,
             Vibes: response
         });
     }
   );
-
-// /**
-//  * Get neighborhoods with given city, state
-//  *
-//  * @name GET /api/neighborhoods/location?city=city&state=state
-//  *
-//  * @return {NeighborhoodResponse} - The neighborhood with given name, city, and state
-//  * @throws {403} - If the user is not logged in
-//  */
-//  router.get(
-//     '/location',
-//     [
-//       userValidator.isUserLoggedIn
-//     ],
-//     async (req: Request, res: Response) => {
-//       const city = req.query.city as string;
-//       const state = req.query.state as string;
-  
-//       const neighborhoods = await NeighborhoodCollection.findAllByLocation(city, state);
-//       const response = neighborhoods.map(util.constructNeighborhoodResponse);
-//       res.status(200).json({
-//         message: `Neighborhoods in ${util.formatWord(city)}, ${state.toUpperCase()} was found.`,
-//         neighborhoods: response
-//       });
-//     }
-//   );
-  
-
-
 
 export { router as vibeRouter };

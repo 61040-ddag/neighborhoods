@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import VibeCollection from './collection';
+import { VibeCollection } from './collection';
 
 const areInfoValid = async (req: Request, res: Response, next: NextFunction) => {
     const username = req.body.username;
@@ -26,7 +26,7 @@ const isAvailabilityInfoValid = async (req: Request, res: Response, next: NextFu
         });
         return;
     }
-    return;
+    next();
 }
 
 const isVibeExists = async (req: Request, res: Response, next: NextFunction) => {

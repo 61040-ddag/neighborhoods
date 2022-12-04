@@ -56,7 +56,7 @@ type AvailabilityResponse = {
  * Transform a raw Availability object from the database into an object
  * with all the information needed by the frontend
  *
- * @param {HydratedDocument<Vibe>} Vibe - A Vibe object
+ * @param {HydratedDocument<Availability>} Vibe - A Vibe object
  * @returns {VibeResponse} - The Vibe object to the frontend
  */
  const constructAvailabilityResponse = (availability: HydratedDocument<Availability>): AvailabilityResponse => {
@@ -66,11 +66,10 @@ type AvailabilityResponse = {
       })
     };
     
-    delete availabilityCopy.userId;
     return {
       ...availabilityCopy,
       _id: availabilityCopy._id.toString(),
-      userId: availabilityCopy.userId,
+      userId: availabilityCopy.username,
       time: formatDate(availabilityCopy.time),
     };
   };
