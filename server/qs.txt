@@ -1,9 +1,0 @@
-questions for annie:
-
-1. what classifies as design review?
-
-2. adding text above marker in mapbox?
-
-3. checking appropriate format of video?
-
-4. order to upload video and store in server

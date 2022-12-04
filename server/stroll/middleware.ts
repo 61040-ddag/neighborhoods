@@ -1,28 +1,28 @@
 import type { Request, Response, NextFunction } from 'express';
+import { Types } from 'mongoose';
 import StrollCollection from './collection';
 
 const areInfoValid = async (req: Request, res: Response, next: NextFunction) => {
     const strollVideo = req.body.strollVideo;
     const title = req.body.title;
 
-    if (!title || !strollVideo){
+    if (!title || !strollVideo) {
         res.status(400).json({
-            error: "title or strollVideo not given"
+            error: "Missing title or stroll video."
         });
         return;
     }
-
-    // check if filename exists in firebase
 
     next();
 }
 
 const isStrollExists = async (req: Request, res: Response, next: NextFunction) => {
+    const validFormat = Types.ObjectId.isValid(req.params.scrollId);
     const strollId = req.params.strollId;
-    const stroll = StrollCollection.findOneById(strollId);
-    if(stroll){
+    const stroll = validFormat ? StrollCollection.findOneById(strollId) : '';
+    if (!stroll) {
         res.status(404).json({
-            error: "There does not exist a stroll with this id"
+            error: `Stroll with stroll ID ${req.params.strollId} does not exist.`
         });
         return;
     }
@@ -30,6 +30,6 @@ const isStrollExists = async (req: Request, res: Response, next: NextFunction) =
 }
 
 export {
-  areInfoValid,
-  isStrollExists
+    areInfoValid,
+    isStrollExists
 };
