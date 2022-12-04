@@ -14,7 +14,7 @@ export default {
         { id: 'city', type: 'body', label: 'City', value: '' },
         { id: 'state', type: 'body', label: 'State', value: '' }
       ],
-      title: 'Add Certified Residency',
+      title: 'Delete Certified Residency',
       callback: () => {
         const message = 'Successfully added Certified Residency!';
         this.$set(this.alerts, message, 'success');

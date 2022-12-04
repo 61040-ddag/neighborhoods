@@ -23,7 +23,7 @@ router.post(
     
     [
         userValidator.isUserLoggedIn,
-        neighborhoodValidator.isCreateInfoValid
+        neighborhoodValidator.isNeighborhoodExists
     ],
     
     async (req: Request, res: Response) => {
