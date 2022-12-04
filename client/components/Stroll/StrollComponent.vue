@@ -1,141 +1,148 @@
-<!-- Reusable component representing a single freet and its actions -->
-<!-- We've tagged some elements with classes; consider writing CSS using those classes to style them... -->
-  <template>
-    <article
-      class="freet"
-    >
-      <header>
-        <div class="author">
+<template>
+  <article class="stroll">
+    <header>
+      <div class="author">
         <h3>
-          {{ stroll.author }}
+          @{{ stroll.author }}
         </h3>
-        </div>
-      </header>
-      <div class="content">
-        <h3> {{stroll.title}}</h3>
-        <video ref="videoRef" :src="stroll.strollVideo" id="video-container" width="100%" controls></video>
+      </div>
+    </header>
+    <div class="title">
+      <h3> {{ stroll.title }}</h3>
+      <video 
+        ref="videoRef" 
+        :src="stroll.strollVideo" 
+        id="video-container" 
+        width="100%" controls>
+      </video>
     </div>
-      <p class="info">
-        Posted at {{ stroll.dateUploaded }}
-      </p>
-      <section class="alerts">
-        <article
-          v-for="(status, alert, index) in alerts"
-          :key="index"
-          :class="status"
-        >
-          <p>{{ alert }}</p>
-        </article>
-      </section>
-    </article>
-  </template>
+    <p class="info">
+      Posted at {{ stroll.dateUploaded }}
+    </p>
+    <section>
+      <div
+        v-if="$store.state.username === stroll.author"
+        class="actions"
+      >
+        <button @click="deleteStroll">
+          🗑️ Delete
+        </button>
+      </div>
+    </section>
+    <section class="alerts">
+      <article v-for="(status, alert, index) in alerts" :key="index" :class="status">
+        <p>{{ alert }}</p>
+      </article>
+    </section>
+  </article>
+</template>
   
-  <script>
-  export default {
-    name: 'StrollComponent',
-    props: {
-      // Data from the stored freet
-      stroll: {
-        type: Object,
-        required: true,
-      },
-      
-    },
-    
-    data() {
-      return {
-        alerts: {} // Displays success/error messages encountered during freet modification
-      };
-    },
-    methods: {
-      async X(){
-        const url = `/api/X`;
-        const fields = new Object();
-        fields.freetId = this.freet._id;
-        const options = {
-            method: "POST",
-            headers: {'Content-Type': 'application/json'},
-            credentials: 'same-origin',
-            body: JSON.stringify(fields),
-        };
-  
-        const r = await fetch(url, options);
-        const res = await r.json();
-        if(r.ok) {
-          this.isXed = true;
-        }
-      },
-      async deleteFreet() {
-        const url = `/api/freets/${this.freet._id}`;
-          try{
-              const r = await fetch(url,{method: 'DELETE'});
-              const res = await r.json();
-              if(!r.ok) {
-                  console.log(res.error);
-                  throw new Error(res.error);
-                  this.alerts = res.error;
-              }
-              this.isdeleted = true;
-          } catch (e) {
-              console.log(e);
-              console.log(e.message);
-              console.log(typeof e.message);
-              this.alerts = e.message;
-              console.log(this.alerts);
-              setTimeout(() => this.alerts = '', 3000);   
-          }
-      }
+<script>
+export default {
+  name: 'StrollComponent',
+  props: {
+    // Data from the stored stroll
+    stroll: {
+      type: Object,
+      required: true,
     }
-  };
-  </script>
+  },
+  data() {
+    return {
+      alerts: {} // Displays success/error messages encountered during stroll modification
+    };
+  },
+  methods: {
+    deleteStroll() {
+        /**
+         * Deletes this stroll.
+         */
+        const params = {
+          method: 'DELETE',
+          callback: () => {
+            this.$store.commit('alert', {
+              message: 'Successfully deleted stroll!', status: 'success'
+            });
+          }
+        };
+        this.request(params);
+      },
+      async request(params) {
+        /**
+         * Submits a request to the stroll's endpoint
+         * @param params - Options for the request
+         * @param params.body - Body for the request, if it exists
+         * @param params.callback - Function to run if the the request succeeds
+         */
+        const options = {
+          method: params.method, headers: {'Content-Type': 'application/json'}
+        };
+        if (params.body) {
+          options.body = params.body;
+        }
   
-  <style scoped>
-  .author{
-    padding-left: 10px;
-    padding-right: 10px;
-    border-bottom: 0.5px solid grey;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .X-container {
-    border: 0.5px solid grey;
-    border-bottom: none;
-    display: flex;
-    justify-content: flex-end;
-  }
-  .X {
-    text-align: center;
-    width: 2.5%;
-  }
-  .freet {
-      border: 0.5px solid grey;
-      padding-top: none;
-      position: relative;
-      margin: auto;
-      margin-bottom: 20px;
-      width: 66%;
-      height: 600px;
-      /* margin-left: 50%; */
-      /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+        try {
+          const r = await fetch(`/api/strolls/${this.stroll._id}`, options);
+          if (!r.ok) {
+            const res = await r.json();
+            throw new Error(res.error);
+          }
   
+          this.$store.commit('refreshStroll');
+  
+          params.callback();
+        } catch (e) {
+          this.$set(this.alerts, e, 'error');
+          setTimeout(() => this.$delete(this.alerts, e), 3000);
+        }
+      }
   }
+};
+</script>
+  
+<style scoped>
+.author {
+  padding-left: 10px;
+  padding-right: 10px;
+  border-bottom: solid 1px lightgray;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
-  video{
-    height: 400px;
+.stroll {
+  margin: auto;
+  width: 66%;
+  border: solid 1px lightgray;
+  border-style: solid;
+  border-radius: 15px;
+  margin-bottom: 1em;
+  padding: 1em;
+  position: relative;
+}
+
+.title {
+  text-align: center;
+}
+
+.actions button {
+    background-color: white;
+    color: black;
+    position: relative;
+    border:solid 1px lightgray;
+    padding: 0px 10px;
+    border-radius: 14px;
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+    font-family: inherit;
+    font-size: medium;
+    font-weight: bold;
+    height: 2em;
   }
   
-  .content {
-    text-align: center;
+  .actions button:hover {
+    background-color: lightgray;
+    color: black;
   }
-  
-  img {
-    width:100%;
-    height: 100%;
-  }
-  
-  .deleteButton{
-    height: 50%;
-  }
-  </style>
+</style>
   

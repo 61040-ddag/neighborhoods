@@ -91,28 +91,9 @@ export default {
 
       return new mapboxgl.Popup({ offset: 25 }).setDOMContent(card);
     },
-    // async callf(e) {
-    //   try{
-    //     const nbhood = this.$store.state.neighborhoods[e.target.id];
-    //     const url = `/api/strolls/${nbhood._id}`;
-    //     console.log(url);
-    //     const r = await fetch(url);
-    //     const res = await r.json();
-    //     if(r.ok){
-    //       console.log(res.strolls);
-    //       this.$store.commit('setStrolls', res.strolls);  
-    //       this.$router.push({ name: 'Stroll' });
-    //     }else{
-    //       throw new Error(res.error);
-    //     }
-    //   } catch (error) {
-    //     this.$set(this.alerts, error, 'error');
-    //     setTimeout(() => this.$delete(this.alerts, error), 3000);
-    //   }
-
     viewNeighborhood(e) {
       const neighborhood = this.$store.state.neighborhoods[e.target.index];
-      this.$store.commit('setNeighborhood', neighborhood);  
+      this.$store.commit('setNeighborhood', neighborhood);
 
       this.$router.push({ name: 'Neighborhood' });
     }

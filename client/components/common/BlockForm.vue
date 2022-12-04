@@ -23,8 +23,8 @@
         >
       </div>
       <div v-if="isVideoUpload">
-      <label> Add stroll: </label>
-      <input  type="file" id="file" name="file" accept="video/*" @change="commitFile"/>
+        <label> Add stroll: </label>
+        <input  type="file" id="file" name="file" accept="video/*" @change="commitFile"/>
       </div>
     </article>
     <article v-else>
@@ -50,13 +50,13 @@ import { initializeApp } from "firebase/app";
 import { getStorage, ref, getDownloadURL, uploadBytes, deleteObject } from "firebase/storage";
 
 const firebaseConfig = {
-          apiKey: "AIzaSyD_uOxqo6xFc64CxF4cf1Fwc4e_s6Q_c_Y",
-          authDomain: "nbhoods-8b7f9.firebaseapp.com",
-          projectId: "nbhoods-8b7f9",
-          storageBucket: "nbhoods-8b7f9.appspot.com",
-          messagingSenderId: "956421104536",
-          appId: "1:956421104536:web:5ff9a4aab04ba2008481ed"
-          };
+  apiKey: "AIzaSyD_uOxqo6xFc64CxF4cf1Fwc4e_s6Q_c_Y",
+  authDomain: "nbhoods-8b7f9.firebaseapp.com",
+  projectId: "nbhoods-8b7f9",
+  storageBucket: "nbhoods-8b7f9.appspot.com",
+  messagingSenderId: "956421104536",
+  appId: "1:956421104536:web:5ff9a4aab04ba2008481ed"
+};
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -81,15 +81,16 @@ export default {
       hasQueryParams: false, // Whether or not form request has query parameters
       setUsername: false, // Whether or not stored username should be updated after form submission
       refreshReviews: false, // Whether or not stored reviews should be updated after form submission
+      refreshStrolls: false, // Whether or not stored strolls should be updated after form submission
+      isVideoUpload: false, // Whether or not we upload a video after form submission
+      fileContent: null, // File content
       alerts: {}, // Displays success/error messages encountered during form submission
       callback: null, // Function to run after successful form submission
-      isVideoUpload: false,
-      fileContent: null,
     };
   },
   computed: {
     filteredFields() {
-      return this.fields.filter(field => field.id !== 'locationId');
+      return this.fields.filter(field => field.id !== 'neighborhoodId');
     }
   },
   methods: {
@@ -103,29 +104,29 @@ export default {
       let url = this.url;
       const now = Date.now();
       let hasUploadedVideo = false;
+      
       const options = {
         method: this.method,
         headers: { 'Content-Type': 'application/json' },
         credentials: 'same-origin' // Sends express-session credentials with request
       };
-      
-      if(this.isVideoUpload && this.fileContent){
-          console.log(this.fields);
-          const storageRef = ref(storage, this.$store.state.username+"/"+now.toString() +"_"+ this.fileContent.name);
 
-          await uploadBytes(storageRef, this.fileContent).then((snapshot) => {
-              hasUploadedVideo = true;
-              console.log('Uploaded a blob or file!');
-          }).catch((error)=>{
-            console.log("couldn't upload")
-          });
-          
+      if (this.isVideoUpload && this.fileContent) {
+        const storageRef = ref(storage, this.$store.state.username + "/" + now.toString() + "_" + this.fileContent.name);
+
+        await uploadBytes(storageRef, this.fileContent).then((snapshot) => {
+          hasUploadedVideo = true;
+          console.log('Uploaded a file!');
+        }).catch((error) => {
+          console.log("Failed to upload a file!")
+        });
+
       }
 
       if (this.hasQueryParams) {
         let queryParams = '?';
         const params = [];
-        
+
         for (const field of this.fields) {
           const { id, type, value } = field;
           if (type === 'queryParam') {
@@ -134,14 +135,14 @@ export default {
               val = val.replace(' ', '_').toLowerCase();
             }
             params.push(`${id}=${val}`)
-          }          
+          }
         }
         queryParams += params.join('&');
         url += queryParams;
       }
 
       if (this.hasBody) {
-        const bodyObject= Object.fromEntries(
+        const bodyObject = Object.fromEntries(
           this.fields.filter(field => field.type === 'body').map(field => {
             const { id, value } = field;
             let val = value;
@@ -153,29 +154,29 @@ export default {
             return [id, val];
           })
         );
-        if(this.isVideoUpload && hasUploadedVideo){
-          const storageRef = ref(storage, this.$store.state.username+"/"+now.toString() +"_"+ this.fileContent.name);
+
+        if (this.isVideoUpload && hasUploadedVideo) {
+          const storageRef = ref(storage, this.$store.state.username + '/' + now.toString() + '_' + this.fileContent.name);
           bodyObject.strollVideo = await getDownloadURL(storageRef)
             .then((url) => {
-                return url;
-                console.log("successfullt downloaded")
+              return url;
+              console.log("Successfully downloaded!")
             });
-        }else{
+        } else {
           bodyObject.strollVideo = "";
         }
-        
+
         options.body = JSON.stringify(bodyObject);
       }
-      
+
       try {
-        console.log(options.body);
         const r = await fetch(url, options);
         if (!r.ok) {
           // If response is not okay, we throw an error and enter the catch block
           const res = await r.json();
           throw new Error(res.error);
         }
-        
+
         if (this.setUsername) {
           const text = await r.text();
           const res = text ? JSON.parse(text) : { user: null };
@@ -188,21 +189,25 @@ export default {
           this.$store.commit('refreshReviews');
         }
 
+        if (this.refreshStrolls) {
+          this.$store.commit('refreshStrolls');
+        }
+
         if (this.callback) {
           this.callback();
         }
       } catch (e) {
-        this.$set(this.alerts, e, 'error');
-        setTimeout(() => this.$delete(this.alerts, e), 3000);
         // if I am trying to upload a video but there is a server error delete from firebase
-        if(this.isVideoUpload && hasUploadedVideo){
-          const deleteRef = ref(storage, this.$store.state.username+"/"+now.toString() +"_"+ this.fileContent.name);
+        if (this.isVideoUpload && hasUploadedVideo) {
+          const deleteRef = ref(storage, this.$store.state.username + '/' + now.toString() + '_' + this.fileContent.name);
           deleteObject(deleteRef).then(() => {
-              console.log("file deleted successfully");
+            console.log("file deleted successfully");
           }).catch((error) => {
-            // Uh-oh, an error occurred!
+            console.log('Uh-oh, an error occurred!')
           });
         }
+        this.$set(this.alerts, e, 'error');
+        setTimeout(() => this.$delete(this.alerts, e), 3000);
       }
     }
   }

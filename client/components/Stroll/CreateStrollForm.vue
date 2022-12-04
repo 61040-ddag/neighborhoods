@@ -1,5 +1,3 @@
-<!-- Form for adding a stroll (block style) -->
-
 <script>
 import BlockForm from '@/components/common/BlockForm.vue';
 
@@ -10,17 +8,16 @@ export default {
     return {
       url: '/api/strolls',
       method: 'POST',
-      isVideoUpload: true,
       hasBody: true,
       fields: [
-        { id: 'name', type: 'body', label: 'Neighborhood Name', value: '' },
-        { id: 'city', type: 'body', label: 'City', value: '' },
-        { id: 'state', type: 'body', label: 'State', value: '' },
+        { id: 'neighborhoodId', type: 'body', value: this.$store.state.neighborhood._id },
         { id: 'title', type: 'body', label: 'Title', value: '' },
       ],
-      title: 'Upload Stroll',
+      title: `Upload Stroll for ${this.$store.state.neighborhood.name}!`,
+      isVideoUpload: true,
+      refreshStrolls: true,
       callback: () => {
-        const message = 'Successfully added a neighborhood!';
+        const message = 'Successfully uploaded a scroll!';
         this.$set(this.alerts, message, 'success');
         setTimeout(() => this.$delete(this.alerts, message), 3000);
       }

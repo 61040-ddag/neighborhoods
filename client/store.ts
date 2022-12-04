@@ -93,12 +93,20 @@ const store = new Vuex.Store({
       const res = await fetch(url).then(async r => r.json());
       state.reviews = res;
     },
-    setStrolls(state, strolls) {
+    async refreshStrolls(state) {
       /**
-       * Update the stored strolls to the specified one
-       * @param strolls - new strolls to set
+       * Request the server for the currently available .
        */
-      state.strolls = strolls;
+      const formatBackend = (word) => {
+        return word.trim().replace(' ', '_').toLowerCase();
+      };
+      const name = formatBackend(state.neighborhood.name);
+      const city = formatBackend(state.neighborhood.city);
+      const neighborhoodState = formatBackend(state.neighborhood.state);
+
+      const url = `/api/strolls/neighborhoods?name=${name}&city=${city}&state=${neighborhoodState}`;
+      const res = await fetch(url).then(async r => r.json());
+      state.strolls = res.strolls;
     },
   },
   // Store data across page refreshes, only discard on browser close

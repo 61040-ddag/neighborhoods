@@ -10,7 +10,7 @@ export default {
             method: 'POST',
             hasBody: true,
             fields: [
-                { id: 'locationId', type: 'body', value: this.$store.state.neighborhood._id },
+                { id: 'neighborhoodId', type: 'body', value: this.$store.state.neighborhood._id },
                 { id: 'rating', type: 'body', label: 'Enter rating out of 10', value: '' },
                 { id: 'content', type: 'body', label: 'Write a review', value: '' }
             ],
