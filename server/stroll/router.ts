@@ -20,7 +20,7 @@ const router = express.Router();
  * @throws {404} - If no user has given author
  */
 router.get(
-  '/',
+  '/authors',
   [
     userValidator.isUserLoggedIn,
   ],
@@ -45,7 +45,7 @@ router.get(
  * @throws {404} - If name, city, state of a neighborhood is not a recognized neighborhood
  */
 router.get(
-  '/',
+  '/neighborhoods',
   [
     userValidator.isUserLoggedIn,
     neighborhoodValidator.isNeighborhoodExists
