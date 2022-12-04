@@ -232,7 +232,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Body**
 
-- `locationId` _{string}_ - The id of the location of the review
+- `neighborhoodId` _{string}_ - The id of the location of the review
 - `rating` _{string}_ - The rating of the review
 - `content` _{string}_ - The content of the review
 

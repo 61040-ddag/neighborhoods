@@ -16,9 +16,8 @@ const router = express.Router();
  *
  * @return {ReviewResponse[]} - An array of reviews of a neighborhood with name, city, state
  * @throws {400} - If name, city or state is not given
- * @throws {400} - If the user is not logged in
+ * @throws {403} - If the user is not logged in
  * @throws {404} - If name, city, state of a neighborhood is not a recognized neighborhood
- *
  */
 router.get(
     '/neighborhoods',
@@ -46,9 +45,8 @@ router.get(
  *
  * @return {ReviewResponse[]} - An array of reviews created by user with username author
  * @throws {400} - If author is not given
- * @throws {400} - If the user is not logged in
+ * @throws {403} - If the user is not logged in
  * @throws {404} - If no user has given author
- *
  */
 router.get(
     '/authors',
@@ -68,7 +66,7 @@ router.get(
  *
  * @name POST /api/reviews
  *
- * @param {string} locationId - The id of the location of the review
+ * @param {string} neighborhoodId - The id of the neighborhood of the review
  * @param {number} rating - The rating of the review
  * @param {string} content - The content of the review
  * @return {ReviewResponse} - The created review
@@ -80,11 +78,16 @@ router.post(
     '/',
     [
         userValidator.isUserLoggedIn,
+        neighborhoodValidator.isNeighborhoodExistsById,
         reviewValidator.isValidReviewContent
     ],
     async (req: Request, res: Response) => {
         const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-        const review = await ReviewCollection.addOne(userId, req.body.locationId, req.body.rating, req.body.content);
+        const neighborhoodId = req.body.neighborhoodId;
+        const rating = req.body.rating;
+        const content = req.body.content;
+
+        const review = await ReviewCollection.addOne(userId, neighborhoodId, rating, content);
 
         res.status(201).json({
             message: 'Your review was created successfully.',

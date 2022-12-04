@@ -7,7 +7,7 @@ export type Review = {
     _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
     authorId: Types.ObjectId;
     dateCreated: Date;
-    locationId: Types.ObjectId;
+    neighborhoodId: Types.ObjectId;
     rating: number;
     content: string;
 };
@@ -16,7 +16,7 @@ export type PopulatedReview = {
     _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
     authorId: User;
     dateCreated: Date;
-    locationId: Neighborhood;
+    neighborhoodId: Neighborhood;
     rating: number;
     content: string;
 };
@@ -31,7 +31,7 @@ const ReviewSchema = new Schema<Review>({
         type: Date,
         required: true
     },
-    locationId: {
+    neighborhoodId: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: 'Neighborhood'
