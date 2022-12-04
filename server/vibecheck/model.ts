@@ -46,19 +46,15 @@ const VibeSchema = new Schema({
 // Availability
 export type Availability = {
   _id: Types.ObjectId;
-  userId: Types.ObjectId;
-  residentId: Types.ObjectId;
-  vibeLink: string;
-  dateScheduled: Date;
+  userId: string;
+  time: Date;
 };
 
 
 export type PopulatedAvailability = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
-  userId: User;
-  residentId: Neighborhood;
-  vibeLink: string;
-  dateScheduled: Date; 
+  userId: string;
+  time: Date;
 };
 
 

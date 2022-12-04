@@ -11,7 +11,9 @@ import dotenv from 'dotenv';
 import * as userValidator from '../server/user/middleware';
 import { userRouter } from '../server/user/router';
 import { neighborhoodRouter } from '../server/neighborhood/router';
+import { vibeRouter } from '../server/vibecheck/router';
 import MongoStore from 'connect-mongo';
+import DatePicker from 'vue2-datepicker';
 
 // Load environmental variables
 dotenv.config({});
@@ -42,6 +44,8 @@ const app = express();
 
 // Set the port
 app.set('port', process.env.PORT || 3000);
+
+// app.component('DatePicker', DatePicker);
 
 // Log requests in the terminal
 app.use(logger('dev'));
@@ -74,6 +78,7 @@ app.use(userValidator.isCurrentSessionUserExists);
 // Add routers from routes folder
 app.use('/api/users', userRouter);
 app.use('/api/neighborhoods', neighborhoodRouter);
+app.use('/api/vibe', vibeRouter);
 // Catch all the other routes and display error message
 app.all('*', (req: Request, res: Response) => {
     res.status(404).json({

@@ -1,6 +1,6 @@
 import type { HydratedDocument, Types } from 'mongoose';
 import { isUserLoggedIn } from 'server/user/middleware';
-import type { Vibe } from './model';
+import type { Availability, Vibe } from './model';
 import { VibeModel, AvailabilityModel } from './model';
 
 class VibeCollection {
@@ -26,10 +26,10 @@ class VibeCollection {
      * @param {string} dateString - the string representation of the date
      * @return {Promise<HydratedDocument<Vibe>>} - The newly created Vibe
      */
-     static async addAvailability(userId: Types.ObjectId | string, date: Date): Promise<HydratedDocument<Vibe>> {   
-        const Vibe = new AvailabilityModel({ userId, date });
-        await Vibe.save(); // Saves Vibe to MongoDB
-        return Vibe;
+     static async addAvailability(userId: Types.ObjectId | string, date: Date): Promise<HydratedDocument<Availability>> {   
+        const Availability = new AvailabilityModel({ userId, date });
+        await Availability.save(); // Saves Vibe to MongoDB
+        return Availability;
     }
 
     /**
@@ -63,26 +63,27 @@ class VibeCollection {
     }
   
     /**
-     * Get all Vibes by user with user Id
+     * Get all Availabilities by user with user Id
      *
      * @param {string} userId - the id of the user whose Vibes we are looking for
-     * @return {Promise<HydratedDocument<Vibe>[]>} - An array of all of the Vibes
+     * @return {Promise<HydratedDocument<Vibe>[]>} - An array of all of the availabilities
      */
       static async findAllByUserId(userId: Types.ObjectId | string): Promise<Array<HydratedDocument<Vibe>>> {
-      return VibeModel.find({userId: userId}).populate('userId').populate('neighborhoodId');
+        console.log(`Find all by userid: ${userId}`);
+        return VibeModel.find({userId: userId});
     }
     
-    /**
-     * Get all Vibes of resident with residentId
-     *
-     * @param {string} residentId - the id of the neighborhood whose Vibes we are looking for
-     * @param {string} userId - the id of the user making the request
-     * @return {Promise<HydratedDocument<Vibe>[]>} - An array of all of the Vibes
-     */
-     static async findAllByResidentId(residentId: Types.ObjectId | string, userId: Types.ObjectId | string): Promise<Array<HydratedDocument<Vibe>>> {
-      const Vibes = await VibeModel.find({residentId}).populate('userId').populate('neighborhoodId');
-      return Vibes.filter(Vibe => Vibe.userId._id != userId);
-    }
+    // /**
+    //  * Get all Vibes of resident with residentId
+    //  *
+    //  * @param {string} residentId - the id of the neighborhood whose Vibes we are looking for
+    //  * @param {string} userId - the id of the user making the request
+    //  * @return {Promise<HydratedDocument<Vibe>[]>} - An array of all of the Vibes
+    //  */
+    //  static async findAllByResidentId(residentId: Types.ObjectId | string, userId: Types.ObjectId | string): Promise<Array<HydratedDocument<Vibe>>> {
+    //   const Vibes = await VibeModel.find({residentId}).populate('userId').populate('residentId');
+    //   return Vibes.filter(Vibe => Vibe.userId._id != userId);
+    // }
     
   }
   

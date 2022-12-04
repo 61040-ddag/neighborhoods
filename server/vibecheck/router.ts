@@ -75,10 +75,10 @@ const router = express.Router();
         
         const dateObj = new Date(date);
         const userObj = await UserCollection.findOneByUsername(username);
-        const Vibe = await VibeCollection.addAvailability(userObj.id, dateObj);
+        const Availability = await VibeCollection.addAvailability(userObj.id, dateObj);
         res.status(201).json({
             message: `Availability was created successfully`,
-            user: util.constructVibeResponse(Vibe)
+            user: util.constructAvailabilityResponse(Availability)
         });
     }
   );
@@ -144,15 +144,15 @@ const router = express.Router();
 
 
 /**
- * Get all the Vibe of the currently signed in user
+ * Get all the Availabilities of the currently signed in user
  *
- * @name GET /api/Vibes
+ * @name GET /api/vibe/getAvailability?user=user
  *
  * @return {VibeResponse} - All the Vibes of the signed in user
  * @throws {403} - If the user is not logged in
  */
  router.get(
-    '/',
+    '/getAvailability',
     [
       userValidator.isUserLoggedIn,
     ],
@@ -166,6 +166,33 @@ const router = express.Router();
     }
   );
 
+// /**
+//  * Get neighborhoods with given city, state
+//  *
+//  * @name GET /api/neighborhoods/location?city=city&state=state
+//  *
+//  * @return {NeighborhoodResponse} - The neighborhood with given name, city, and state
+//  * @throws {403} - If the user is not logged in
+//  */
+//  router.get(
+//     '/location',
+//     [
+//       userValidator.isUserLoggedIn
+//     ],
+//     async (req: Request, res: Response) => {
+//       const city = req.query.city as string;
+//       const state = req.query.state as string;
+  
+//       const neighborhoods = await NeighborhoodCollection.findAllByLocation(city, state);
+//       const response = neighborhoods.map(util.constructNeighborhoodResponse);
+//       res.status(200).json({
+//         message: `Neighborhoods in ${util.formatWord(city)}, ${state.toUpperCase()} was found.`,
+//         neighborhoods: response
+//       });
+//     }
+//   );
+  
 
 
-export { router as VibeRouter };
+
+export { router as vibeRouter };

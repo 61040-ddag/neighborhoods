@@ -1,25 +1,63 @@
 <script>
-
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/index.css';
+import { ref } from 'vue';
 export default {
+  components: { DatePicker },
   data() {
     return {
-      message: 'Hello World!'
+      time1: null,
+      time2: null,
+      time3: null,
     }
-  }
+  },
+  mounted() {
+    this.getAvailability();
+  },
+  methods: {
+    async getAvailability() {
+      try {
+        const r = await fetch(`/api/vibe/getAvailability?${this.$store.state.username}`);
+        const response = await r.json();
+        if (!r.ok) {
+          throw new Error(response.error);
+        }
+      } catch (e) {
+        this.$set(this.alerts, e, "error");
+        setTime(() => this.$delete(this.alerts, e), 3000);
+      }
+      console.log(response);
+
+    },
+    async addAvailability() {
+      const options = {
+        method: 'POST',
+        body: JSON.stringify({
+          username: "",
+          date: ""
+        }),
+        headers: { 'Content-Type': 'application/json' }
+      };
+      const r = await fetch('/api/vibe/addAvailability', options);
+      const response = await r.json();
+      if (!r.ok) {
+          throw new Error(response.error);
+      }
+      console.log(response);
+    }
+  },
 }
 </script>
 
 <template>
   <div class="customContainer container row col-md-8 mx-auto">
     <h1 class="h1 text-center">Welcome to VibeCheck!</h1>
-    <iframe src="https://calendar.google.com/calendar/embed?src=vibecheckbot1%40gmail.com&ctz=America%2FNew_York" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+    <DatePicker v-model="date" />
     <button 
     class="styledButton" 
-    onclick="
-    window.open('https://mit.zoom.us/s/91389409521','_blank');
-    ">
-    Launch Meeting
-  </button>
+    @click="getAvailability">
+    Add availability
+    </button>
   </div>
   
 </template>
