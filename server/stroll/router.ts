@@ -39,7 +39,7 @@ router.get(
  *
  * @name GET /api/strolls/neighborhoods?name=name&city=city&state=state
  *
- * @return {StrollResponse} - The neighborhood with given neighborhoodId
+ * @return {StrollResponse} - All strolls of neighborhood
  * @throws {400} - If name, city or state is not given
  * @throws {403} - If the user is not logged in
  * @throws {404} - If name, city, state of a neighborhood is not a recognized neighborhood

@@ -260,6 +260,31 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if the user is not the author of the review
 - `404` if the `reviewId` is invalid
 
+#### `GET /api/certifiedResidency/isCertified?user=username&neighborhoodId=neighborhoodId`
+
+**Returns**
+
+- A boolean on whether or not a user is a resident of neighborhood
+
+**Throws**
+
+- `400` if user is not given or neighborhoodId is not given
+- `403` if the user is not logged in
+- `404` if no user has given username or neighborhoodId of a neighborhood is not a recognized neighborhood
+
+#### `GET /api/certifiedResidency/users?user=username`
+
+**Returns**
+
+- An array of neighborhoods an user is a resident in
+
+**Throws**
+
+- `400` if user is not given
+- `403` if the user is not logged in
+- `404` if no user has given username
+
+
 #### `POST /api/certifiedResidency`
 
 #### `DELETE /api/certifiedResidency/:neighborhood?`
@@ -270,10 +295,61 @@ This renders the `index.html` file that will be used to interact with the backen
 
 #### `DELETE /api/vibeCheck/availability/:dateTime?`
 
-#### `GET /api/neighborhoodStroll/:strollId?`
+#### ` GET /api/strolls/authors?author=username`
 
-#### `GET /api/neighoborhoodStroll?neighborhood=neighborhood`
+**Returns**
 
-#### `POST /api/neighborhoodStroll`
+- A success message
+- An array of strolls of belonging to user with username
 
-#### `DELETE /api/neighborhoodStroll/:strollId?`
+**Throws**
+
+- `400` - If author is not given
+- `403` - If the user is not logged in
+- `404` - If no user has given author
+
+
+#### `GET /api/strolls/neighborhoods?name=name&city=city&state=state`
+
+**Returns**
+
+- A success message
+- An array of strolls of strolls of the neighborhood with name city and state
+
+**Throws**
+
+- `400` If name, city or state is not given
+- `403` If the user is not logged in
+- `404` If name, city, state of a neighborhood is not a recognized neighborhood
+
+
+#### `POST /api/strolls`
+
+**Body**
+
+- `neighborhoodId` _{string}_ - The id of the neighborhood of the stroll
+- `strollVideo` _{string}_ - the link of the stroll video to the firebase storage
+- `title` _{string}_ - the title of the stroll
+
+
+**Returns**
+
+- A success message
+- An object with the created stroll
+
+**Throws**
+
+- `403` - If the user is not logged in
+- `404` - If no neighborhood with neighborhoodId exists
+- `400` - If title of stroll or videoStroll is not properly formatted string
+
+#### `DELETE /api/strolls/:strollId?`
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` - If the user is not logged in
+- `404` - If the strollId is not valid
