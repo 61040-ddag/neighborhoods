@@ -51,7 +51,8 @@ class StrollCollection {
    */
   static async findAllBylocation(neighborhoodId: Types.ObjectId | string, authorId: Types.ObjectId | string): Promise<Array<HydratedDocument<Stroll>>> {
     const strolls = await StrollModel.find({ neighborhoodId }).populate('authorId').populate('neighborhoodId');
-    return strolls.filter(stroll => stroll.authorId._id != authorId);
+    // return strolls.filter(stroll => stroll.authorId._id != authorId);
+    return strolls;
   }
 
   /**
