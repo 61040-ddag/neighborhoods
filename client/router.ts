@@ -9,6 +9,7 @@ import AccountPage from './components/Account/AccountPage.vue';
 import SignupPage from './components/Login/SignupPage.vue';
 import LoginPage from './components/Login/LoginPage.vue';
 import NotFound from './NotFound.vue';
+import Vibe from './components/Vibe/Vibe.vue';
 
 Vue.use(VueRouter);
 
@@ -18,6 +19,7 @@ const routes = [
     { path: '/neighborhood', name: 'Neighborhood', component: NeighborhoodPage},
     { path: '/map', name: 'Map', component: MapPage },
     { path: '/profile', name: 'Profile', component: ProfilePage },
+    { path: '/vibe', name: 'Vibe', component: Vibe },
     { path: '/account', name: 'Account', component: AccountPage },
     { path: '/login', name: 'Login', component: LoginPage },
     { path: '/signup', name: 'Signup', component: SignupPage },

@@ -28,9 +28,11 @@
     "mongoose": "^6.6.2",
     "morgan": "~1.10.0",
     "nanoid": "^3.3.4",
+    "nodemon": "^2.0.20",
     "vue": "^2.7.13",
     "vue-mapbox": "^0.4.1",
     "vue-router": "^3.6.5",
+    "vue2-datepicker": "^3.11.1",
     "vuex": "^3.6.2",
     "vuex-persistedstate": "^4.1.0"
   },
