@@ -18,6 +18,16 @@ type ReviewResponse = {
 }
 
 /**
+ * Encode a readable word
+ * 
+ * @param {string} word - The database version of the word
+ * @returns {string} - Readable version of the word
+ */
+const formatWord = (word: string): string => {
+    return word.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+}
+
+/**
  * Encode a date as an unambiguous string
  *
  * @param {Date} date - A date object
@@ -47,7 +57,7 @@ const constructReviewResponse = (review: HydratedDocument<Review>): ReviewRespon
         _id: reviewCopy._id.toString(),
         author: username,
         dateCreated: formatDate(review.dateCreated),
-        neighborhood: { name: name, city: city, state: state }
+        neighborhood: { name: formatWord(name), city: formatWord(city), state: state.toUpperCase() }
     };
 };
 

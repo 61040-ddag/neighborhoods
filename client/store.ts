@@ -17,6 +17,7 @@ const store = new Vuex.Store({
     neighborhood: null, // The neighborhood being viewed
     reviews: [], // All reviews for the neighborhood being viewed
     strolls: [], // All the strolls
+    certifiedResidences: [], // All the neighborhoods that the logged in user is a resident
     alerts: {} // global success/error messages encountered during submissions to non-visible forms
   },
   mutations: {
@@ -95,7 +96,7 @@ const store = new Vuex.Store({
     },
     async refreshStrolls(state) {
       /**
-       * Request the server for the currently available .
+       * Request the server for the currently available strolls.
        */
       const formatBackend = (word) => {
         return word.trim().replace(' ', '_').toLowerCase();
@@ -108,6 +109,15 @@ const store = new Vuex.Store({
       const res = await fetch(url).then(async r => r.json());
       state.strolls = res.strolls;
     },
+    async refreshCertifiedResidency(state) {
+      /**
+       * Request the server for the currently available certifiedResidency.
+       */
+
+      const url = `/api/certifiedResidency/users?user=${state.username}`;
+      const res = await fetch(url).then(async r => r.json());
+      state.certifiedResidences = res;
+    }
   },
   // Store data across page refreshes, only discard on browser close
   plugins: [createPersistedState()]

@@ -84,6 +84,7 @@ export default {
       refreshStrolls: false, // Whether or not stored strolls should be updated after form submission
       isVideoUpload: false, // Whether or not we upload a video after form submission
       fileContent: null, // File content
+      refreshCertifiedResidency: false, // Whether or not stored certifiedResidency should be updated after form submission
       alerts: {}, // Displays success/error messages encountered during form submission
       callback: null, // Function to run after successful form submission
     };
@@ -191,6 +192,10 @@ export default {
 
         if (this.refreshStrolls) {
           this.$store.commit('refreshStrolls');
+        }
+
+        if (this.refreshCertifiedResidency) {
+          this.$store.commit('refreshCertifiedResidency');
         }
 
         if (this.callback) {
