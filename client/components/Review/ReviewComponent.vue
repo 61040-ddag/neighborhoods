@@ -5,8 +5,11 @@
     <article
       class="review"
     >
-      <header>
-        <h3 class="author">
+      <header class="author">
+        <h3 v-if="isCertified">
+          @{{ review.author }}☑️
+        </h3>
+        <h3 v-else>
           @{{ review.author }}
         </h3>
       </header>
@@ -58,11 +61,22 @@
     },
     data() {
       return {
+        isCertified: false,
         draft: this.review.content, // Potentially-new content for this review
         alerts: {} // Displays success/error messages encountered during review modification
       };
     },
+    async mounted() {
+      this.checkCertified()
+    },
     methods: {
+      async checkCertified() {
+        const username = this.review.author;
+        const neighborhoodId = this.review.neighborhood._id;
+        const url = `/api/certifiedResidency/isCertified?user=${username}&neighborhoodId=${neighborhoodId}`;
+        const res = await fetch(url).then(async r => r.json());
+        this.isCertified = res;
+      },
       deleteReview() {
         /**
          * Deletes this review.

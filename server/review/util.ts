@@ -3,6 +3,7 @@ import moment from 'moment';
 import type { Review, PopulatedReview } from '../review/model';
 
 type neighborhood = {
+    _id: string;
     name: string;
     city: string;
     state: string;
@@ -50,14 +51,14 @@ const constructReviewResponse = (review: HydratedDocument<Review>): ReviewRespon
     };
     const { username } = reviewCopy.authorId;
     delete reviewCopy.authorId;
-    const { name, city, state } = reviewCopy.neighborhoodId;
+    const { _id, name, city, state } = reviewCopy.neighborhoodId;
     delete reviewCopy.neighborhoodId;
     return {
         ...reviewCopy,
         _id: reviewCopy._id.toString(),
         author: username,
         dateCreated: formatDate(review.dateCreated),
-        neighborhood: { name: formatWord(name), city: formatWord(city), state: state.toUpperCase() }
+        neighborhood: { _id: _id.toString(), name: formatWord(name), city: formatWord(city), state: state.toUpperCase() }
     };
 };
 

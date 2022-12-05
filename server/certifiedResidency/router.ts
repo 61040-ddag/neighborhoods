@@ -12,6 +12,31 @@ import { formatWord } from '../neighborhood/util';
 const router = express.Router();
 
 /**
+ * @name GET /api/certifiedResidency/isCertified?user=username&neighborhoodId=neighborhoodId
+ * 
+ * @return {Boolean} - Whether or not a user is a resident of neighborhood
+ * @throws {400} - If user is not given or neighborhoodId is not given
+ * @throws {403} - If the user is not logged in
+ * @throws {404} - If no user has given username or neighborhoodId of a neighborhood is not a recognized neighborhood
+ */
+ router.get(
+    '/isCertified',
+    [
+        userValidator.isUserLoggedIn,
+        certifiedResidencyValidator.isUserExists,
+        certifiedResidencyValidator.isNeighborhoodExistsById
+    ],
+    async (req: Request, res: Response) => {
+        const userId = (await UserCollection.findOneByUsername(req.query.user as string))._id;
+        const neighborhoodId = req.query.neighborhoodId as string;
+
+        const certifiedResidency = await CertifiedResidencyCollection.findOneByUserandNeighborhood(userId, neighborhoodId);
+        const response = certifiedResidency ? true : false;
+        res.status(200).json(response);
+    }
+);
+
+/**
  * @name GET /api/certifiedResidency/users?user=username
  * 
  * @return {CertifiedResidencyResponse[]} - An array of neighborhoods an user is a resident in
