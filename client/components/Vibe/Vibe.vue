@@ -2,10 +2,12 @@
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 import { ref } from 'vue';
+import Availability from './Availability';
 export default {
-  components: { DatePicker },
+  components: { DatePicker, Availability },
   data() {
     return {
+      username: this.$store.state.username,
       inputtedTime: null,
       availabilities: []
     }
@@ -49,20 +51,36 @@ export default {
 
 <template>
   <div class="customContainer container row col-md-8 mx-auto">
-    <h1 class="h1 text-center">Welcome to VibeCheck!</h1>
-    <DatePicker v-model="inputtedTime" type="datetime"/>
+    <h1 class="h1 text-center title">VibeCheck</h1>
+    <div class="header">
+      <h2>Resident? Add availability!</h2>
+      <DatePicker v-model="inputtedTime" type="datetime"/>
+    </div>
     <h1 v-if="(inputtedTime !== null)">{{ inputtedTime }}</h1>
-    <h2 v-for="avail in availabilities">{{ avail.time }}</h2>
     <button 
     class="styledButton" 
     @click="addAvailability">
     Add availability
     </button>
+    <h2 class="header">Neighborhood Availabilities</h2>
+    <Availability 
+    v-for="avail in availabilities"
+    :key="avail.id"
+    :time="avail.time"
+    :user="username"
+    />
+    <!-- <h1 v-for="avail in availabilities">{{avail.time}}</h1> -->
   </div>
   
 </template>
 
 <style>
+
+.header {
+  text-align: center;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
 
 .customContainer {
   margin-top: 5%;
@@ -82,6 +100,7 @@ export default {
   margin-top: 40px;
   padding: 8px 40px;
   text-align: center;
+  margin-bottom: 50px;
 }
 
 </style>

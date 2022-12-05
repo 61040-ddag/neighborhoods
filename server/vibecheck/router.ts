@@ -24,7 +24,7 @@ const router = express.Router();
  *
  */
  router.post(
-    '/',
+    '/addVibe',
     [
       userValidator.isUserLoggedIn,
       VibeValidator.areInfoValid,
@@ -32,17 +32,43 @@ const router = express.Router();
     async (req: Request, res: Response) => {
         const username = req.body.username as string;
         const resident = req.body.resident as string;
-        const dateScheduled = req.body.dateScheduled as string;
-
-        const vibeLink = ""; // TODO: random google meet link
+        let dateScheduled:any = req.body.date as string;
+        const vibeLink = req.body.vibeLink as string;
 
 
         const userObj = await UserCollection.findOneByUsername(username);
         const residentObj = await UserCollection.findOneByUsername(resident);
-        const Vibe = await VibeCollection.addVibe(userObj.id, residentObj.id, vibeLink, new Date(dateScheduled));
+        dateScheduled = new Date(dateScheduled.replace("th", ""));
+        const Vibe = await VibeCollection.addVibe(userObj.id, residentObj.id, vibeLink, dateScheduled);
         res.status(201).json({
             message: `Vibe was created successfully`,
             user: util.constructVibeResponse(Vibe)
+        });
+    }
+  );
+
+/**
+ * Get all the Vibe of the currently signed in user
+ *
+ * @name GET /api/vibe/getAvailability?user=user
+ *
+ * @return {AvailabilityResponse} - All the Vibes of the signed in user
+ * @throws {403} - If the user is not logged in
+ */
+ router.get(
+    '/getVibe',
+    [
+      userValidator.isUserLoggedIn,
+    ],
+    async (req: Request, res: Response) => {
+        const userId = req.session.userId;
+        const time = req.query.time as string;
+        const vibe = await VibeCollection.findOneByUserAndTime(userId, time);
+        console.log(vibe);
+        const response = util.constructVibeResponse(vibe);
+        res.status(200).json({
+            message: `Vibes were found`,
+            Vibes: response
         });
     }
   );

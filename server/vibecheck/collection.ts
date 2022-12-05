@@ -30,6 +30,24 @@ class VibeCollection {
     }
 
     /**
+     * Find a Vibe by username and time
+     * 
+     * @param {userId} userId - The id of the user in the vibe interview
+     * @param {time} time: the time of the interview
+     * @return {Promise<HydratedDocument<Vibe>>} - The Vibe with the given VibeId, if any
+     */
+    static async findOneByUserAndTime(userId: string, time: string): Promise<HydratedDocument<Vibe>> {
+        let time_ = time.replace("th", "");
+        time_ = time_.replace("nd", "");
+        time_ = time_.replace("rd", "");
+        time_ = time_.replace("st", "");
+        console.log('line 41');
+        console.log(time_);
+        const timeDate = new Date(time_);
+        return VibeModel.findOne({userId: userId, dateScheduled: timeDate})
+    }
+
+    /**
      * Delete a Vibe by id
      * 
      * @param VibeId - the id of the Vibe to be deleted

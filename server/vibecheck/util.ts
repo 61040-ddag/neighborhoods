@@ -33,6 +33,8 @@ type AvailabilityResponse = {
  * @returns {VibeResponse} - The Vibe object to the frontend
  */
  const constructVibeResponse = (Vibe: HydratedDocument<Vibe>): VibeResponse => {
+    // console.log("util vibe");
+    // console.log(Vibe);
     const VibeCopy: PopulatedVibe = {
       ...Vibe.toObject({
         versionKey: false // Cosmetics; prevents returning of __v property

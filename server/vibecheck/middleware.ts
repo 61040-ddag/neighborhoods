@@ -4,12 +4,17 @@ import { VibeCollection } from './collection';
 const areInfoValid = async (req: Request, res: Response, next: NextFunction) => {
     const username = req.body.username;
     const resident = req.body.resident;
-    const dateScheduled = req.body.dateScheduled;
+    const dateScheduled = req.body.date;
+    const vibeLink = req.body.vibeLink;
 
+    console.log(username);
+    console.log(resident);
+    console.log(dateScheduled);
+    console.log(vibeLink);
 
-    if (!username || !resident || !dateScheduled){
+    if (!username || !resident || !dateScheduled || !vibeLink){
         res.status(400).json({
-            error: "username, resident, or scheduled date missing"
+            error: "username, resident, scheduled date, or video link missing"
         });
         return;
     }
