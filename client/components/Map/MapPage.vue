@@ -103,36 +103,6 @@ export default {
 </script>
 
 <style>
-
-#neighborhood-button {
-  display: inline-block;
-  margin: 5px;
-  height: 35px;
-  font-size: 14px;
-}
-
-#vibe-button {
-  display: inline-block;
-  margin: 5px;
-  height: 35px;
-  font-size: 15px;
-}
-
-#styled-div-parent {
-  height: 190px;
-}
-
-#styled-div {
-  height:150px;
-  line-height:5px;
-  display: inline-block;
-  position: absolute;
-  vertical-align: middle;
-}
-
-.stacked-div {
-  vertical-align: middle;
-}
 .map-container {
   position: relative;
   width: 100%;
