@@ -2,6 +2,8 @@ import type { Request, Response } from 'express';
 import express from 'express';
 import UserCollection from './collection';
 import ReviewCollection from '../review/collection';
+import StrollCollection from '../stroll/collection';
+import CertifiedResidencyCollection from '../certifiedResidency/collection';
 import * as userValidator from './middleware';
 import * as util from './util';
 
@@ -160,6 +162,8 @@ router.delete(
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
     await UserCollection.deleteOne(userId);
     await ReviewCollection.deleteManyByAuthor(userId);
+    await CertifiedResidencyCollection.deleteManyByUser(userId);
+    await StrollCollection.deleteManyByAuthor(userId);
     req.session.userId = undefined;
     res.status(200).json({
       message: 'Your account has been deleted successfully.'

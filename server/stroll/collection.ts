@@ -63,6 +63,24 @@ class StrollCollection {
     const stroll = await StrollModel.deleteOne({ _id: strollId });
     return stroll !== null;
   }
+
+  /**
+   * Delete all the strolls by the given user
+   *
+   * @param {string} userId - The id of user
+   */
+   static async deleteManyByAuthor(userId: Types.ObjectId | string): Promise<void> {
+    await StrollModel.deleteMany({ userId: userId });
+  }
+
+  /**
+   * Delete all the strolls by the given neighborhood
+   *
+   * @param {string} neighborhoodId - The id of neighborhood
+   */
+  static async deleteManyByLocation(neighborhoodId: Types.ObjectId | string): Promise<void> {
+    await StrollModel.deleteMany({ neighborhoodId });
+  }
 }
 
 export default StrollCollection;
