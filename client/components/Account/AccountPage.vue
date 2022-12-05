@@ -25,14 +25,6 @@
         button="Delete Account" 
       />
     </section>
-    <section>
-      <AddCertifiedResidencyForm
-        button="Add Residency"/>
-    </section>
-    <section>
-      <DeleteCertifiedResidencyForm 
-        button="Delete Residency"/>
-    </section>
   </main>
 </template>
   
@@ -41,8 +33,6 @@ import ChangeUsernameForm from '@/components/Account/ChangeUsernameForm.vue';
 import ChangePasswordForm from '@/components/Account/ChangePasswordForm.vue';
 import DeleteAccountForm from '@/components/Account/DeleteAccountForm.vue';
 import LogoutForm from '@/components/Account/LogoutForm.vue';
-import AddCertifiedResidencyForm from '@/components/Account/AddCertifiedResidencyForm.vue';
-import DeleteCertifiedResidencyForm from '@/components/Account/DeleteCertifiedResidencyForm.vue';
 
 export default {
   name: 'AccountPage',
@@ -50,9 +40,7 @@ export default {
     ChangeUsernameForm,
     ChangePasswordForm,
     DeleteAccountForm,
-    LogoutForm,
-    AddCertifiedResidencyForm,
-    DeleteCertifiedResidencyForm
+    LogoutForm
   }
 };
 </script>

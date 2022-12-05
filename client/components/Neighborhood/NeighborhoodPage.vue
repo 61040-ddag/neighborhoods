@@ -19,6 +19,9 @@
                     <b-tab title="Review" active>
                         <ReviewPage />
                     </b-tab>
+                    <b-tab title="Scroll" active>
+                        <StrollPage />
+                    </b-tab>
                 </b-tabs>
             </b-card>
         </div>
@@ -26,19 +29,30 @@
 </template>
 
 <script>
-import ReviewPage from '@/components/Review/ReviewPage.vue'
+import ReviewPage from '@/components/Review/ReviewPage.vue';
+import StrollPage from '@/components/Stroll/StrollPage.vue';
 
 export default {
     name: 'NeighborhoodPage',
     components: {
-        ReviewPage
+        ReviewPage,
+        StrollPage
+    },
+    data() {
+        return {
+            alerts: {}
+        }
     },
     mounted() {
-        this.loadReviews();
+        this.loadReviews(),
+        this.loadStrolls()
     },
     methods: {
         loadReviews() {
             this.$store.commit('refreshReviews')
+        },
+        loadStrolls() {
+            this.$store.commit('refreshStrolls');
         }
     }
 }
