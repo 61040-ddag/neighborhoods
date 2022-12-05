@@ -4,6 +4,7 @@ import HomePage from './components/Home/HomePage.vue';
 import NeighborhoodsPage from './components/Neighborhood/NeighborhoodsPage.vue';
 import NeighborhoodPage from './components/Neighborhood/NeighborhoodPage.vue';
 import MapPage from './components/Map/MapPage.vue';
+import ProfilePage from './components/Profile/ProfilePage.vue';
 import AccountPage from './components/Account/AccountPage.vue';
 import SignupPage from './components/Login/SignupPage.vue';
 import LoginPage from './components/Login/LoginPage.vue';
@@ -16,6 +17,7 @@ const routes = [
     { path: '/neighborhoods', name: 'Neighborhoods', component: NeighborhoodsPage },
     { path: '/neighborhood', name: 'Neighborhood', component: NeighborhoodPage},
     { path: '/map', name: 'Map', component: MapPage },
+    { path: '/profile', name: 'Profile', component: ProfilePage },
     { path: '/account', name: 'Account', component: AccountPage },
     { path: '/login', name: 'Login', component: LoginPage },
     { path: '/signup', name: 'Signup', component: SignupPage },
@@ -44,7 +46,7 @@ router.beforeEach((to, from, next) => {
         }
 
         const toLoggedInPages = (
-            to.name === 'Account' || to.name === 'Neighborhood' || to.name === 'Map'
+            to.name === 'Account' || to.name === 'Neighborhood' || to.name === 'Map' || to.name === 'Profile'
         );
 
         if (toLoggedInPages && !router.app.$store.state.username) {

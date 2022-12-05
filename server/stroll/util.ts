@@ -18,13 +18,22 @@ type StrollResponse = {
 };
 
 /**
+ * Encode a readable word
+ * 
+ * @param {string} word - The database version of the word
+ * @returns {string} - Readable version of the word
+ */
+const formatWord = (word: string): string => {
+  return word.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+}
+
+/**
  * Encode a date as an unambiguous string
  *
  * @param {Date} date - A date object
  * @returns {string} - formatted date as string
  */
 const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:mm:ss a');
-
 
 /**
  * Transform a raw Neighborhood object from the database into an object
@@ -49,7 +58,7 @@ const constructStrollResponse = (stroll: HydratedDocument<Stroll>): StrollRespon
     _id: strollCopy._id.toString(),
     dateUploaded: formatDate(stroll.dateUploaded),
     author: username,
-    neighborhood: { name: name, city: city, state: state }
+    neighborhood: { name: formatWord(name), city: formatWord(city), state: state.toUpperCase() }
   };
 };
 

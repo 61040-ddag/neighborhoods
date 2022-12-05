@@ -24,7 +24,6 @@
       <DeleteAccountForm 
         button="Delete Account" 
       />
-      
     </section>
   </main>
 </template>
@@ -35,14 +34,13 @@ import ChangePasswordForm from '@/components/Account/ChangePasswordForm.vue';
 import DeleteAccountForm from '@/components/Account/DeleteAccountForm.vue';
 import LogoutForm from '@/components/Account/LogoutForm.vue';
 
-
 export default {
   name: 'AccountPage',
   components: {
     ChangeUsernameForm,
     ChangePasswordForm,
     DeleteAccountForm,
-    LogoutForm,
+    LogoutForm
   }
 };
 </script>
