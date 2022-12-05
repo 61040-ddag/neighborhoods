@@ -280,14 +280,38 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Throws**
 
-- `400` if user is not given
+- `400` if neighborhoodId is not given
 - `403` if the user is not logged in
-- `404` if no user has given username
+- `404` neighborhoodId of a neighborhood is not a recognized neighborhood
 
 
 #### `POST /api/certifiedResidency`
 
-#### `DELETE /api/certifiedResidency/:neighborhood?`
+**Body**
+
+- `name` _{string}_ - The name of the neighborhood
+- `city` _{string}_ - The city of the neighborhood's location
+- `state` _{string}_ - The state of the neighborhood's location
+
+**Returns**
+
+- A success message
+- The created certifiedResidency
+
+**Throws**
+
+- `400` if any neighborhood information provided is in the wrong format
+- `403` if the user is not logged in
+- `409` if neighborhood already exists
+
+#### `DELETE /api/certifiedResidency/:certifiedResidencyId?`
+
+- A success message
+
+**Throws**
+
+- `403` - If the user is not logged in
+- `404` - If the certifiedResidencyId is not valid
 
 #### `POST /api/vibeCheck/interviews`
 
@@ -304,9 +328,9 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Throws**
 
-- `400` - If author is not given
-- `403` - If the user is not logged in
-- `404` - If no user has given author
+- `400` - if author is not given
+- `403` - if the user is not logged in
+- `404` - if no user has given author
 
 
 #### `GET /api/strolls/neighborhoods?name=name&city=city&state=state`
@@ -318,9 +342,9 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Throws**
 
-- `400` If name, city or state is not given
-- `403` If the user is not logged in
-- `404` If name, city, state of a neighborhood is not a recognized neighborhood
+- `400` if name, city or state is not given
+- `403` if the user is not logged in
+- `404` if name, city, state of a neighborhood is not a recognized neighborhood
 
 
 #### `POST /api/strolls`
@@ -339,9 +363,9 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Throws**
 
-- `403` - If the user is not logged in
-- `404` - If no neighborhood with neighborhoodId exists
-- `400` - If title of stroll or videoStroll is not properly formatted string
+- `403` - if the user is not logged in
+- `404` - if no neighborhood with neighborhoodId exists
+- `400` - if title of stroll or videoStroll is not properly formatted string
 
 #### `DELETE /api/strolls/:strollId?`
 
