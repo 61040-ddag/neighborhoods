@@ -1,0 +1,68 @@
+<template>
+    <main>
+        <section>
+            <header>
+                <h2>Profile</h2>
+            </header>
+        </section>
+        <section class="profile">
+            <section>
+                <header>
+                    <h3>@{{ $store.state.username }}</h3>
+                </header>
+                <header>
+                    <h4>Joined: {{ dateJoined }}</h4>
+                </header>
+            </section>
+        </section>
+        <div>
+            <b-card no-body>
+                <b-tabs card>
+                    <b-tab title="Your Residences" active>
+                        <CertifiedResidencyPage />
+                    </b-tab>
+                    <b-tab title="Upcoming Meetings">
+                        
+                    </b-tab>
+                </b-tabs>
+            </b-card>
+        </div>
+    </main>
+</template>
+
+<script>
+import CertifiedResidencyPage from '@/components/CertifiedResidency/CertifiedResidencyPage.vue';
+
+
+export default {
+    name: 'ProfilePage',
+    components: {
+        CertifiedResidencyPage,
+        
+    },
+    computed: {
+        dateJoined() {
+            return this.$store.state.dateJoined.split(',')[0]
+        }
+    },
+    mounted() {
+        this.loadCertifiedResidency()
+    },
+    methods: {
+        loadCertifiedResidency() {
+            this.$store.commit('refreshCertifiedResidency');
+        }
+    }
+};
+</script>
+
+<style scoped>
+.profile {
+    border: solid 1px lightgray;
+    border-style: solid;
+    border-radius: 15px;
+    margin-bottom: 1em;
+    padding: 1em;
+    position: relative;
+}
+</style>

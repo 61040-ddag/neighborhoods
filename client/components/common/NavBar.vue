@@ -28,6 +28,14 @@
                 </router-link>
             </button>
             <button v-if="$store.state.username">
+                <router-link
+                    to="/profile"
+                    class="link"
+                >
+                    👤 Profile
+                </router-link>
+            </button>
+            <button v-if="$store.state.username">
                 <router-link 
                     to="/account" 
                     class="link"
@@ -100,7 +108,6 @@ button {
   background-color: white;
   padding: 0px 10px;
   border-radius: 20px;
-  height: 2.5em;
   border: 2px solid grey;
 }
 button:hover {

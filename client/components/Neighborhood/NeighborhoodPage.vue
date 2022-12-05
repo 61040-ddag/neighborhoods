@@ -1,35 +1,74 @@
 <template>
     <main>
+        <header class="back">
+            <router-link
+                to="/map"
+                class="backLink"
+            >
+                ← Back to Map
+            </router-link>
+        </header>
         <section>
-            <section>
             <header>
-                <h2>Neighborhood Management</h2>
+                <h2 class="text">{{this.$store.state.neighborhood.name}}</h2>
             </header>
-            <CreateNeighborhoodForm
-                button="Create Neighborhood"
-            />
-            <UpdateNeighborhoodForm
-                button="Update Neighborhood"
-            />
-            <DeleteNeighborhoodForm
-                button="Delete Neighborhood"
-            />
-            </section>
         </section>
+        <div>
+            <b-card no-body>
+                <b-tabs card>
+                    <b-tab title="Review" active>
+                        <ReviewPage />
+                    </b-tab>
+                    <b-tab title="Scroll">
+                        <StrollPage />
+                    </b-tab>
+                </b-tabs>
+            </b-card>
+        </div>
     </main>
 </template>
 
 <script>
-import CreateNeighborhoodForm from '@/components/Neighborhood/CreateNeighborhoodForm.vue';
-import DeleteNeighborhoodForm from '@/components/Neighborhood/DeleteNeighborhoodForm.vue';
-import UpdateNeighborhoodForm from '@/components/Neighborhood/UpdateNeighborhoodForm.vue';
+import ReviewPage from '@/components/Review/ReviewPage.vue';
+import StrollPage from '@/components/Stroll/StrollPage.vue';
 
 export default {
     name: 'NeighborhoodPage',
     components: {
-        CreateNeighborhoodForm,
-        DeleteNeighborhoodForm,
-        UpdateNeighborhoodForm
+        ReviewPage,
+        StrollPage
+    },
+    data() {
+        return {
+            alerts: {}
+        }
+    },
+    mounted() {
+        this.loadReviews(),
+        this.loadStrolls()
+    },
+    methods: {
+        loadReviews() {
+            this.$store.commit('refreshReviews')
+        },
+        loadStrolls() {
+            this.$store.commit('refreshStrolls');
+        }
     }
-};
+}
+
 </script>
+
+<style scoped>
+.text {
+    text-align: center;
+}
+.back {
+    margin-top: 1em;
+}
+.backLink {
+    text-decoration: none;
+    color: black;
+    margin-top: 1em;
+ }
+</style>

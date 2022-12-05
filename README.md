@@ -123,6 +123,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Throws**
 
+- `400` if `name`, `city` or `state` is not given
 - `403` if user is not logged in
 - `404` if `name`, `city`, `state` of a neighborhood is not a recognized neighborhood
 
@@ -134,6 +135,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Throws**
 
+- `400` if `city` or `state` is not given
 - `403` if user is not logged in
 
 #### `GET /api/neighborhoods?lat1=lat1&long1=long1&lat2=lat2&long2=long`
@@ -184,6 +186,7 @@ This renders the `index.html` file that will be used to interact with the backen
 - An object with the updated neighborhood
 
 **Throws**
+- `400` if `name`, `city` or `state` is not given
 - `400` if any updated neighborhood information is in the wrong format
 - `401` if user making the request is not the admin
 - `403` if user is not logged in
@@ -196,21 +199,119 @@ This renders the `index.html` file that will be used to interact with the backen
 - A success message
 
 **Throws**
+- `400` if `name`, `city` or `state` is not given
 - `401` if user making the request is not the admin
 - `403` if user is not logged in
 - `404` if `name`, `city`, `state` of a neighborhood is not a recognized neighborhood
 
-#### `GET /api/reviews?neighborhood=neighborhood`
+#### `GET /api/reviews/neighborhoods?name=name&city=city&state=state`
 
-#### `GET /api/reviews?author=username`
+**Returns**
+
+- An array of reviews of a neighborhood with `name`, `city`, `state`
+
+**Throws**
+
+- `400` if `name`, `city` or `state` is not given
+- `403` if the user is not logged in
+- `404` if `name`, `city`, `state` of a neighborhood is not a recognized neighborhood
+
+#### `GET /api/reviews/authors?author=username`
+
+**Returns**
+
+- An array of reviews created by user with username `author`
+
+**Throws**
+
+- `400` if `author` is not given
+- `403` if the user is not logged in
+- `404` if `author` is not a recognized username of any user
 
 #### `POST /api/reviews`
 
+**Body**
+
+- `neighborhoodId` _{string}_ - The id of the location of the review
+- `rating` _{string}_ - The rating of the review
+- `content` _{string}_ - The content of the review
+
+**Returns**
+
+- A success message
+- A object with the created review
+
+**Throws**
+
+- `400` if the review `content` is empty or a stream of empty spaces
+- `400` if the review `rating` is not a number or between 0 and 10
+- `403` if the user is not logged in
+- `413` If the review `content` is more than 4096 characters long
+
 #### `DELETE /api/reviews/:reviewId?`
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `403` if the user is not the author of the review
+- `404` if the `reviewId` is invalid
+
+#### `GET /api/certifiedResidency/isCertified?user=username&neighborhoodId=neighborhoodId`
+
+**Returns**
+
+- A boolean on whether or not a user is a resident of neighborhood
+
+**Throws**
+
+- `400` if user is not given or neighborhoodId is not given
+- `403` if the user is not logged in
+- `404` if no user has given username or neighborhoodId of a neighborhood is not a recognized neighborhood
+
+#### `GET /api/certifiedResidency/users?user=username`
+
+**Returns**
+
+- An array of neighborhoods an user is a resident in
+
+**Throws**
+
+- `400` if neighborhoodId is not given
+- `403` if the user is not logged in
+- `404` neighborhoodId of a neighborhood is not a recognized neighborhood
+
 
 #### `POST /api/certifiedResidency`
 
-#### `DELETE /api/certifiedResidency/:neighborhood?`
+**Body**
+
+- `name` _{string}_ - The name of the neighborhood
+- `city` _{string}_ - The city of the neighborhood's location
+- `state` _{string}_ - The state of the neighborhood's location
+
+**Returns**
+
+- A success message
+- The created certifiedResidency
+
+**Throws**
+
+- `400` if any neighborhood information provided is in the wrong format
+- `403` if the user is not logged in
+- `409` if neighborhood already exists
+
+#### `DELETE /api/certifiedResidency/:certifiedResidencyId?`
+
+- A success message
+
+**Throws**
+
+- `403` - If the user is not logged in
+- `404` - If the certifiedResidencyId is not valid
 
 #### `POST /api/vibeCheck/interviews`
 
@@ -218,10 +319,61 @@ This renders the `index.html` file that will be used to interact with the backen
 
 #### `DELETE /api/vibeCheck/availability/:dateTime?`
 
-#### `GET /api/neighborhoodStroll/:strollId?`
+#### ` GET /api/strolls/authors?author=username`
 
-#### `GET /api/neighoborhoodStroll?neighborhood=neighborhood`
+**Returns**
 
-#### `POST /api/neighborhoodStroll`
+- A success message
+- An array of strolls of belonging to user with username
 
-#### `DELETE /api/neighborhoodStroll/:strollId?`
+**Throws**
+
+- `400` - if author is not given
+- `403` - if the user is not logged in
+- `404` - if no user has given author
+
+
+#### `GET /api/strolls/neighborhoods?name=name&city=city&state=state`
+
+**Returns**
+
+- A success message
+- An array of strolls of strolls of the neighborhood with name city and state
+
+**Throws**
+
+- `400` if name, city or state is not given
+- `403` if the user is not logged in
+- `404` if name, city, state of a neighborhood is not a recognized neighborhood
+
+
+#### `POST /api/strolls`
+
+**Body**
+
+- `neighborhoodId` _{string}_ - The id of the neighborhood of the stroll
+- `strollVideo` _{string}_ - the link of the stroll video to the firebase storage
+- `title` _{string}_ - the title of the stroll
+
+
+**Returns**
+
+- A success message
+- An object with the created stroll
+
+**Throws**
+
+- `403` - if the user is not logged in
+- `404` - if no neighborhood with neighborhoodId exists
+- `400` - if title of stroll or videoStroll is not properly formatted string
+
+#### `DELETE /api/strolls/:strollId?`
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` - If the user is not logged in
+- `404` - If the strollId is not valid

@@ -6,11 +6,11 @@ const isNeighborhoodAlreadyExists = async (req: Request, res: Response, next: Ne
     const name = req.body.name as string;
     const city = req.body.city as string;
     const state = req.body.state as string;
-    
+
     const neighborhood = await NeighborhoodCollection.findOneByInfo(name, city, state);
     if (neighborhood) {
         res.status(409).json({
-            error: `This neighborhood ${formatWord(neighborhood.name)} already exists.`
+            error: `Neighborhood ${formatWord(neighborhood.name)}, ${formatWord(neighborhood.city)}, ${neighborhood.state.toUpperCase()} already exists.`
         });
         return;
     }
@@ -21,11 +21,11 @@ const isNeighborhoodExists = async (req: Request, res: Response, next: NextFunct
     const name = req.query.name as string;
     const city = req.query.city as string;
     const state = req.query.state as string;
-    
+
     const neighborhood = await NeighborhoodCollection.findOneByInfo(name, city, state);
     if (!neighborhood) {
         res.status(404).json({
-            error: `This neighborhood ${formatWord(name)} does not exists.`
+            error: `Neighborhood ${formatWord(name)}, ${formatWord(city)}, ${state.toUpperCase()} does not exists.`
         });
         return;
     }
@@ -87,7 +87,7 @@ const isCreateInfoValid = async (req: Request, res: Response, next: NextFunction
         });
         return;
     }
-    
+
     if (!(latitude && longitude && crimeRate && averageAge && averagePrice)) {
         res.status(400).json({
             error: "Missing residential data."
@@ -129,6 +129,18 @@ const isUpdatedInfoValid = async (req: Request, res: Response, next: NextFunctio
     next();
 };
 
+const isNeighborhoodExistsById= async (req: Request, res: Response, next: NextFunction) => {
+    const neighborhoodId = req.body.neighborhoodId;
+    
+    const neighborhood = await NeighborhoodCollection.findOneById(neighborhoodId);
+    if (!neighborhood) {
+        res.status(404).json({
+            error: `Neighborhood with neighborhood ID ${neighborhoodId} does not exist.`
+        });
+        return;
+    }
+    next();
+}
 
 export {
     isCreateInfoValid,
@@ -136,4 +148,5 @@ export {
     isNeighborhoodExists,
     isBoundsValid,
     isUpdatedInfoValid,
+    isNeighborhoodExistsById
 };

@@ -16,13 +16,14 @@ export default {
     return {
       map: null,
       markers: [],
+      alerts: {}
     };
   },
   methods: {
     initMap() {
       let centerLat = 0;
       let centerLong = 0;
-      
+
       const numOfNbhoods = this.$store.state.neighborhoods.length;
       for (const nbhood of this.$store.state.neighborhoods) {
         centerLat += nbhood.latitude;
@@ -51,14 +52,16 @@ export default {
         }
       });
       // add markers
-      for (const nbhood of this.$store.state.neighborhoods) {
+
+      for (let i = 0; i < this.$store.state.neighborhoods.length; i++) {
+        const nbhood = this.$store.state.neighborhoods[i];
         const el = document.createElement("div");
         el.className = "marker";
-        const popup = this.featurePopup(nbhood.name, nbhood.city, nbhood.state, new Map([["Crime Rate", nbhood.crimeRate], ["Average Price", nbhood.averagePrice], ["Average Age", nbhood.averageAge]]));
+        const popup = this.featurePopup(i, nbhood.name, nbhood.city, nbhood.state, new Map([["Crime Rate", nbhood.crimeRate], ["Average Price", nbhood.averagePrice], ["Average Age", nbhood.averageAge]]));
         const marker = new mapboxgl.Marker(el).setLngLat([nbhood.longitude, nbhood.latitude]).setPopup(popup).addTo(this.map);
       }
     },
-    featurePopup(name, city, state, info) {
+    featurePopup(index, name, city, state, info) {
       const card = document.createElement("div");
       card.setAttribute("id", "styled-div-parent");
       const p = document.createElement("p");
@@ -66,7 +69,6 @@ export default {
       card.appendChild(p);
       const ul = document.createElement("ul");
       for (const [key, value] of info) {
-        console.log(key, value);
         const li = document.createElement("li");
         li.innerHTML = key + ": " + value;
         ul.appendChild(li);
@@ -78,13 +80,16 @@ export default {
       card.append(newDiv);
 
       const button = document.createElement("button");
-      button.onclick = this.callf;
+
+      button.index = index;
+      button.addEventListener('click', this.viewNeighborhood);
       button.innerHTML = "View Neighborhood";
       button.setAttribute("id", "neighborhood-button");
       button.classList.add('btn');
       button.classList.add('btn-primary');
       newDiv.appendChild(button);
 
+<<<<<<< HEAD
       const vibeButton = document.createElement("button");
       vibeButton.onclick = this.showVibePage;
       vibeButton.innerHTML = "Vibe Check";
@@ -101,6 +106,15 @@ export default {
     // 
     showVibePage() {
       this.$router.replace({ name: "Vibe", params: {neighborhood:"123"} });
+=======
+      return new mapboxgl.Popup({ offset: 25 }).setDOMContent(card);
+    },
+    viewNeighborhood(e) {
+      const neighborhood = this.$store.state.neighborhoods[e.target.index];
+      this.$store.commit('setNeighborhood', neighborhood);
+
+      this.$router.push({ name: 'Neighborhood' });
+>>>>>>> d674c541ed4ddc19093975294538100578119e5f
     }
   }
 
