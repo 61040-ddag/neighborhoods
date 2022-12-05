@@ -81,14 +81,11 @@ app.use(userValidator.isCurrentSessionUserExists);
 // Add routers from routes folder
 app.use('/api/users', userRouter);
 app.use('/api/neighborhoods', neighborhoodRouter);
-<<<<<<< HEAD
 app.use('/api/vibe', vibeRouter);
-=======
 app.use('/api/strolls', strollRouter);
 app.use('/api/reviews', reviewRouter);
 app.use('/api/certifiedResidency', certifiedResidencyRouter);
 
->>>>>>> d674c541ed4ddc19093975294538100578119e5f
 // Catch all the other routes and display error message
 app.all('*', (req: Request, res: Response) => {
     res.status(404).json({

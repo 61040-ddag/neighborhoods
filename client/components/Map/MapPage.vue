@@ -89,24 +89,6 @@ export default {
       button.classList.add('btn-primary');
       newDiv.appendChild(button);
 
-<<<<<<< HEAD
-      const vibeButton = document.createElement("button");
-      vibeButton.onclick = this.showVibePage;
-      vibeButton.innerHTML = "Vibe Check";
-      vibeButton.setAttribute("id", "vibe-button")
-      vibeButton.classList.add('btn');
-      vibeButton.classList.add('btn-primary');
-      newDiv.appendChild(vibeButton);
-      return new mapboxgl.Popup({ offset: 25 }).setDOMContent(card);
-    },
-    callf() {
-      // show neighborhood
-    },
-
-    // 
-    showVibePage() {
-      this.$router.replace({ name: "Vibe", params: {neighborhood:"123"} });
-=======
       return new mapboxgl.Popup({ offset: 25 }).setDOMContent(card);
     },
     viewNeighborhood(e) {
@@ -114,7 +96,6 @@ export default {
       this.$store.commit('setNeighborhood', neighborhood);
 
       this.$router.push({ name: 'Neighborhood' });
->>>>>>> d674c541ed4ddc19093975294538100578119e5f
     }
   }
 
