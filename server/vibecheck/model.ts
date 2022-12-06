@@ -1,24 +1,22 @@
 import type { StringExpressionOperatorReturningArray, Types } from 'mongoose';
 import { Schema, model } from 'mongoose';
-import type {User} from '../user/model';
-import type {Neighborhood} from '../neighborhood/model';
+import type { User } from '../user/model';
+import type { Neighborhood } from '../neighborhood/model';
 
 // Vibe AKA interview
 export type Vibe = {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
   residentId: Types.ObjectId;
-  vibeLink: string;
-  dateScheduled: Date;
+  availabilityId: Types.ObjectId;
 };
 
 
 export type PopulatedVibe = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   userId: User;
-  residentId: Neighborhood;
-  vibeLink: string;
-  dateScheduled: Date; 
+  residentId: User;
+  availabilityId: Availability;
 };
 
 
@@ -33,47 +31,57 @@ const VibeSchema = new Schema({
     required: true,
     ref: 'User'
   },
-  vibeLink: {
-    type: String,
-    required: true
-  },
-  dateScheduled: {
-    type: Date,
-    required: true
+  availabilityId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'Availability'
   },
 });
 
 // Availability
 export type Availability = {
   _id: Types.ObjectId;
-  username: string;
-  time: Date;
+  userId: Types.ObjectId;
+  neighborhoodId: Types.ObjectId;
+  vibeLink: string;
+  dateTime: Date;
 };
 
 
 export type PopulatedAvailability = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
-  username: string;
-  time: Date;
+  userId: User;
+  neighborhoodId: Neighborhood;
+  vibeLink: string;
+  dateTime: Date;
 };
 
 
 const AvailabilitySchema = new Schema({
-  username: {
-    type: String,
+  userId: {
+    type: Schema.Types.ObjectId,
     required: true,
     ref: 'User'
   },
-  time: {
+  neighborhoodId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'Neighborhood'
+  },
+  vibeLink: {
+    type: String,
+    required: true
+  },
+  dateTime: {
     type: Date,
     required: true,
   }
 });
 
-const  AvailabilityModel = model<Availability>('Availability', AvailabilitySchema);
 const VibeModel = model<Vibe>('Vibe', VibeSchema);
+const AvailabilityModel = model<Availability>('Availability', AvailabilitySchema);
 
-export { 
+export {
   VibeModel,
   AvailabilityModel
-}
+};

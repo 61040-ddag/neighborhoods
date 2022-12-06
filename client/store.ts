@@ -15,9 +15,11 @@ const store = new Vuex.Store({
     neighborhoodFilter: null, // Neighborhood, city, and/or state to filter shown neighborhoods
     neighborhoods: [], // All neighborhoods created in app
     neighborhood: null, // The neighborhood being viewed
+    residentNeighborhood: null, // The resident neighborhood being viewed
     reviews: [], // All reviews for the neighborhood being viewed
     strolls: [], // All the strolls
     certifiedResidences: [], // All the neighborhoods that the logged in user is a resident
+    upcomingMeetings: [],
     alerts: {} // global success/error messages encountered during submissions to non-visible forms
   },
   mutations: {
@@ -57,6 +59,13 @@ const store = new Vuex.Store({
        * @param neighborhood - new neighborhood to set
        */
       state.neighborhood = neighborhood;
+    },
+    setResidentNeighborhood(state, residentNeighborhood) {
+      /**
+       * Update the stored residentNeighborhood to the specified one
+       * @param residentNeighborhood - new residentNeighborhood to set
+       */
+      state.residentNeighborhood = residentNeighborhood;
     },
     updateNeighborhoodFilter(state, neighborhoodFilter) {
       /**
@@ -117,6 +126,14 @@ const store = new Vuex.Store({
       const url = `/api/certifiedResidency/users?user=${state.username}`;
       const res = await fetch(url).then(async r => r.json());
       state.certifiedResidences = res;
+    },
+    async refreshUpcomingMeetings(state) {
+      /**
+       * Request the server for the currently available schedule vibes
+       */
+      const url = '/api/vibe';
+      const res = await fetch(url).then(async r => r.json());
+      state.upcomingMeetings = res;
     }
   },
   // Store data across page refreshes, only discard on browser close

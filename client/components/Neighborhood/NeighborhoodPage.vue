@@ -22,6 +22,9 @@
                     <b-tab title="Scroll">
                         <StrollPage />
                     </b-tab>
+                    <b-tab title="Vibe Check">
+                        <AvailabilityPage />
+                    </b-tab>
                 </b-tabs>
             </b-card>
         </div>
@@ -31,12 +34,14 @@
 <script>
 import ReviewPage from '@/components/Review/ReviewPage.vue';
 import StrollPage from '@/components/Stroll/StrollPage.vue';
+import AvailabilityPage from '@/components/Vibe/AvailabilityPage.vue';
 
 export default {
     name: 'NeighborhoodPage',
     components: {
         ReviewPage,
-        StrollPage
+        StrollPage,
+        AvailabilityPage
     },
     data() {
         return {

@@ -2,21 +2,21 @@
     <div class="wrapper">
         <div class="card text-center card_">
             <div class="card-header">
-            Availability
+                Availability
             </div>
             <div class="card-body">
-            <h5 class="card-title">Resident: {{ user }}</h5>
-            <p class="card-text">Available at: {{ time }}</p>
-            <label>Enter meeting here and create breakout room:</label><br>
-            <!-- <input type="text" v-model="videoLink"><br></br> -->
-            <a class="btn btn-primary" href="https://mit.zoom.us/j/3197957566">Join Zoom here</a><br>
-            <!-- <button href="#"
-            class="btn btn-primary"
-            type="submit"
-            @click="setVideoLink"
-            >
-            Set Appointment</button> -->
+                <h5 class="card-title">Resident: {{availability.username }}</h5>
+                <p class="card-text">Available at: {{ availability.dateTime }}</p>
+                <label>Enter meeting here and create breakout room:</label><br>
+                <!-- <input type="text" v-model="videoLink"><br></br> -->
+                <a class="btn btn-primary" v-bind:href="availability.vibeLink">Meeting Link</a><br>
             </div>
+            <div>
+                <button @click="deleteAvailability">
+                    Delete
+                </button>
+            </div>
+
         </div>
     </div>
 </template>
@@ -24,48 +24,58 @@
 export default {
     name: "Availability",
     props: {
-        user: String,
-        time: Date,
-        required: true,
-    },
-    mounted() {
-        // this.getVideoLink()
+        availability: {
+            type: Object,
+            required: true,
+        }
     },
     data() {
         return {
-            videoLink: null
+            alerts: {}
         }
     },
     methods: {
-        async setVideoLink() {
-            console.log("line 37 console");
-            console.log(this.time);
-            console.log(this.videoLink);
-            const options = {
-                method: 'POST',
-                body: JSON.stringify({
-                    username: this.$store.state.username,
-                    resident: this.user,
-                    date: this.time,
-                    vibeLink: this.videoLink
-                }),
-                headers: { 'Content-Type': 'application/json' }
+        deleteAvailability() {
+            const params = {
+                url: `/api/vibe/availability/${this.availability._id}`,
+                method: 'DELETE',
+                callback: () => {
+                    this.$store.commit('alert', {
+                        message: `Successfully unschedule availability`, status: 'success'
+                    });
+                }
             };
-            const r = await fetch('/api/vibe/addVibe', options);
-            const response = await r.json();
-            if (!r.ok) {
-                throw new Error(response.error);
-            }
-            console.log(response);
+            this.request(params);
         },
-        async getVideoLink() {
-            const r = await fetch(`/api/vibe/getVibe?time=${this.time}`);
-            const response = await r.json();
-            if (!r.ok) {
-                throw new Error(response.error);
+        async request(params) {
+            /**
+             * Submits a request to the availability's endpoint
+             * @param params - Options for the request
+             * @param params.body - Body for the request
+             * @param params.callback - Function to run if the request succeeds
+             */
+            const options = {
+                method: params.method, headers: { 'Content-Type': 'application/json' }
+            };
+
+            if (params.body) {
+                options.body = params.body;
             }
-            console.log(response);
-            this.videoLink = response.videoLink;
+
+            try {
+                const r = await fetch(params.url, options);
+                if (!r.ok) {
+                    const res = await r.json();
+                    throw new Error(res.error);
+                }
+
+                this.$emit('updateAvailability');
+
+                params.callback();
+            } catch (e) {
+                this.$set(this.alerts, e, 'error');
+                setTimeout(() => this.$delete(this.alerts, e), 3000);
+            }
         }
     }
 }
@@ -73,6 +83,7 @@ export default {
 
 <style>
 .wrapper {
-    padding-bottom: 100px;;
+    padding-bottom: 100px;
+    ;
 }
 </style>

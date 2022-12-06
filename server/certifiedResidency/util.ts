@@ -2,6 +2,7 @@ import type { HydratedDocument } from 'mongoose';
 import type { CertifiedResidency, PopulatedCertifiedResidency } from './model';
 
 type neighborhood = {
+  _id: string,
   name: string;
   city: string;
   state: string;
@@ -38,13 +39,13 @@ const constructCertifiedResidencyResponse = (certifiedResidency: HydratedDocumen
   };
   const { username } = certifiedResidencyCopy.userId;
   delete certifiedResidencyCopy.userId;
-  const { name, city, state } = certifiedResidencyCopy.neighborhoodId;
+  const { _id, name, city, state } = certifiedResidencyCopy.neighborhoodId;
   delete certifiedResidencyCopy.neighborhoodId;
   return {
     ...certifiedResidencyCopy,
     _id: certifiedResidencyCopy._id.toString(),
     user: username,
-    neighborhood: { name: formatWord(name), city: formatWord(city), state: state.toUpperCase() }
+    neighborhood: { _id: _id.toString(), name: formatWord(name), city: formatWord(city), state: state.toUpperCase() }
   };
 };
 

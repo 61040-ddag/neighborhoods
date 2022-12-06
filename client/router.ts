@@ -5,11 +5,12 @@ import NeighborhoodsPage from './components/Neighborhood/NeighborhoodsPage.vue';
 import NeighborhoodPage from './components/Neighborhood/NeighborhoodPage.vue';
 import MapPage from './components/Map/MapPage.vue';
 import ProfilePage from './components/Profile/ProfilePage.vue';
+import AvailabilityPage from './components/Vibe/AvailabilityPage.vue';
 import AccountPage from './components/Account/AccountPage.vue';
 import SignupPage from './components/Login/SignupPage.vue';
 import LoginPage from './components/Login/LoginPage.vue';
 import NotFound from './NotFound.vue';
-import Vibe from './components/Vibe/Vibe.vue';
+// import Vibe from './components/Vibe/Vibe.vue';
 
 Vue.use(VueRouter);
 
@@ -19,7 +20,7 @@ const routes = [
     { path: '/neighborhood', name: 'Neighborhood', component: NeighborhoodPage},
     { path: '/map', name: 'Map', component: MapPage },
     { path: '/profile', name: 'Profile', component: ProfilePage },
-    { path: '/vibe', name: 'Vibe', component: Vibe },
+    { path: '/availability', name: 'Availability', component: AvailabilityPage },
     { path: '/account', name: 'Account', component: AccountPage },
     { path: '/login', name: 'Login', component: LoginPage },
     { path: '/signup', name: 'Signup', component: SignupPage },
@@ -48,7 +49,7 @@ router.beforeEach((to, from, next) => {
         }
 
         const toLoggedInPages = (
-            to.name === 'Account' || to.name === 'Neighborhood' || to.name === 'Map' || to.name === 'Profile'
+            to.name === 'Account' || to.name === 'Neighborhood' || to.name === 'Map' || to.name === 'Profile' || to.name === 'Availability'
         );
 
         if (toLoggedInPages && !router.app.$store.state.username) {

@@ -2,66 +2,58 @@
     <article class="residency">
         <header>
             <h3>
-                {{ neighborhood.name }}, {{ neighborhood.city }}, {{ neighborhood.state }}
+                Meeting on {{dateTime}}
             </h3>
+            <h2> Meeting between {{user}} and {{resident}} </h2>
+            <a :href="vibeLink"> Link to meeting </a>
         </header>
-        <section>
-            <button @click="leaveResidence">
-                Leave Residence
+        <button @click="deleteVibe">
+                Delete
             </button>
-            <button 
-                @click="residentNeighborhood"
-            >
-                Schedule Availability
-            </button>
-        </section>
-        <section class="alerts">
-        <article
-          v-for="(status, alert, index) in alerts"
-          :key="index"
-          :class="status"
-        >
-          <p>{{ alert }}</p>
-        </article>
-      </section>
     </article>
 </template>
 
 <script>
-import AvailabilityPage from '@/components/Vibe/AvailabilityPage.vue';
+
 
 export default {
-    name: 'CertifiedResidencyComponent',
-    components: {
-        AvailabilityPage
-    },
+    name: 'UpcomingMeetingComponent',
     props: {
         id: {
             type: String,
             required: true
         },
-        neighborhood: {
-            type: Object,
+        user: {
+            type: String,
             required: true
-        }
+        },
+        resident: {
+            type: String,
+            required: true
+        },
+        vibeLink: {
+            type: String,
+            required: true
+        },
+        dateTime: {
+            type: String,
+            required: true
+        },
     },
+
     data() {
         return {
             alerts: {}
         };
     },
     methods: {
-        residentNeighborhood() {
-            this.$store.commit('setResidentNeighborhood', this.neighborhood);
-            this.$router.push({ name: 'Availability' });
-        },
-        leaveResidence() {
+        deleteVibe() {
             const params = {
-                url: `/api/certifiedResidency/${this.id}`,
+                url: `/api/vibe/${this.id}`,
                 method: 'DELETE',
                 callback: () => {
                     this.$store.commit('alert', {
-                        message: `Successfully left the neighborhood ${this.neighborhood.name}, ${this.neighborhood.city}, ${this.neighborhood.state}`, status: 'success'
+                        message: `Successfully deleted vibe with vibe ${this.id} `, status: 'success'
                     });
                 }
             };
@@ -89,7 +81,7 @@ export default {
                     throw new Error(res.error);
                 }
 
-                this.$store.commit('refreshCertifiedResidency');
+                this.$store.commit('upcomingMeetings');
 
                 params.callback();
             } catch (e) {

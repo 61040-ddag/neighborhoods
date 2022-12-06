@@ -1,53 +1,108 @@
 import type { Request, Response, NextFunction } from 'express';
-import { VibeCollection } from './collection';
+import { Types } from 'mongoose';
+import { VibeCollection, AvailabilityCollection } from './collection';
+import NeighborhoodCollection from '../neighborhood/collection';
 
-const areInfoValid = async (req: Request, res: Response, next: NextFunction) => {
-    const username = req.body.username;
-    const resident = req.body.resident;
-    const dateScheduled = req.body.date;
-    const vibeLink = req.body.vibeLink;
 
-    console.log(username);
-    console.log(resident);
-    console.log(dateScheduled);
-    console.log(vibeLink);
-
-    if (!username || !resident || !dateScheduled || !vibeLink){
-        res.status(400).json({
-            error: "username, resident, scheduled date, or video link missing"
-        });
-        return;
-    }
-    next();
-}
-
-const isAvailabilityInfoValid = async (req: Request, res: Response, next: NextFunction) => {
-    const username = req.body.username;
-    const date = req.body.date;
-
-    if (!username || !date) {
-        res.status(400).json({
-            error: "username or date missing"
-        });
-        return;
-    }
-    next();
-}
-
-const isVibeExists = async (req: Request, res: Response, next: NextFunction) => {
-    const VibeId = req.params.VibeId;
-    const Vibe = VibeCollection.findOneById(VibeId);
-    if(Vibe){
+/**
+ * Checks if a vibe is valid
+ */
+ const isVibeValid = async (req: Request, res: Response, next: NextFunction) => {
+    if (!(req.body.residentId || req.body.vibeLink || req.body.availabilityId)) {
         res.status(404).json({
-            error: "There does not exist a Vibe with this id"
+            error: `Entered invalid information`
+        });
+        return;
+    }
+
+    next();
+};
+
+/**
+ * Checks if a isVibeExists with vibeId is req.params exists
+ */
+ const isVibeExists = async (req: Request, res: Response, next: NextFunction) => {
+    const validFormat = Types.ObjectId.isValid(req.params.vibeId);
+    const vibe = validFormat ? await VibeCollection.findOneById(req.params.vibeId) : '';
+    if (!vibe) {
+        res.status(404).json({
+            error: `Vibe with ID ${req.params.vibeId} does not exist.`
+        });
+        return;
+    }
+
+    next();
+};
+
+const isVibeBelongToUser = async (req: Request, res: Response, next: NextFunction) => {
+    const validFormat = Types.ObjectId.isValid(req.params.vibeId);
+    const vibe = validFormat ? await VibeCollection.findOneByIdAndUserId(req.params.vibeId, req.session.userId) : '';
+    if (!vibe) {
+        res.status(406).json({
+            error: `Vibe with ID ${req.params.vibeId} does not belong to user.`
+        });
+        return;
+    }
+
+    next();
+};
+
+//////////////////////////////////// Availability Middleware ////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/**
+ * Checks if a isAvailabilityExists with availabilityId is req.params exists
+ */
+const isAvailabilityExists = async (req: Request, res: Response, next: NextFunction) => {
+    const validFormat = Types.ObjectId.isValid(req.params.availabilityId);
+    const availability = validFormat ? await AvailabilityCollection.findOne(req.params.availabilityId) : '';
+    console.log(availability)
+    if (!availability) {
+        res.status(404).json({
+            error: `Availability with ID ${req.params.availabilityId} does not exist.`
+        });
+        return;
+    }
+
+    next();
+};
+
+const isNeighborhoodExistsById = async (req: Request, res: Response, next: NextFunction) => {
+    const validFormat = Types.ObjectId.isValid(req.query.neighborhoodId as string);
+    const neighborhood = validFormat ? await NeighborhoodCollection.findOneById(req.query.neighborhoodId as string) : '';
+    console.log(neighborhood)
+    if (!neighborhood) {
+        res.status(404).json({
+            error: `Neighborhood with neighborhood ID ${req.query.neighborhoodId as string} does not exist.`
         });
         return;
     }
     next();
 }
+
+const isDateTimeAlreadyExists = async (req: Request, res: Response, next: NextFunction) => {
+    const dateTime = req.body.dateTime;
+
+    const availabilites = await AvailabilityCollection.findAllByUserId(req.session.userId as string);
+
+    const result = availabilites.map(availability => availability.dateTime);
+
+    if (result.includes(dateTime)) {
+        res.status(409).json({
+            error: `You are already schedule an availability ${dateTime}.`
+        });
+        return;
+    }
+    next();
+};
 
 export {
-  areInfoValid,
-  isVibeExists,
-  isAvailabilityInfoValid
+    isAvailabilityExists,
+    isNeighborhoodExistsById,
+    isDateTimeAlreadyExists,
+    isVibeBelongToUser,
+    isVibeExists,
+    isVibeValid
 };

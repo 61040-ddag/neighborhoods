@@ -34,7 +34,7 @@ export default {
     name: 'HomePage',
     components: {
         GetNeighborhoodsForm
-    }
+    },
 };
 </script>
 

@@ -4,16 +4,25 @@ import type { Vibe, PopulatedVibe, PopulatedAvailability, Availability } from '.
 
 type VibeResponse = {
     _id: string;
-    user: string;
-    resident: string;
+    username: string;
+    residentname: string;
+    dateTime: string;
     vibeLink: string;
-    dateScheduled: string;
+};
+
+type neighborhood = {
+    _id: string;
+    name: string;
+    city: string;
+    state: string;
 };
 
 type AvailabilityResponse = {
     _id: string;
-    userId: string;
-    time: string;
+    username: string;
+    neighborhood: neighborhood 
+    vibeLink: string;
+    dateTime: string;
 };
 
 /**
@@ -26,39 +35,40 @@ type AvailabilityResponse = {
 
 
 /**
- * Transform a raw Neighborhood object from the database into an object
+ * Transform a raw Vibe object from the database into an object
  * with all the information needed by the frontend
  *
  * @param {HydratedDocument<Vibe>} Vibe - A Vibe object
  * @returns {VibeResponse} - The Vibe object to the frontend
  */
- const constructVibeResponse = (Vibe: HydratedDocument<Vibe>): VibeResponse => {
-    // console.log("util vibe");
-    // console.log(Vibe);
-    const VibeCopy: PopulatedVibe = {
-      ...Vibe.toObject({
-        versionKey: false // Cosmetics; prevents returning of __v property
-      })
-    };
-    
-    const {username} = VibeCopy.userId;
-    delete VibeCopy.userId;
-    return {
-      ...VibeCopy,
-      _id: VibeCopy._id.toString(),
-      user: username,
-      resident: Vibe.residentId.toString(),
-      vibeLink: Vibe.vibeLink,
-      dateScheduled: formatDate(Vibe.dateScheduled),
-    };
+ const constructVibeResponse = (vibe: HydratedDocument<Vibe>): VibeResponse => {
+  const vibeCopy: PopulatedVibe = {
+    ...vibe.toObject({
+      versionKey: false // Cosmetics; prevents returning of __v property
+    })
   };
-
+  const username  = vibeCopy.userId.username;
+  const residentname  = vibeCopy.residentId.username;
+  const dateTime = vibeCopy.availabilityId.dateTime;
+  const vibeLink = vibeCopy.availabilityId.vibeLink;
+  delete vibeCopy.userId;
+  delete vibeCopy.residentId;
+  delete vibeCopy.availabilityId;
+  return {
+    ...vibeCopy,
+    _id: vibeCopy._id.toString(),
+    username: username,
+    residentname: residentname,
+    dateTime: formatDate(dateTime),
+    vibeLink: vibeLink,
+  };
+};
 
 /**
  * Transform a raw Availability object from the database into an object
  * with all the information needed by the frontend
  *
- * @param {HydratedDocument<Availability>} Vibe - A Vibe object
+ * @param {HydratedDocument<Availability>} availability - A availability object
  * @returns {VibeResponse} - The Vibe object to the frontend
  */
  const constructAvailabilityResponse = (availability: HydratedDocument<Availability>): AvailabilityResponse => {
@@ -67,12 +77,21 @@ type AvailabilityResponse = {
         versionKey: false // Cosmetics; prevents returning of __v property
       })
     };
-    
+    const { username } = availabilityCopy.userId;
+    const { _id, name, city, state } = availabilityCopy.neighborhoodId;
+    delete availabilityCopy.userId;
+    delete availabilityCopy.neighborhoodId;
     return {
       ...availabilityCopy,
       _id: availabilityCopy._id.toString(),
-      userId: availabilityCopy.username,
-      time: formatDate(availabilityCopy.time),
+      username: username,
+      neighborhood: {
+        _id: _id.toString(),
+        name: name,
+        city: city,
+        state: state
+      },
+      dateTime: formatDate(availabilityCopy.dateTime),
     };
   };
   
