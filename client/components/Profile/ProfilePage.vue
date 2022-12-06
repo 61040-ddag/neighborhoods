@@ -22,7 +22,7 @@
                         <CertifiedResidencyPage />
                     </b-tab>
                     <b-tab title="Upcoming Meetings">
-                        
+                        <UpcomingMeetingsPage />
                     </b-tab>
                 </b-tabs>
             </b-card>
@@ -32,13 +32,13 @@
 
 <script>
 import CertifiedResidencyPage from '@/components/CertifiedResidency/CertifiedResidencyPage.vue';
-
+import UpcomingMeetingsPage from '@/components/VibeCheck/UpcomingMeetingsPage.vue';
 
 export default {
     name: 'ProfilePage',
     components: {
         CertifiedResidencyPage,
-        
+        UpcomingMeetingsPage
     },
     computed: {
         dateJoined() {
@@ -46,11 +46,15 @@ export default {
         }
     },
     mounted() {
-        this.loadCertifiedResidency()
+        this.loadCertifiedResidency();
+        this.loadUpcomingMeetings();
     },
     methods: {
         loadCertifiedResidency() {
             this.$store.commit('refreshCertifiedResidency');
+        },
+        loadUpcomingMeetings(){
+            this.$store.commit('refreshUpcomingMeetings');
         }
     }
 };

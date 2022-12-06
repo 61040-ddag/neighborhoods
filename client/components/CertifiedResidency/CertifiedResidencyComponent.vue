@@ -9,6 +9,11 @@
             <button @click="leaveResidence">
                 Leave Residence
             </button>
+            <button 
+                @click="residentNeighborhood"
+            >
+                Schedule Availability
+            </button>
         </section>
         <section class="alerts">
         <article
@@ -23,9 +28,13 @@
 </template>
 
 <script>
+import AvailabilityPage from '@/components/VibeCheck/AvailabilityPage.vue';
 
 export default {
     name: 'CertifiedResidencyComponent',
+    components: {
+        AvailabilityPage
+    },
     props: {
         id: {
             type: String,
@@ -42,6 +51,10 @@ export default {
         };
     },
     methods: {
+        residentNeighborhood() {
+            this.$store.commit('setResidentNeighborhood', this.neighborhood);
+            this.$router.push({ name: 'Availability' });
+        },
         leaveResidence() {
             const params = {
                 url: `/api/certifiedResidency/${this.id}`,

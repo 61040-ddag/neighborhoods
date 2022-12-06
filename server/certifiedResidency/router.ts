@@ -3,6 +3,7 @@ import express from 'express';
 import CertifiedResidencyCollection from './collection';
 import UserCollection from '../user/collection';
 import NeighborhoodCollection from '../neighborhood/collection';
+import { AvailabilityCollection, VibeCheckCollection } from '../vibecheck/collection';
 import * as certifiedResidencyValidator from '../certifiedResidency/middleware';
 import * as neighborhoodValidator from '../neighborhood/middleware';
 import * as userValidator from '../user/middleware';
@@ -136,7 +137,15 @@ router.delete(
         certifiedResidencyValidator.isCertifiedResidencyExists
     ],
     async (req: Request, res: Response) => {
+        const userId = req.session.userId;
         await CertifiedResidencyCollection.deleteOneById(req.params.certifiedResidencyId);
+        // When a user leaves a neighborhood, their availabilities needs to be deleted
+        const availabilites = await AvailabilityCollection.findAllByUserId(userId);
+        await AvailabilityCollection.deleteManyByUser(userId);
+        // When their availabilities are deleted, their respective vibe checks must be deleted 
+        for (const availability of availabilites) {
+            await VibeCheckCollection.deleteOneByAvailabilityId(availability._id);
+        }
         res.status(200).json({
             message: `You have successfully deleted your residency!`
         });

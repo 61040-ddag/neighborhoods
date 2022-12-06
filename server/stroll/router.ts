@@ -94,9 +94,10 @@ router.post(
     const strollVideo = req.body.strollVideo;
 
     const stroll = await StrollCollection.addOne(userId, neighborhoodId, title, strollVideo);
+    
     res.status(201).json({
       message: `Stroll was created successfully`,
-      user: util.constructStrollResponse(stroll)
+      // user: util.constructStrollResponse(stroll)
     });
   }
 );

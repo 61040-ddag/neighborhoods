@@ -3,6 +3,7 @@ import moment from 'moment';
 import type { Stroll, PopulatedStroll } from './model';
 
 type neighborhood = {
+  _id: string;
   name: string;
   city: string;
   state: string;
@@ -50,7 +51,7 @@ const constructStrollResponse = (stroll: HydratedDocument<Stroll>): StrollRespon
   };
 
   const { username } = strollCopy.authorId;
-  const { name, city, state } = strollCopy.neighborhoodId;
+  const { _id, name, city, state } = strollCopy.neighborhoodId;
   delete strollCopy.authorId;
   delete strollCopy.neighborhoodId;
   return {
@@ -58,7 +59,7 @@ const constructStrollResponse = (stroll: HydratedDocument<Stroll>): StrollRespon
     _id: strollCopy._id.toString(),
     dateUploaded: formatDate(stroll.dateUploaded),
     author: username,
-    neighborhood: { name: formatWord(name), city: formatWord(city), state: state.toUpperCase() }
+    neighborhood: { _id: _id.toString(), name: formatWord(name), city: formatWord(city), state: state.toUpperCase() }
   };
 };
 

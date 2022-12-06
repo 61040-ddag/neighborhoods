@@ -66,7 +66,7 @@
         alerts: {} // Displays success/error messages encountered during review modification
       };
     },
-    async mounted() {
+    async created() {
       this.checkCertified()
     },
     methods: {

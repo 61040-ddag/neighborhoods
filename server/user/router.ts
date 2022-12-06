@@ -4,6 +4,7 @@ import UserCollection from './collection';
 import ReviewCollection from '../review/collection';
 import StrollCollection from '../stroll/collection';
 import CertifiedResidencyCollection from '../certifiedResidency/collection';
+import { AvailabilityCollection, VibeCheckCollection } from '../vibecheck/collection';
 import * as userValidator from './middleware';
 import * as util from './util';
 
@@ -164,6 +165,14 @@ router.delete(
     await ReviewCollection.deleteManyByAuthor(userId);
     await CertifiedResidencyCollection.deleteManyByUser(userId);
     await StrollCollection.deleteManyByAuthor(userId);
+    const availabilites = await AvailabilityCollection.findAllByUserId(userId);
+    await AvailabilityCollection.deleteManyByUser(userId);
+    // All vibe checks where user is the resident
+    for (const availability of availabilites) {
+      await VibeCheckCollection.deleteOneByAvailabilityId(availability._id);
+    }
+    await VibeCheckCollection.deleteManyByUser(userId);
+
     req.session.userId = undefined;
     res.status(200).json({
       message: 'Your account has been deleted successfully.'

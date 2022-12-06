@@ -15,9 +15,12 @@ const store = new Vuex.Store({
     neighborhoodFilter: null, // Neighborhood, city, and/or state to filter shown neighborhoods
     neighborhoods: [], // All neighborhoods created in app
     neighborhood: null, // The neighborhood being viewed
+    residentNeighborhood: null, // The resident neighborhood being viewed
     reviews: [], // All reviews for the neighborhood being viewed
     strolls: [], // All the strolls
     certifiedResidences: [], // All the neighborhoods that the logged in user is a resident
+    availabilities: [], // All availabilities of residents for the neighborhood being viewed
+    upcomingMeetings: [], // All upcoming meetings for various vibe checks
     alerts: {} // global success/error messages encountered during submissions to non-visible forms
   },
   mutations: {
@@ -57,6 +60,13 @@ const store = new Vuex.Store({
        * @param neighborhood - new neighborhood to set
        */
       state.neighborhood = neighborhood;
+    },
+    setResidentNeighborhood(state, residentNeighborhood) {
+      /**
+       * Update the stored residentNeighborhood to the specified one
+       * @param residentNeighborhood - new residentNeighborhood to set
+       */
+      state.residentNeighborhood = residentNeighborhood;
     },
     updateNeighborhoodFilter(state, neighborhoodFilter) {
       /**
@@ -117,6 +127,25 @@ const store = new Vuex.Store({
       const url = `/api/certifiedResidency/users?user=${state.username}`;
       const res = await fetch(url).then(async r => r.json());
       state.certifiedResidences = res;
+    },
+    async refreshAvailabilities(state) {
+      /**
+       * Request the server for the currently available availabilities of the current neighborhood
+       */
+      const url = `/api/vibeCheck/availability?neighborhoodId=${state.neighborhood._id}`;
+      const res = await fetch(url).then(async r => r.json());
+      const upcomingMeetings = new Set(state.upcomingMeetings.map(vibeCheck => vibeCheck.availability._id));
+      state.availabilities = res.availabilities
+        .filter(availability => availability.username !== state.username)
+        .filter(availability => !upcomingMeetings.has(availability._id));
+    },
+    async refreshUpcomingMeetings(state) {
+      /**
+       * Request the server for the currently available the scheduled vibeChecks of the logged in user
+       */
+      const url = `/api/vibeCheck`;
+      const res = await fetch(url).then(async r => r.json());
+      state.upcomingMeetings = res.vibeChecks;
     }
   },
   // Store data across page refreshes, only discard on browser close

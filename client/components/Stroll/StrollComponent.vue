@@ -2,7 +2,10 @@
   <article class="stroll">
     <header>
       <div class="author">
-        <h3>
+        <h3 v-if="isCertified">
+          @{{ stroll.author }}☑️
+        </h3>
+        <h3 v-else>
           @{{ stroll.author }}
         </h3>
       </div>
@@ -49,10 +52,21 @@ export default {
   },
   data() {
     return {
+      isCertified: false,
       alerts: {} // Displays success/error messages encountered during stroll modification
     };
   },
+  async created() {
+    this.checkCertified()
+  },
   methods: {
+    async checkCertified() {
+      const username = this.stroll.author;
+      const neighborhoodId = this.stroll.neighborhood._id;
+      const url = `/api/certifiedResidency/isCertified?user=${username}&neighborhoodId=${neighborhoodId}`;
+      const res = await fetch(url).then(async r => r.json());
+      this.isCertified = res;
+    },
     deleteStroll() {
         /**
          * Deletes this stroll.
