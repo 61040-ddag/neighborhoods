@@ -1,6 +1,14 @@
 <template>
-    <div class="customContainer container row col-md-8 mx-auto">
-        <section v-if="isResident">
+    <main>
+        <header class="back">
+            <router-link 
+                to="/profile" 
+                class="backLink"
+            >
+                ← Back to Profile
+            </router-link>
+        </header>
+            <div class="customContainer container row col-md-8 mx-auto">
             <h1 class="h1 text-center title">Schedule Availability for {{ $store.state.residentNeighborhood.name }}</h1>
             <div class="header">
                 <h2>Resident? Add availability!</h2>
@@ -12,64 +20,54 @@
             <button class="styledButton" type="submit" @click="addAvailability">
                 Add availability
             </button>
-        </section>
-        <h2 class="header">Neighborhood Availabilities</h2>
-        <section v-if="availabilities.length">
-            <Availability v-for="avail in availabilities" :key="avail.id" :availability="avail"
-                @updateAvailability="getAvailability" />
-        </section>
-        <article v-else>
-            <p v-if="isResident">No schedules. Schedule an availability now!</p>
-            <p v-else>No residents are available at this time. Please check again later!</p>     
-        </article>
+            <h2 class="header">Neighborhood Availabilities</h2>
+            <section v-if="availabilities.length">
+                <AvailabilityComponent 
+                    v-for="availability in availabilities" 
+                    :key="availability.id" 
+                    :availability="availability"
+                    @updateAvailability="getAvailability" 
+                />
+            </section>
+            <article v-else>
+                No schedules. Schedule an availability now!
+            </article>
     </div>
-
+    </main>
 </template>
 
 <script>
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 import { ref } from 'vue';
-import Availability from '@/components/Vibe/Availability.vue';
+import AvailabilityComponent from '@/components/VibeCheck/AvailabilityComponent.vue';
 
 export default {
     name: 'AvailabilityPage',
     components: {
         DatePicker,
-        Availability
+        AvailabilityComponent
     },
     data() {
         return {
             inputtedTime: null,
-            isResident: false,
             videoLink: "",
             availabilities: []
         }
     },
     async mounted() {
         this.getAvailability();
-        this.checkResident();
     },
     methods: {
-        async checkResident() {
-            const url = `/api/certifiedResidency/isCertified?user=${this.$store.state.username}&neighborhoodId=${this.$store.state.neighborhood._id}`;
-            const res = await fetch(url).then(async r => r.json());
-            this.isResident = res;
-        },
         async getAvailability() {
             try {
-                const r = await fetch(`/api/vibe/availability?neighborhoodId=${this.$store.state.residentNeighborhood._id}`);
+                const r = await fetch(`/api/vibeCheck/availability?neighborhoodId=${this.$store.state.residentNeighborhood._id}`);
                 const response = await r.json();
                 if (!r.ok) {
                     throw new Error(response.error);
                 }
-                console.log(response.availabilities)
-                if (this.isResident) {
-                    this.availabilities = response.availabilities.filter(avail => avail.username === this.$store.state.username);
-                } else {
-                    this.availabilities = response.availabilities;
-                }
-                
+                this.availabilities = response.availabilities.filter(availability => availability.username === this.$store.state.username);
+
             } catch (e) {
                 this.$set(this.alerts, e, "error");
                 setTime(() => this.$delete(this.alerts, e), 3000);
@@ -80,13 +78,13 @@ export default {
                 method: 'POST',
                 body: JSON.stringify({
                     neighborhoodId: `${this.$store.state.residentNeighborhood._id}`,
-                    vibeLink: `${this.videoLink}`,
+                    videoLink: `${this.videoLink}`,
                     dateTime: `${this.inputtedTime}`
                 }),
                 headers: { 'Content-Type': 'application/json' }
             };
 
-            const r = await fetch('/api/vibe/availability', options);
+            const r = await fetch('/api/vibeCheck/availability', options);
             const response = await r.json();
             if (!r.ok) {
                 throw new Error(response.error);
@@ -99,6 +97,11 @@ export default {
 </script>
 
 <style>
+.backLink {
+  text-decoration: none;
+  color: black;
+  margin-top: 1em;
+}
 .header {
     text-align: center;
     padding-top: 50px;

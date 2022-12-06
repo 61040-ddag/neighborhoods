@@ -5,11 +5,9 @@
                 Availability
             </div>
             <div class="card-body">
-                <h5 class="card-title">Resident: {{availability.username }}</h5>
+                <h5 class="card-title">Resident: @{{availability.username }}</h5>
+                <h5 class="card-title">Neighborhood: {{availability.neighborhood.name }}</h5>
                 <p class="card-text">Available at: {{ availability.dateTime }}</p>
-                <label>Enter meeting here and create breakout room:</label><br>
-                <!-- <input type="text" v-model="videoLink"><br></br> -->
-                <a class="btn btn-primary" v-bind:href="availability.vibeLink">Meeting Link</a><br>
             </div>
             <div>
                 <button @click="deleteAvailability">
@@ -22,7 +20,7 @@
 </template>
 <script>
 export default {
-    name: "Availability",
+    name: 'AvailabilityComponent',
     props: {
         availability: {
             type: Object,
@@ -37,7 +35,7 @@ export default {
     methods: {
         deleteAvailability() {
             const params = {
-                url: `/api/vibe/availability/${this.availability._id}`,
+                url: `/api/vibeCheck/availability/${this.availability._id}`,
                 method: 'DELETE',
                 callback: () => {
                     this.$store.commit('alert', {

@@ -1,16 +1,25 @@
 import type { Request, Response, NextFunction } from 'express';
 import { Types } from 'mongoose';
-import { VibeCollection, AvailabilityCollection } from './collection';
+import { VibeCheckCollection, AvailabilityCollection } from './collection';
+import UserCollection from '../user/collection';
 import NeighborhoodCollection from '../neighborhood/collection';
 
 
 /**
- * Checks if a vibe is valid
+ * Checks if a vibe check is valid
  */
- const isVibeValid = async (req: Request, res: Response, next: NextFunction) => {
-    if (!(req.body.residentId || req.body.vibeLink || req.body.availabilityId)) {
+const isVibeCheckValid = async (req: Request, res: Response, next: NextFunction) => {
+    if (!(req.body.availabilityId)) {
         res.status(404).json({
-            error: `Entered invalid information`
+            error: `Missing information in vibe check.`
+        });
+        return;
+    }
+
+    const availability = await AvailabilityCollection.findOne(req.body.availabilityId);
+    if (!availability) {
+        res.status(404).json({
+            error: `Availability with ID ${req.body.availabilityId} does not exist.`
         });
         return;
     }
@@ -21,12 +30,12 @@ import NeighborhoodCollection from '../neighborhood/collection';
 /**
  * Checks if a isVibeExists with vibeId is req.params exists
  */
- const isVibeExists = async (req: Request, res: Response, next: NextFunction) => {
-    const validFormat = Types.ObjectId.isValid(req.params.vibeId);
-    const vibe = validFormat ? await VibeCollection.findOneById(req.params.vibeId) : '';
-    if (!vibe) {
+const isVibeCheckExists = async (req: Request, res: Response, next: NextFunction) => {
+    const validFormat = Types.ObjectId.isValid(req.params.vibeCheckId);
+    const vibeCheck = validFormat ? await VibeCheckCollection.findOneById(req.params.vibeCheckId) : '';
+    if (!vibeCheck) {
         res.status(404).json({
-            error: `Vibe with ID ${req.params.vibeId} does not exist.`
+            error: `Vibe check with ID ${req.params.vibeCheckId} does not exist.`
         });
         return;
     }
@@ -34,12 +43,12 @@ import NeighborhoodCollection from '../neighborhood/collection';
     next();
 };
 
-const isVibeBelongToUser = async (req: Request, res: Response, next: NextFunction) => {
-    const validFormat = Types.ObjectId.isValid(req.params.vibeId);
-    const vibe = validFormat ? await VibeCollection.findOneByIdAndUserId(req.params.vibeId, req.session.userId) : '';
-    if (!vibe) {
+const isVibeCheckBelongToUser = async (req: Request, res: Response, next: NextFunction) => {
+    const validFormat = Types.ObjectId.isValid(req.params.vibeCheckId);
+    const vibeCheck = validFormat ? await VibeCheckCollection.findOneByIdAndUserId(req.params.vibeCheckId, req.session.userId) : '';
+    if (!vibeCheck) {
         res.status(406).json({
-            error: `Vibe with ID ${req.params.vibeId} does not belong to user.`
+            error: `Vibe check with ID ${req.params.vibeCheckId} does not belong to user.`
         });
         return;
     }
@@ -58,7 +67,7 @@ const isVibeBelongToUser = async (req: Request, res: Response, next: NextFunctio
 const isAvailabilityExists = async (req: Request, res: Response, next: NextFunction) => {
     const validFormat = Types.ObjectId.isValid(req.params.availabilityId);
     const availability = validFormat ? await AvailabilityCollection.findOne(req.params.availabilityId) : '';
-    console.log(availability)
+
     if (!availability) {
         res.status(404).json({
             error: `Availability with ID ${req.params.availabilityId} does not exist.`
@@ -72,10 +81,23 @@ const isAvailabilityExists = async (req: Request, res: Response, next: NextFunct
 const isNeighborhoodExistsById = async (req: Request, res: Response, next: NextFunction) => {
     const validFormat = Types.ObjectId.isValid(req.query.neighborhoodId as string);
     const neighborhood = validFormat ? await NeighborhoodCollection.findOneById(req.query.neighborhoodId as string) : '';
-    console.log(neighborhood)
+
     if (!neighborhood) {
         res.status(404).json({
             error: `Neighborhood with neighborhood ID ${req.query.neighborhoodId as string} does not exist.`
+        });
+        return;
+    }
+    next();
+}
+
+const isNeighborhoodExistsByIdBody = async (req: Request, res: Response, next: NextFunction) => {
+    const validFormat = Types.ObjectId.isValid(req.body.neighborhoodId as string);
+    const neighborhood = validFormat ? await NeighborhoodCollection.findOneById(req.body.neighborhoodId as string) : '';
+
+    if (!neighborhood) {
+        res.status(404).json({
+            error: `Neighborhood with neighborhood ID ${req.body.neighborhoodId as string} does not exist.`
         });
         return;
     }
@@ -101,8 +123,9 @@ const isDateTimeAlreadyExists = async (req: Request, res: Response, next: NextFu
 export {
     isAvailabilityExists,
     isNeighborhoodExistsById,
+    isNeighborhoodExistsByIdBody,
     isDateTimeAlreadyExists,
-    isVibeBelongToUser,
-    isVibeExists,
-    isVibeValid
+    isVibeCheckBelongToUser,
+    isVibeCheckExists,
+    isVibeCheckValid
 };

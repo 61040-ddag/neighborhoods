@@ -32,7 +32,7 @@
 
 <script>
 import CertifiedResidencyPage from '@/components/CertifiedResidency/CertifiedResidencyPage.vue';
-import UpcomingMeetingsPage from '@/components/Vibe/UpcomingMeetingsPage.vue';
+import UpcomingMeetingsPage from '@/components/VibeCheck/UpcomingMeetingsPage.vue';
 
 export default {
     name: 'ProfilePage',

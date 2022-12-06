@@ -56,7 +56,7 @@ export default {
       alerts: {} // Displays success/error messages encountered during stroll modification
     };
   },
-  async mounted() {
+  async created() {
     this.checkCertified()
   },
   methods: {

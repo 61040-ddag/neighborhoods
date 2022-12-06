@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import AvailabilityPage from '@/components/Vibe/AvailabilityPage.vue';
+import AvailabilityPage from '@/components/VibeCheck/AvailabilityPage.vue';
 
 export default {
     name: 'CertifiedResidencyComponent',

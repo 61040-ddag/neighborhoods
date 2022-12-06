@@ -1,29 +1,45 @@
 import type { HydratedDocument } from 'mongoose';
 import moment from 'moment';
-import type { Vibe, PopulatedVibe, PopulatedAvailability, Availability } from './model';
+import type { VibeCheck, PopulatedVibeCheck, PopulatedAvailability, Availability } from './model';
 
-type VibeResponse = {
-    _id: string;
-    username: string;
-    residentname: string;
-    dateTime: string;
-    vibeLink: string;
+type VibeCheckResponse = {
+  _id: string;
+  username: string;
+  availability: availability;
 };
 
+type availability = {
+  _id: string;
+  residentname: string;
+  neighborhood: neighborhood;
+  videoLink: string;
+  dateTime: string;
+}
+
 type neighborhood = {
-    _id: string;
-    name: string;
-    city: string;
-    state: string;
+  _id: string;
+  name: string;
+  city: string;
+  state: string;
 };
 
 type AvailabilityResponse = {
-    _id: string;
-    username: string;
-    neighborhood: neighborhood 
-    vibeLink: string;
-    dateTime: string;
+  _id: string;
+  username: string;
+  neighborhood: neighborhood
+  videoLink: string;
+  dateTime: string;
 };
+
+/**
+ * Encode a readable word
+ * 
+ * @param {string} word - The database version of the word
+ * @returns {string} - Readable version of the word
+ */
+const formatWord = (word: string): string => {
+  return word.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+}
 
 /**
  * Encode a date as an unambiguous string
@@ -31,36 +47,44 @@ type AvailabilityResponse = {
  * @param {Date} date - A date object
  * @returns {string} - formatted date as string
  */
- const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:mm:ss a');
+const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:mm:ss a');
 
 
 /**
- * Transform a raw Vibe object from the database into an object
+ * Transform a raw Vibe Check object from the database into an object
  * with all the information needed by the frontend
  *
- * @param {HydratedDocument<Vibe>} Vibe - A Vibe object
- * @returns {VibeResponse} - The Vibe object to the frontend
+ * @param {HydratedDocument<VibeCheck>} vibeCheck - A vibe check object
+ * @returns {VibeCheckResponse} - The vibe check object to the frontend
  */
- const constructVibeResponse = (vibe: HydratedDocument<Vibe>): VibeResponse => {
-  const vibeCopy: PopulatedVibe = {
-    ...vibe.toObject({
+const constructVibeCheckResponse = (vibeCheck: HydratedDocument<VibeCheck>): VibeCheckResponse => {
+  const vibeCheckCopy: PopulatedVibeCheck = {
+    ...vibeCheck.toObject({
       versionKey: false // Cosmetics; prevents returning of __v property
     })
   };
-  const username  = vibeCopy.userId.username;
-  const residentname  = vibeCopy.residentId.username;
-  const dateTime = vibeCopy.availabilityId.dateTime;
-  const vibeLink = vibeCopy.availabilityId.vibeLink;
-  delete vibeCopy.userId;
-  delete vibeCopy.residentId;
-  delete vibeCopy.availabilityId;
+  const username = vibeCheckCopy.userId.username;
+  const { _id: availability_id, userId: residentId, neighborhoodId, videoLink, dateTime } = vibeCheckCopy.availabilityId;
+  const { username: residentname } = residentId;
+  const { _id: neighborhood_id, name, city, state } = neighborhoodId;
+  delete vibeCheckCopy.userId;
+  delete vibeCheckCopy.availabilityId;
   return {
-    ...vibeCopy,
-    _id: vibeCopy._id.toString(),
+    ...vibeCheckCopy,
+    _id: vibeCheckCopy._id.toString(),
     username: username,
-    residentname: residentname,
-    dateTime: formatDate(dateTime),
-    vibeLink: vibeLink,
+    availability: {
+      _id: availability_id.toString(),
+      residentname: residentname,
+      neighborhood: {
+        _id: neighborhood_id.toString(),
+        name: formatWord(name),
+        city: formatWord(city),
+        state: state.toUpperCase()
+      },
+      videoLink: videoLink,
+      dateTime: formatDate(dateTime)
+    }
   };
 };
 
@@ -69,34 +93,33 @@ type AvailabilityResponse = {
  * with all the information needed by the frontend
  *
  * @param {HydratedDocument<Availability>} availability - A availability object
- * @returns {VibeResponse} - The Vibe object to the frontend
+ * @returns {VibeCheckResponse} - The Vibe object to the frontend
  */
- const constructAvailabilityResponse = (availability: HydratedDocument<Availability>): AvailabilityResponse => {
-    const availabilityCopy: PopulatedAvailability = {
-      ...availability.toObject({
-        versionKey: false // Cosmetics; prevents returning of __v property
-      })
-    };
-    const { username } = availabilityCopy.userId;
-    const { _id, name, city, state } = availabilityCopy.neighborhoodId;
-    delete availabilityCopy.userId;
-    delete availabilityCopy.neighborhoodId;
-    return {
-      ...availabilityCopy,
-      _id: availabilityCopy._id.toString(),
-      username: username,
-      neighborhood: {
-        _id: _id.toString(),
-        name: name,
-        city: city,
-        state: state
-      },
-      dateTime: formatDate(availabilityCopy.dateTime),
-    };
+const constructAvailabilityResponse = (availability: HydratedDocument<Availability>): AvailabilityResponse => {
+  const availabilityCopy: PopulatedAvailability = {
+    ...availability.toObject({
+      versionKey: false // Cosmetics; prevents returning of __v property
+    })
   };
-  
-  export {
-    constructVibeResponse,
-    constructAvailabilityResponse
+  const { username } = availabilityCopy.userId;
+  const { _id, name, city, state } = availabilityCopy.neighborhoodId;
+  delete availabilityCopy.userId;
+  delete availabilityCopy.neighborhoodId;
+  return {
+    ...availabilityCopy,
+    _id: availabilityCopy._id.toString(),
+    username: username,
+    neighborhood: {
+      _id: _id.toString(),
+      name: formatWord(name),
+      city: formatWord(city),
+      state: state.toUpperCase()
+    },
+    dateTime: formatDate(availabilityCopy.dateTime),
   };
-  
+};
+
+export {
+  constructVibeCheckResponse,
+  constructAvailabilityResponse
+};

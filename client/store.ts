@@ -19,7 +19,8 @@ const store = new Vuex.Store({
     reviews: [], // All reviews for the neighborhood being viewed
     strolls: [], // All the strolls
     certifiedResidences: [], // All the neighborhoods that the logged in user is a resident
-    upcomingMeetings: [],
+    availabilities: [], // All availabilities of residents for the neighborhood being viewed
+    upcomingMeetings: [], // All upcoming meetings for various vibe checks
     alerts: {} // global success/error messages encountered during submissions to non-visible forms
   },
   mutations: {
@@ -127,13 +128,24 @@ const store = new Vuex.Store({
       const res = await fetch(url).then(async r => r.json());
       state.certifiedResidences = res;
     },
+    async refreshAvailabilities(state) {
+      /**
+       * Request the server for the currently available availabilities of the current neighborhood
+       */
+      const url = `/api/vibeCheck/availability?neighborhoodId=${state.neighborhood._id}`;
+      const res = await fetch(url).then(async r => r.json());
+      const upcomingMeetings = new Set(state.upcomingMeetings.map(vibeCheck => vibeCheck.availability._id));
+      state.availabilities = res.availabilities
+        .filter(availability => availability.username !== state.username)
+        .filter(availability => !upcomingMeetings.has(availability._id));
+    },
     async refreshUpcomingMeetings(state) {
       /**
-       * Request the server for the currently available schedule vibes
+       * Request the server for the currently available the scheduled vibeChecks of the logged in user
        */
-      const url = '/api/vibe';
+      const url = `/api/vibeCheck`;
       const res = await fetch(url).then(async r => r.json());
-      state.upcomingMeetings = res;
+      state.upcomingMeetings = res.vibeChecks;
     }
   },
   // Store data across page refreshes, only discard on browser close

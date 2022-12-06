@@ -23,7 +23,9 @@
                         <StrollPage />
                     </b-tab>
                     <b-tab title="Vibe Check">
-                        <AvailabilityPage />
+                        <VibeCheckPage 
+                            :isResident="isResident"
+                        />
                     </b-tab>
                 </b-tabs>
             </b-card>
@@ -34,23 +36,25 @@
 <script>
 import ReviewPage from '@/components/Review/ReviewPage.vue';
 import StrollPage from '@/components/Stroll/StrollPage.vue';
-import AvailabilityPage from '@/components/Vibe/AvailabilityPage.vue';
+import VibeCheckPage from '@/components/VibeCheck/VibeCheckPage.vue';
 
 export default {
     name: 'NeighborhoodPage',
     components: {
         ReviewPage,
         StrollPage,
-        AvailabilityPage
+        VibeCheckPage
     },
     data() {
         return {
-            alerts: {}
-        }
+            isResident: false,
+        };
     },
-    mounted() {
+    async mounted() {
         this.loadReviews(),
-        this.loadStrolls()
+        this.loadStrolls(),
+        this.loadAvailabilities(),
+        this.checkResident()
     },
     methods: {
         loadReviews() {
@@ -58,6 +62,16 @@ export default {
         },
         loadStrolls() {
             this.$store.commit('refreshStrolls');
+        },
+        loadAvailabilities() {
+            this.$store.commit('refreshAvailabilities');
+        },
+        async checkResident() {
+            const username = this.$store.state.username;
+            const neighborhoodId = this.$store.state.neighborhood._id;
+            const url = `/api/certifiedResidency/isCertified?user=${username}&neighborhoodId=${neighborhoodId}`;
+            const res = await fetch(url).then(async r => r.json());
+            this.isResident = res;
         }
     }
 }

@@ -3,30 +3,23 @@ import { Schema, model } from 'mongoose';
 import type { User } from '../user/model';
 import type { Neighborhood } from '../neighborhood/model';
 
-// Vibe AKA interview
-export type Vibe = {
+// Vibe Check AKA interview
+export type VibeCheck = {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
-  residentId: Types.ObjectId;
   availabilityId: Types.ObjectId;
 };
 
 
-export type PopulatedVibe = {
+export type PopulatedVibeCheck = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   userId: User;
-  residentId: User;
-  availabilityId: Availability;
+  availabilityId: PopulatedAvailability;
 };
 
 
-const VibeSchema = new Schema({
+const VibeCheckSchema = new Schema({
   userId: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: 'User'
-  },
-  residentId: {
     type: Schema.Types.ObjectId,
     required: true,
     ref: 'User'
@@ -43,7 +36,7 @@ export type Availability = {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
   neighborhoodId: Types.ObjectId;
-  vibeLink: string;
+  videoLink: string;
   dateTime: Date;
 };
 
@@ -52,7 +45,7 @@ export type PopulatedAvailability = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   userId: User;
   neighborhoodId: Neighborhood;
-  vibeLink: string;
+  videoLink: string;
   dateTime: Date;
 };
 
@@ -68,7 +61,7 @@ const AvailabilitySchema = new Schema({
     required: true,
     ref: 'Neighborhood'
   },
-  vibeLink: {
+  videoLink: {
     type: String,
     required: true
   },
@@ -78,10 +71,10 @@ const AvailabilitySchema = new Schema({
   }
 });
 
-const VibeModel = model<Vibe>('Vibe', VibeSchema);
+const VibeCheckModel = model<VibeCheck>('VibeCheck', VibeCheckSchema);
 const AvailabilityModel = model<Availability>('Availability', AvailabilitySchema);
 
 export {
-  VibeModel,
+  VibeCheckModel,
   AvailabilityModel
 };

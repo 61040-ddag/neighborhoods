@@ -5,12 +5,11 @@ import NeighborhoodsPage from './components/Neighborhood/NeighborhoodsPage.vue';
 import NeighborhoodPage from './components/Neighborhood/NeighborhoodPage.vue';
 import MapPage from './components/Map/MapPage.vue';
 import ProfilePage from './components/Profile/ProfilePage.vue';
-import AvailabilityPage from './components/Vibe/AvailabilityPage.vue';
+import AvailabilityPage from './components/VibeCheck/AvailabilityPage.vue';
 import AccountPage from './components/Account/AccountPage.vue';
 import SignupPage from './components/Login/SignupPage.vue';
 import LoginPage from './components/Login/LoginPage.vue';
-import NotFound from './NotFound.vue';
-// import Vibe from './components/Vibe/Vibe.vue';
+import NotFound from './NotFound.vue';;
 
 Vue.use(VueRouter);
 

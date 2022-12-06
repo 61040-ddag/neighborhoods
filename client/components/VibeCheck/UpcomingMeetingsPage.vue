@@ -3,29 +3,26 @@
         <section v-if="$store.state.upcomingMeetings.length">
             <UpcomingMeetingComponent 
                 v-for="upcomingMeeting in $store.state.upcomingMeetings"
-                :key="upcomingMeeting._id"
-                :id="upcomingMeeting._id"
-                :user="upcomingMeeting.user"
-                :resident="upcomingMeeting.resident"
-                :vibeLink="upcomingMeeting.vibeLink"
-                :dateTime="upcomingMeeting.dateTime"
+                :upcomingMeeting="upcomingMeeting"
             />
         </section>
         <article 
             v-else
             class="text"
         >
-            <h3>You have no upcoming meetings! Schedule a meeting to learn more about a neighborhood!!!</h3>
+            <h3>You have no upcoming meetings!</h3>
         </article>
     </main>
 </template>
     
 <script>
-
+import UpcomingMeetingComponent from '@/components/VibeCheck/UpcomingMeetingComponent.vue';
 
 export default {
     name: 'UpcomingMeetingsPage',
-    
+    components: {
+        UpcomingMeetingComponent
+    }
 };
 </script>
 

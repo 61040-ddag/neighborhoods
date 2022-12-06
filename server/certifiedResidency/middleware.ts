@@ -46,7 +46,7 @@ const isUserExists = async (req: Request, res: Response, next: NextFunction) => 
 const isNeighborhoodExistsById= async (req: Request, res: Response, next: NextFunction) => {
     const validFormat = Types.ObjectId.isValid(req.query.neighborhoodId as string);
     const neighborhood = validFormat ? await NeighborhoodCollection.findOneById(req.query.neighborhoodId as string) : '';
-    console.log(neighborhood)
+    
     if (!neighborhood) {
         res.status(404).json({
             error: `Neighborhood with neighborhood ID ${req.query.neighborhoodId as string} does not exist.`

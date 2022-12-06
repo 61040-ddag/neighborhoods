@@ -79,7 +79,7 @@ app.use(userValidator.isCurrentSessionUserExists);
 app.use('/api/users', userRouter);
 app.use('/api/neighborhoods', neighborhoodRouter);
 app.use('/api/strolls', strollRouter);
-app.use('/api/vibe', vibeRouter);
+app.use('/api/vibeCheck', vibeRouter);
 app.use('/api/reviews', reviewRouter);
 app.use('/api/certifiedResidency', certifiedResidencyRouter);
 
