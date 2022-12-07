@@ -38,12 +38,11 @@ const router = express.Router();
  *
  * @name POST /api/vibeCheck
  *
- * @param {string} residentname - the username of the resident
- * @param {string} availabilityId - the date that the Vibe is scheduled for
+ * @param {string} availabilityId - The id of the availability of the desired resident
  * @return {VibeCheckResponse} - The created vibe check
- * @throws {400} - If residentname or availabilityId is missing
+ * @throws {400} - If availabilityId is missing
  * @throws {403} - If user is not logged in
- * @throws {404} - If user with residentname or availabilityId deoes not exist
+ * @throws {404} - If availabilityId does not exist
  *
  */
 router.post(
@@ -72,7 +71,7 @@ router.post(
  *
  * @return {string} - A success message
  * @throws {403} - If the user is not logged in
- * @throws {404} - If vibe check with vibeCheckId doesn't exist or information invalid
+ * @throws {404} - If vibe check with vibeCheckId does not exist
  */
  router.delete(
     '/:vibeCheckId?',
@@ -99,7 +98,7 @@ router.post(
  *
  * @name GET /api/vibeCheck/availability?neighborhoodId=neighborhoodId
  *
- * @return {AvailabilityResponse[]} - All availability of a neighborhood
+ * @return {AvailabilityResponse[]} - All availabilities of a neighborhood
  * @throws {400} - If neighborhoodId is not given
  * @throws {403} - If the user is not logged in
  * @throws {404} - If neighborhoodId of a neighborhood is not a recognized neighborhood
@@ -127,12 +126,12 @@ router.get(
  *
  * @name POST /api/vibeCheck/availability
  *
- * @param {string} neighborhoodId - the id of the neighborhood
- * @param {string} videoLink - The video link of the vibe interview
- * @param {string} dateTime - the date and time that the availability is scheduled for
+ * @param {string} neighborhoodId - The id of the neighborhood
+ * @param {string} videoLink - The video link of the meeting
+ * @param {string} dateTime - The date and time that the availability is scheduled for
  * @return {AvailabilityResponse} - The created availability
- * @throws {403} - If there is a user already logged in
- * @throws {404} - if neighborhoodId is not a recognized neighborhood
+ * @throws {403} - If the user is not logged in
+ * @throws {404} - If neighborhoodId is not a recognized neighborhood
  * @throws {409} - If date and time already exist
  */
 router.post(
@@ -159,11 +158,11 @@ router.post(
 /**
  * Delete an availability.
  *
- * @name DELETE /api/vibeCheck/availability:availabilityId
+ * @name DELETE /api/vibeCheck/availability/:availabilityId
  *
  * @return {string} - A success message
  * @throws {403} - If the user is not logged in
- * @throws {404} - If availability with availabilityId doesn't exist
+ * @throws {404} - If availability with availabilityId does not exist
  */
 router.delete(
   '/availability/:availabilityId?',

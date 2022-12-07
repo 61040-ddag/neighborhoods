@@ -282,7 +282,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
 - `400` if neighborhoodId is not given
 - `403` if the user is not logged in
-- `404` neighborhoodId of a neighborhood is not a recognized neighborhood
+- `404` if neighborhoodId of a neighborhood is not a recognized neighborhood
 
 
 #### `POST /api/certifiedResidency`
@@ -306,18 +306,96 @@ This renders the `index.html` file that will be used to interact with the backen
 
 #### `DELETE /api/certifiedResidency/:certifiedResidencyId?`
 
+**Returns**
+
 - A success message
 
 **Throws**
 
-- `403` - If the user is not logged in
-- `404` - If the certifiedResidencyId is not valid
+- `403` if the user is not logged in
+- `404` if the certifiedResidencyId is not valid
 
-#### `POST /api/vibeCheck/interviews`
+#### `GET /api/vibeCheck`
+
+**Returns**
+
+- A success message
+- An array of all the vibe checks of the logged in user
+
+**Throws**
+
+- `403` - If the user is not logged in
+
+#### `POST /api/vibeCheck`
+
+**Body**
+
+- `availabilityId` _{string}_ - The id of the availability of the desired resident
+
+**Returns**
+
+- A success message
+- The created vibe check
+
+**Throws**
+
+- `400` if availabilityId is missing
+- `403` if the user is not logged in
+- `404` if the availabilityId is not valid
+
+#### `DELETE /api/vibeCheck/:vibeCheckId?`
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if vibe check with vibeCheckId does not exist
+
+#### `GET /api/vibeCheck/availability?neighborhoodId=neighborhoodId`
+
+**Returns**
+
+- A success message
+- An array of all the availabilities of a neighborhood
+
+**Throws**
+
+- `400` if neighborhoodId is not given
+- `403` if the user is not logged in
+- `404` if neighborhoodId of a neighborhood is not a recognized neighborhood
 
 #### `POST /api/vibeCheck/availability`
 
-#### `DELETE /api/vibeCheck/availability/:dateTime?`
+**Body**
+
+- `neighborhoodId` _{string}_ - The id of the neighborhood
+- `videoLink` _{string}_ - The video link of the meeting
+- `dateTime` _{string}_ - The date and time that the availability is scheduled for
+
+**Returns**
+
+- A success message
+- The created availability
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if neighborhoodId is not a recognized neighborhood
+- `409` if date and time already exist
+
+#### `DELETE /api/vibeCheck/availability/:availabilityId?`
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if availability with availabilityId does not exist
 
 #### ` GET /api/strolls/authors?author=username`
 
@@ -363,9 +441,9 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Throws**
 
-- `403` - if the user is not logged in
-- `404` - if no neighborhood with neighborhoodId exists
-- `400` - if title of stroll or videoStroll is not properly formatted string
+- `403` if the user is not logged in
+- `404` if no neighborhood with neighborhoodId exists
+- `400` if title of stroll or videoStroll is not properly formatted string
 
 #### `DELETE /api/strolls/:strollId?`
 
@@ -375,5 +453,5 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Throws**
 
-- `403` - If the user is not logged in
-- `404` - If the strollId is not valid
+- `403` if the user is not logged in
+- `404` if the strollId is not valid

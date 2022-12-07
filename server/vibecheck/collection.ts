@@ -57,14 +57,14 @@ class VibeCheckCollection {
     return otherVibeChecks;
   }
 
-
   /**
-   * Delete all the vibe check for a given user
-   *
-   * @param {string} userId - The id of user
+   * Delete a vibe check by id
+   * 
+   * @param vibeCheckId - the id of the Vibe to be deleted
    */
-  static async deleteManyByUser(userId: Types.ObjectId | string): Promise<void> {
-    await VibeCheckModel.deleteMany({ userId: userId });
+  static async deleteOneById(vibeCheckId: Types.ObjectId | string): Promise<boolean> {
+    const vibeCheck = await VibeCheckModel.deleteOne({ _id: vibeCheckId });
+    return vibeCheck !== null;
   }
 
   /**
@@ -78,13 +78,12 @@ class VibeCheckCollection {
   }
 
   /**
-   * Delete a vibe check by id
-   * 
-   * @param vibeCheckId - the id of the Vibe to be deleted
-   */
-  static async deleteOneById(vibeCheckId: Types.ObjectId | string): Promise<boolean> {
-    const vibeCheck = await VibeCheckModel.deleteOne({ _id: vibeCheckId });
-    return vibeCheck !== null;
+  * Delete all the vibe check for a given user
+  *
+  * @param {string} userId - The id of user
+  */
+  static async deleteManyByUser(userId: Types.ObjectId | string): Promise<void> {
+    await VibeCheckModel.deleteMany({ userId: userId });
   }
 }
 
@@ -132,7 +131,7 @@ class AvailabilityCollection {
    * @return {Promise<HydratedDocument<Availability>[]>} - An array of all of the availabilites
    */
   static async findAllByNeighborhoodId(neighborhoodId: Types.ObjectId | string): Promise<Array<HydratedDocument<Availability>>> {
-    return await AvailabilityModel.find({ neighborhoodId }).populate('userId').populate('neighborhoodId');
+    return await AvailabilityModel.find({ neighborhoodId: neighborhoodId }).populate('userId').populate('neighborhoodId');
   }
 
   /**
