@@ -20,18 +20,18 @@ class VibeCheckCollection {
    * Find a vibe check by vibeCheckId
    * 
    * @param {string} vibeCheckId - The id of the vibe check to find
-   * @return {Promise<HydratedDocument<VibeCheck>>} - The vibe check with the given vibeCheckId, if any
+   * @return {Promise<HydratedDocument<VibeCheck>> | Promise<null>} - The vibe check with the given vibeCheckId, if any
    */
   static async findOneById(vibeCheckId: Types.ObjectId | string): Promise<HydratedDocument<VibeCheck>> {
     return VibeCheckModel.findOne({ _id: vibeCheckId });
   }
 
   /**
-   * Find a vibe check by VibeId and UserId
+   * Find a vibe check by vibeCheckId and UserId
    * 
    * @param {string} vibeCheckId - The id of the vibe check to find
    * @param {string} UserId - The id of the User to find
-   * @return {Promise<HydratedDocument<VibeCheck>>} - The vibe check with the given VibeId, if any
+   * @return {Promise<HydratedDocument<VibeCheck>>} - The vibe check with the given vibeCheckId and userId, if any
    */
   static async findOneByIdAndUserId(vibeCheckId: Types.ObjectId | string, userId: Types.ObjectId | string): Promise<HydratedDocument<VibeCheck>> {
     const user = await (await VibeCheckModel.findOne({ _id: vibeCheckId, userId: userId }))
@@ -45,22 +45,31 @@ class VibeCheckCollection {
     }
   }
 
+    /**
+   * Find a vibe check by availabilityId
+   * 
+   * @param {string} availabilityId - The id of the availability to find
+   * @return {Promise<HydratedDocument<VibeCheck>>} - The vibe check with the given availabilityId, if any
+   */
+  static async findOneByAvailabilityId(availabilityId: Types.ObjectId | string): Promise<HydratedDocument<VibeCheck>> {
+    return VibeCheckModel.findOne({ availabilityId: availabilityId }).populate('userId').populate({ path: 'availabilityId', populate: [{ path: 'userId' }, { path: 'neighborhoodId' }] });
+  }
+
   /**
    * Find all vibe checks userId is part of
    * 
    * @param {string} userId - The id of the user whose vibe checks we are looking for
+   * @return {Promise<HydratedDocument<VibeCheck>[]>}
    */
   static async findAllByUserId(userId: Types.ObjectId | string): Promise<Array<HydratedDocument<VibeCheck>>> {
-    const otherVibeChecks = await VibeCheckModel.find({ userId: userId }).populate('userId').populate({ path: 'availabilityId', populate: [{ path: 'userId' }, { path: 'neighborhoodId' }] });
-    const myVibeChecks = await VibeCheckModel.find({ "availabilityId.userId._id": userId }).populate('userId').populate({ path: 'availabilityId', populate: [{ path: 'userId' }, { path: 'neighborhoodId' }] });
-    otherVibeChecks.push(...myVibeChecks);
-    return otherVibeChecks;
+    return await VibeCheckModel.find({ userId: userId }).populate('userId').populate({ path: 'availabilityId', populate: [{ path: 'userId' }, { path: 'neighborhoodId' }] });
   }
 
   /**
    * Delete a vibe check by id
    * 
    * @param vibeCheckId - the id of the Vibe to be deleted
+   * @returns {Promise<Boolean>} - true if the vibe check has been deleted, false otherwise
    */
   static async deleteOneById(vibeCheckId: Types.ObjectId | string): Promise<boolean> {
     const vibeCheck = await VibeCheckModel.deleteOne({ _id: vibeCheckId });
@@ -71,6 +80,7 @@ class VibeCheckCollection {
    * Delete all the vibe check for a given resident of availability
    *
    * @param {string} availabilityId - The id of availability
+   * @returns {Promise<Boolean>} - true if the vibe check has been deleted, false otherwise
    */
   static async deleteOneByAvailabilityId(availabilityId: Types.ObjectId | string): Promise<boolean> {
     const vibeCheck = await VibeCheckModel.deleteMany({ availabilityId: availabilityId });
@@ -138,6 +148,7 @@ class AvailabilityCollection {
    * Delete an availability by id
    * 
    * @param availabilityId - the id of the Availability to be deleted
+   * @returns {Promise<Boolean>} - true if the availability has been deleted, false otherwise
    */
   static async deleteOneById(availabilityId: Types.ObjectId | string): Promise<boolean> {
     const Availability = await AvailabilityModel.deleteOne({ _id: availabilityId });
