@@ -13,7 +13,7 @@ type availability = {
   residentname: string;
   neighborhood: neighborhood;
   videoLink: string;
-  dateTime: string;
+  dateTime: Date;
 }
 
 type neighborhood = {
@@ -28,7 +28,7 @@ type AvailabilityResponse = {
   username: string;
   neighborhood: neighborhood
   videoLink: string;
-  dateTime: string;
+  dateTime: Date;
 };
 
 /**
@@ -83,7 +83,7 @@ const constructVibeCheckResponse = (vibeCheck: HydratedDocument<VibeCheck>): Vib
         state: state.toUpperCase()
       },
       videoLink: videoLink,
-      dateTime: formatDate(dateTime)
+      dateTime: dateTime
     }
   };
 };
@@ -115,11 +115,12 @@ const constructAvailabilityResponse = (availability: HydratedDocument<Availabili
       city: formatWord(city),
       state: state.toUpperCase()
     },
-    dateTime: formatDate(availabilityCopy.dateTime),
+    dateTime: availabilityCopy.dateTime,
   };
 };
 
 export {
   constructVibeCheckResponse,
-  constructAvailabilityResponse
+  constructAvailabilityResponse,
+  formatDate
 };

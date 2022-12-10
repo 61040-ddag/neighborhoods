@@ -16,21 +16,41 @@ const router = express.Router();
  * @return {VibeCheckResponse[]} - All vibe checks of a user
  * @throws {403} - If the user is not logged in
  */
- router.get(
-    '/',
-    [
-      userValidator.isUserLoggedIn,
-    ],
-    async (req: Request, res: Response) => {
-      const userId = req.session.userId;
-      const vibeChecks = await VibeCheckCollection.findAllByUserId(userId);
-      const response = vibeChecks.map(util.constructVibeCheckResponse);
-      res.status(200).json({
-        message: `All vibe checks were found`,
-        vibeChecks: response
-      });
+router.get(
+  '/',
+  [
+    userValidator.isUserLoggedIn,
+  ],
+  async (req: Request, res: Response) => {
+    const userId = req.session.userId;
+    const vibeChecks = await VibeCheckCollection.findAllByUserId(userId);
+    const availabilites = await AvailabilityCollection.findAllByUserId(userId);
+    for (const availability of availabilites) {
+      const vibeCheck = await VibeCheckCollection.findOneByAvailabilityId(availability._id);
+      if (vibeCheck) {
+        vibeChecks.push(vibeCheck);
+      }
     }
-  );
+    const response = vibeChecks
+      .map(util.constructVibeCheckResponse)
+      .sort((vibeCheck1, vibeCheck2) => {
+        return vibeCheck1.availability.dateTime.getTime() - vibeCheck2.availability.dateTime.getTime();
+      })
+      .map(vibeCheck => {
+        return {
+          ...vibeCheck,
+          availability: {
+            ...vibeCheck.availability,
+            dateTime: util.formatDate(vibeCheck.availability.dateTime)
+          }
+        };
+      });
+    res.status(200).json({
+      message: `All vibe checks were found`,
+      vibeChecks: response
+    });
+  }
+);
 
 
 /**
@@ -38,12 +58,11 @@ const router = express.Router();
  *
  * @name POST /api/vibeCheck
  *
- * @param {string} residentname - the username of the resident
- * @param {string} availabilityId - the date that the Vibe is scheduled for
+ * @param {string} availabilityId - The id of the availability of the desired resident
  * @return {VibeCheckResponse} - The created vibe check
- * @throws {400} - If residentname or availabilityId is missing
+ * @throws {400} - If availabilityId is missing
  * @throws {403} - If user is not logged in
- * @throws {404} - If user with residentname or availabilityId deoes not exist
+ * @throws {404} - If availabilityId does not exist
  *
  */
 router.post(
@@ -59,7 +78,7 @@ router.post(
 
     res.status(201).json({
       message: `Vibe check was created successfully`,
-      user: util.constructVibeCheckResponse(vibeCheck)
+      vibeCheck: util.constructVibeCheckResponse(vibeCheck)
     });
   }
 );
@@ -72,23 +91,23 @@ router.post(
  *
  * @return {string} - A success message
  * @throws {403} - If the user is not logged in
- * @throws {404} - If vibe check with vibeCheckId doesn't exist or information invalid
+ * @throws {404} - If vibe check with vibeCheckId does not exist
  */
- router.delete(
-    '/:vibeCheckId?',
-    [
-      userValidator.isUserLoggedIn,
-      vibeCheckValidator.isVibeCheckExists,
-      vibeCheckValidator.isVibeCheckBelongToUser,
-    ],
-    async (req: Request, res: Response) => {
-        const vibeCheckId = req.params.vibeCheckId;
-        await VibeCheckCollection.deleteOneById(vibeCheckId);
-        res.status(200).json({
-        message: 'The vibe check has been deleted successfully.'
-        });
-    }
-  );
+router.delete(
+  '/:vibeCheckId?',
+  [
+    userValidator.isUserLoggedIn,
+    vibeCheckValidator.isVibeCheckExists,
+    vibeCheckValidator.isVibeCheckBelongToUser,
+  ],
+  async (req: Request, res: Response) => {
+    const vibeCheckId = req.params.vibeCheckId;
+    await VibeCheckCollection.deleteOneById(vibeCheckId);
+    res.status(200).json({
+      message: 'The vibe check has been deleted successfully.'
+    });
+  }
+);
 
 /////////////////////////////// Availability Routes ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +118,7 @@ router.post(
  *
  * @name GET /api/vibeCheck/availability?neighborhoodId=neighborhoodId
  *
- * @return {AvailabilityResponse[]} - All availability of a neighborhood
+ * @return {AvailabilityResponse[]} - All availabilities of a neighborhood
  * @throws {400} - If neighborhoodId is not given
  * @throws {403} - If the user is not logged in
  * @throws {404} - If neighborhoodId of a neighborhood is not a recognized neighborhood
@@ -113,8 +132,18 @@ router.get(
   async (req: Request, res: Response) => {
     const neighborhoodId = req.query.neighborhoodId as string;
     const availabilities = await AvailabilityCollection.findAllByNeighborhoodId(neighborhoodId);
-    
-    const response = availabilities.map(util.constructAvailabilityResponse);
+
+    const response = availabilities
+      .map(util.constructAvailabilityResponse)
+      .sort((availability1, availability2) => {
+        return availability1.dateTime.getTime() - availability2.dateTime.getTime();
+      })
+      .map(availability => {
+        return {
+          ...availability,
+          dateTime: util.formatDate(availability.dateTime)
+        };
+      });
     res.status(200).json({
       message: `All availabilities were found.`,
       availabilities: response
@@ -127,12 +156,12 @@ router.get(
  *
  * @name POST /api/vibeCheck/availability
  *
- * @param {string} neighborhoodId - the id of the neighborhood
- * @param {string} videoLink - The video link of the vibe interview
- * @param {string} dateTime - the date and time that the availability is scheduled for
+ * @param {string} neighborhoodId - The id of the neighborhood
+ * @param {string} videoLink - The video link of the meeting
+ * @param {string} dateTime - The date and time that the availability is scheduled for
  * @return {AvailabilityResponse} - The created availability
- * @throws {403} - If there is a user already logged in
- * @throws {404} - if neighborhoodId is not a recognized neighborhood
+ * @throws {403} - If the user is not logged in
+ * @throws {404} - If neighborhoodId is not a recognized neighborhood
  * @throws {409} - If date and time already exist
  */
 router.post(
@@ -159,11 +188,11 @@ router.post(
 /**
  * Delete an availability.
  *
- * @name DELETE /api/vibeCheck/availability:availabilityId
+ * @name DELETE /api/vibeCheck/availability/:availabilityId
  *
  * @return {string} - A success message
  * @throws {403} - If the user is not logged in
- * @throws {404} - If availability with availabilityId doesn't exist
+ * @throws {404} - If availability with availabilityId does not exist
  */
 router.delete(
   '/availability/:availabilityId?',
@@ -172,7 +201,10 @@ router.delete(
     vibeCheckValidator.isAvailabilityExists
   ],
   async (req: Request, res: Response) => {
-    await AvailabilityCollection.deleteOneById(req.params.availabilityId);
+    const availabilityId = req.params.availabilityId as string;
+    await AvailabilityCollection.deleteOneById(availabilityId);
+    // When a user deletes their availability, the corresponding vibe check with associated availability must be deleted 
+    await VibeCheckCollection.deleteOneByAvailabilityId(availabilityId);
     res.status(200).json({
       message: 'The availability has been deleted successfully.'
     });
