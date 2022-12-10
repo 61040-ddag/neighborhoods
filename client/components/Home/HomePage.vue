@@ -53,12 +53,8 @@ export default {
     align-items: center;
 }
 
-.outer-container {
-}
-
 .outermost-container {
-    padding-top: 20%;
-    border: 3px solid blue;
+    padding-top: 18%;
 }
 
 .routerLink {
