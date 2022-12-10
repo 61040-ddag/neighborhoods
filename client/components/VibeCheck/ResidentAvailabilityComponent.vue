@@ -34,7 +34,6 @@
                 url: `/api/vibeCheck`,
                 method: 'POST',
                 body: JSON.stringify({
-                    residentname: this.availability.username,
                     availabilityId: this.availability._id
                 }),
                 callback: () => {
