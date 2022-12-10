@@ -1,36 +1,53 @@
 <!-- Form for finding neighborhoods (inline style) -->
 <template>
-  <form @submit.prevent="submit">
-    <input 
-      v-model="neighborhood" 
-      type="text" 
-      :placeholder="neighborhoodPlaceholder"
-    >
-    <input 
-      v-model="city" 
-      type="text" 
-      :placeholder="cityPlaceholder"
-    >
-    <input 
-      v-model="state" 
-      type="text" 
-      :placeholder="statePlaceholder"
-    >
-    <button 
-      type="submit"
-    >
-      {{ button }}
-    </button>
-    <section class="alerts">
-      <article 
-        v-for="(status, alert, index) in alerts" 
-        :key="index" 
-        :class="status"
-      >
-        <p>{{ alert }}</p>
-      </article>
-    </section>
-  </form>
+  <div class="contain">
+    <form @submit.prevent="submit">
+      <ul class="ul-list">
+        <li class="list">
+        <input 
+          class="input-css"
+          v-model="neighborhood" 
+          type="text" 
+          :placeholder="neighborhoodPlaceholder"
+        >
+        </li>
+        <li class="list">
+        <input 
+          class="input-css"
+          v-model="city" 
+          type="text" 
+          :placeholder="cityPlaceholder"
+        >
+        </li>
+        <li class="list">
+        <input 
+          class="input-css"
+          v-model="state" 
+          type="text" 
+          :placeholder="statePlaceholder"
+        >
+        </li>
+        <li class="list">
+        <button 
+          class="input-css button-css"
+          type="submit"
+        >
+          {{ button }}
+        </button>
+        </li>
+      </ul>
+
+      <section class="alerts">
+        <article 
+          v-for="(status, alert, index) in alerts" 
+          :key="index" 
+          :class="status"
+        >
+          <p>{{ alert }}</p>
+        </article>
+      </section>
+    </form>
+</div>
 </template>
 
 
@@ -159,6 +176,42 @@ button {
 button:hover {
   background-color: lightgray;
   color: black;
+}
+
+.contain {
+  text-align: center;
+  align-items: center;
+}
+
+.list {
+  margin: auto;
+  list-style-type: none;
+  align-items: center;
+  text-align: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.ul-list {
+  margin: auto;
+  align-items: center;
+  text-align: center;
+}
+
+.input-css {
+  height: 46px;
+  margin: auto;
+}
+
+.button-css {
+    color: #000000;
+    top:50%;
+    background-color:#1DA1F2;
+    border:none; 
+    border-radius:12px; 
+    padding:10px;
+    min-height:30px; 
+    min-width: 120px;
 }
 </style>
   
