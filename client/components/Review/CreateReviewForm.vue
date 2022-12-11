@@ -1,6 +1,7 @@
 <!-- Reusable component representing a form in a block style -->
 
 <template>
+  <section>
     <form @submit.prevent="submit">
       <h3>Post Your Review for {{this.$store.state.neighborhood.name}}!</h3>
           <star-rating 
@@ -16,8 +17,18 @@
       @submit="submit">
         Review
       </button>
+      <section class="alerts">
+        <article 
+          v-for="(status, alert, index) in alerts" 
+          :key="index" 
+          :class="status"
+        >
+          <p>{{ alert }}</p>
+        </article>
+      </section>
     </form>
-  </template>
+  </section>
+</template>
     
 <script>
 import StarRating from 'vue-star-rating';
@@ -30,7 +41,8 @@ export default {
   data() {
     return {
       rating: 0,
-      content: ""
+      content: "",
+      alerts: {}, // Displays success/error messages encountered during form submission
     }
   },
   methods: {
@@ -45,7 +57,12 @@ export default {
           rating: this.rating,
           content: this.content
         }),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
+        callback: () => {
+          const message = `Successfully created a review for ${this.$store.state.neighborhood.name}!`;
+          this.$set(this.alerts, message, 'success');
+          setTimeout(() => this.$delete(this.alerts, message), 3000);
+        }
       };
 
       // Reset review after posting
@@ -59,6 +76,8 @@ export default {
         }
 
         this.$store.commit('refreshReviews');
+
+        options.callback();
       } catch (e) {
         this.$set(this.alerts, e, 'error');
         setTimeout(() => this.$delete(this.alerts, e), 3000);
