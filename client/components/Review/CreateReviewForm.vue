@@ -1,9 +1,9 @@
 <script>
-import BlockForm from '@/components/common/BlockForm.vue';
+import ReviewForm from './CreateReviewForm2.vue';
 
 export default {
     name: 'CreateReviewForm',
-    mixins: [BlockForm],
+    mixins: [ReviewForm],
     data() {
         return {
             url: '/api/reviews',
@@ -11,7 +11,7 @@ export default {
             hasBody: true,
             fields: [
                 { id: 'neighborhoodId', type: 'body', value: this.$store.state.neighborhood._id },
-                { id: 'rating', type: 'body', label: 'Enter rating out of 10', value: '' },
+                { id: 'rating', type: 'body', label: 'Enter rating out of 5', value: '' },
                 { id: 'content', type: 'body', label: 'Write a review', value: '' }
             ],
             title: `Post Your Review for ${this.$store.state.neighborhood.name}!`,

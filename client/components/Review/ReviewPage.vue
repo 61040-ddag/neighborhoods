@@ -1,9 +1,7 @@
 <template>
     <main>
         <section>
-            <CreateReviewForm 
-                button="Review"
-            />
+            <CreateReviewForm2 />
         </section>
         <section
             v-if="$store.state.reviews.length"
@@ -24,13 +22,13 @@
 
 <script>
 import ReviewComponent from '@/components/Review/ReviewComponent.vue';
-import CreateReviewForm from '@/components/Review/CreateReviewForm.vue';
+import CreateReviewForm2 from '@/components/Review/CreateReviewForm2.vue';
 
 export default {
     name: 'ReviewPage',
     components: {
         ReviewComponent,
-        CreateReviewForm
+        CreateReviewForm2
     }
 }
 

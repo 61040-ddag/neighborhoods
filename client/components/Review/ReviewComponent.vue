@@ -14,8 +14,14 @@
         </h3>
       </header>
       <p class="rating">
-        Rating: {{ review.rating }} / 10
+        Rating:
       </p>
+      <star-rating 
+      v-bind:read-only="true" 
+      v-bind:show-rating="false"
+      v-bind:star-size="25"
+      v-model="review.rating">
+      </star-rating>
       <p class="review-text">
         Review:
       </p>
@@ -50,6 +56,7 @@
   </template>
   
   <script>
+  import StarRating from 'vue-star-rating';
   export default {
     name: 'ReviewComponent',
     props: {
@@ -59,11 +66,15 @@
         required: true
       }
     },
+    components: {
+      StarRating
+    },
     data() {
       return {
         isCertified: false,
         draft: this.review.content, // Potentially-new content for this review
-        alerts: {} // Displays success/error messages encountered during review modification
+        alerts: {}, // Displays success/error messages encountered during review modification
+        rating: 5
       };
     },
     async created() {
