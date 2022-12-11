@@ -11,8 +11,10 @@ import dotenv from 'dotenv';
 import * as userValidator from '../server/user/middleware';
 import { userRouter } from '../server/user/router';
 import { neighborhoodRouter } from '../server/neighborhood/router';
-import { certifiedresidencyRouter } from '../server/certified_residency/router';
+import { certifiedResidencyRouter } from '../server/certifiedResidency/router';
+import { strollRouter } from '../server/stroll/router';
 import { reviewRouter } from '../server/review/router';
+import { vibeRouter } from '../server/vibecheck/router';
 import MongoStore from 'connect-mongo';
 
 // Load environmental variables
@@ -76,6 +78,8 @@ app.use(userValidator.isCurrentSessionUserExists);
 // Add routers from routes folder
 app.use('/api/users', userRouter);
 app.use('/api/neighborhoods', neighborhoodRouter);
+app.use('/api/strolls', strollRouter);
+app.use('/api/vibeCheck', vibeRouter);
 app.use('/api/reviews', reviewRouter);
 app.use('/api/certifiedresidency', certifiedresidencyRouter);
 

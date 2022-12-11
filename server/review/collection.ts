@@ -8,22 +8,22 @@ class ReviewCollection {
      * Add a review to the collection
      *
      * @param {string} authorId - The id of the author of the review
-     * @param {string} locationId - The id of location of the review
+     * @param {string} neighborhoodId - The id of neighborhood of the review
      * @param {number} rating - The rating of the review
      * @param {string} content - The content of the review
      * @return {Promise<HydratedDocument<Review>>} - The newly created review
      */
-    static async addOne(authorId: Types.ObjectId | string, locationId: Types.ObjectId | string, rating: number, content: string): Promise<HydratedDocument<Review>> {
+    static async addOne(authorId: Types.ObjectId | string, neighborhoodId: Types.ObjectId | string, rating: number, content: string): Promise<HydratedDocument<Review>> {
         const date = new Date();
         const review = new ReviewModel({
             authorId,
             dateCreated: date,
-            locationId,
+            neighborhoodId,
             rating,
             content
         });
         await review.save();
-        return (await review.populate('authorId')).populate('locationId');
+        return (await review.populate('authorId')).populate('neighborhoodId');
     }
 
     /**
@@ -33,17 +33,17 @@ class ReviewCollection {
      * @return {Promise<HydratedDocument<Review>> | Promise<null> } - The review with the given reviewId, if any
      */
     static async findOne(reviewId: Types.ObjectId | string): Promise<HydratedDocument<Review>> {
-        return ReviewModel.findOne({ _id: reviewId }).populate('authorId').populate('locationId');
+        return ReviewModel.findOne({ _id: reviewId }).populate('authorId').populate('neighborhoodId');
     }
 
     /**
      * Get all the reviews by given location
      *
-     * @param {string} locationId - The id of location of the reviews
+     * @param {string} neighborhoodId - The id of neighborhood of the reviews
      * @return {Promise<HydratedDocument<Review>[]>} - An array of all of the reviews
      */
-    static async findAllByLocation(locationId: Types.ObjectId | string): Promise<Array<HydratedDocument<Review>>> {
-        return ReviewModel.find({ locationId: locationId }).sort({ dateCreated: -1 }).populate('authorId').populate('locationId');
+    static async findAllByLocation(neighborhoodId: Types.ObjectId | string): Promise<Array<HydratedDocument<Review>>> {
+        return ReviewModel.find({ neighborhoodId: neighborhoodId }).sort({ dateCreated: -1 }).populate('authorId').populate('neighborhoodId');
     }
 
     /**
@@ -54,7 +54,7 @@ class ReviewCollection {
      */
     static async findAllByUsername(username: string): Promise<Array<HydratedDocument<Review>>> {
         const author = await UserCollection.findOneByUsername(username);
-        return ReviewModel.find({ authorId: author._id }).sort({ dateCreated: -1 }).populate('authorId').populate('locationId');
+        return ReviewModel.find({ authorId: author._id }).sort({ dateCreated: -1 }).populate('authorId').populate('neighborhoodId');
     }
 
     /**
@@ -80,10 +80,10 @@ class ReviewCollection {
     /**
      * Delete all the reviews by the given author
      *
-     * @param {string} locationId - The id of location of reviews
+     * @param {string} neighborhoodId - The id of neighborhood of reviews
      */
-     static async deleteManyByLocation(locationId: Types.ObjectId | string): Promise<void> {
-        await ReviewModel.deleteMany({ locationId });
+     static async deleteManyByLocation(neighborhoodId: Types.ObjectId | string): Promise<void> {
+        await ReviewModel.deleteMany({ neighborhoodId });
     }
 }
 

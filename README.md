@@ -232,7 +232,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Body**
 
-- `locationId` _{string}_ - The id of the location of the review
+- `neighborhoodId` _{string}_ - The id of the location of the review
 - `rating` _{string}_ - The rating of the review
 - `content` _{string}_ - The content of the review
 
@@ -260,20 +260,198 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if the user is not the author of the review
 - `404` if the `reviewId` is invalid
 
+#### `GET /api/certifiedResidency/isCertified?user=username&neighborhoodId=neighborhoodId`
+
+**Returns**
+
+- A boolean on whether or not a user is a resident of neighborhood
+
+**Throws**
+
+- `400` if user is not given or neighborhoodId is not given
+- `403` if the user is not logged in
+- `404` if no user has given username or neighborhoodId of a neighborhood is not a recognized neighborhood
+
+#### `GET /api/certifiedResidency/users?user=username`
+
+**Returns**
+
+- An array of neighborhoods an user is a resident in
+
+**Throws**
+
+- `400` if neighborhoodId is not given
+- `403` if the user is not logged in
+- `404` if neighborhoodId of a neighborhood is not a recognized neighborhood
+
+
 #### `POST /api/certifiedResidency`
 
-#### `DELETE /api/certifiedResidency/:neighborhood?`
+**Body**
 
-#### `POST /api/vibeCheck/interviews`
+- `name` _{string}_ - The name of the neighborhood
+- `city` _{string}_ - The city of the neighborhood's location
+- `state` _{string}_ - The state of the neighborhood's location
+
+**Returns**
+
+- A success message
+- The created certifiedResidency
+
+**Throws**
+
+- `400` if any neighborhood information provided is in the wrong format
+- `403` if the user is not logged in
+- `409` if neighborhood already exists
+
+#### `DELETE /api/certifiedResidency/:certifiedResidencyId?`
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the certifiedResidencyId is not valid
+
+#### `GET /api/vibeCheck`
+
+**Returns**
+
+- A success message
+- An array of all the vibe checks of the logged in user
+
+**Throws**
+
+- `403` - If the user is not logged in
+
+#### `POST /api/vibeCheck`
+
+**Body**
+
+- `availabilityId` _{string}_ - The id of the availability of the desired resident
+
+**Returns**
+
+- A success message
+- The created vibe check
+
+**Throws**
+
+- `400` if availabilityId is missing
+- `403` if the user is not logged in
+- `404` if the availabilityId is not valid
+
+#### `DELETE /api/vibeCheck/:vibeCheckId?`
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if vibe check with vibeCheckId does not exist
+
+#### `GET /api/vibeCheck/availability?neighborhoodId=neighborhoodId`
+
+**Returns**
+
+- A success message
+- An array of all the availabilities of a neighborhood
+
+**Throws**
+
+- `400` if neighborhoodId is not given
+- `403` if the user is not logged in
+- `404` if neighborhoodId of a neighborhood is not a recognized neighborhood
 
 #### `POST /api/vibeCheck/availability`
 
-#### `DELETE /api/vibeCheck/availability/:dateTime?`
+**Body**
 
-#### `GET /api/neighborhoodStroll/:strollId?`
+- `neighborhoodId` _{string}_ - The id of the neighborhood
+- `videoLink` _{string}_ - The video link of the meeting
+- `dateTime` _{string}_ - The date and time that the availability is scheduled for
 
-#### `GET /api/neighoborhoodStroll?neighborhood=neighborhood`
+**Returns**
 
-#### `POST /api/neighborhoodStroll`
+- A success message
+- The created availability
 
-#### `DELETE /api/neighborhoodStroll/:strollId?`
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if neighborhoodId is not a recognized neighborhood
+- `409` if date and time already exist
+
+#### `DELETE /api/vibeCheck/availability/:availabilityId?`
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if availability with availabilityId does not exist
+
+#### ` GET /api/strolls/authors?author=username`
+
+**Returns**
+
+- A success message
+- An array of strolls of belonging to user with username
+
+**Throws**
+
+- `400` - if author is not given
+- `403` - if the user is not logged in
+- `404` - if no user has given author
+
+
+#### `GET /api/strolls/neighborhoods?name=name&city=city&state=state`
+
+**Returns**
+
+- A success message
+- An array of strolls of strolls of the neighborhood with name city and state
+
+**Throws**
+
+- `400` if name, city or state is not given
+- `403` if the user is not logged in
+- `404` if name, city, state of a neighborhood is not a recognized neighborhood
+
+
+#### `POST /api/strolls`
+
+**Body**
+
+- `neighborhoodId` _{string}_ - The id of the neighborhood of the stroll
+- `strollVideo` _{string}_ - the link of the stroll video to the firebase storage
+- `title` _{string}_ - the title of the stroll
+
+
+**Returns**
+
+- A success message
+- An object with the created stroll
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if no neighborhood with neighborhoodId exists
+- `400` if title of stroll or videoStroll is not properly formatted string
+
+#### `DELETE /api/strolls/:strollId?`
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the strollId is not valid

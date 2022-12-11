@@ -28,6 +28,14 @@
                 </router-link>
             </button>
             <button v-if="$store.state.username">
+                <router-link
+                    to="/profile"
+                    class="link"
+                >
+                    👤 Profile
+                </router-link>
+            </button>
+            <button v-if="$store.state.username">
                 <router-link 
                     to="/account" 
                     class="link"

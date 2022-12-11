@@ -4,12 +4,12 @@ import HomePage from './components/Home/HomePage.vue';
 import NeighborhoodsPage from './components/Neighborhood/NeighborhoodsPage.vue';
 import NeighborhoodPage from './components/Neighborhood/NeighborhoodPage.vue';
 import MapPage from './components/Map/MapPage.vue';
-import ReviewPage from './components/Review/ReviewPage.vue';
+import ProfilePage from './components/Profile/ProfilePage.vue';
+import AvailabilityPage from './components/VibeCheck/AvailabilityPage.vue';
 import AccountPage from './components/Account/AccountPage.vue';
 import SignupPage from './components/Login/SignupPage.vue';
 import LoginPage from './components/Login/LoginPage.vue';
-import UploadStrollComponent from './components/Stroll/UploadStrollComponent.vue'
-import NotFound from './NotFound.vue';
+import NotFound from './NotFound.vue';;
 
 Vue.use(VueRouter);
 
@@ -17,12 +17,12 @@ const routes = [
     { path: '/', name: 'Home', component: HomePage },
     { path: '/neighborhoods', name: 'Neighborhoods', component: NeighborhoodsPage },
     { path: '/neighborhood', name: 'Neighborhood', component: NeighborhoodPage},
-    { path: '/neighborhood/review', name: 'Review', component: ReviewPage },
+    { path: '/map', name: 'Map', component: MapPage },
+    { path: '/profile', name: 'Profile', component: ProfilePage },
+    { path: '/availability', name: 'Availability', component: AvailabilityPage },
     { path: '/account', name: 'Account', component: AccountPage },
     { path: '/login', name: 'Login', component: LoginPage },
     { path: '/signup', name: 'Signup', component: SignupPage },
-    { path: '/map', name: 'Map', component: MapPage },
-    { path: '/stroll', name: 'Stroll', component: UploadStrollComponent },
     { path: '*', name: 'Not Found', component: NotFound }
 ];
 
@@ -48,7 +48,7 @@ router.beforeEach((to, from, next) => {
         }
 
         const toLoggedInPages = (
-            to.name === 'Account' || to.name === 'Neighborhood' || to.name === 'Map' || to.name === 'Review' || to.name === 'Stroll'
+            to.name === 'Account' || to.name === 'Neighborhood' || to.name === 'Map' || to.name === 'Profile' || to.name === 'Availability'
         );
 
         if (toLoggedInPages && !router.app.$store.state.username) {

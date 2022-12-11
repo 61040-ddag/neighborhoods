@@ -129,10 +129,24 @@ const isUpdatedInfoValid = async (req: Request, res: Response, next: NextFunctio
     next();
 };
 
+const isNeighborhoodExistsById= async (req: Request, res: Response, next: NextFunction) => {
+    const neighborhoodId = req.body.neighborhoodId;
+    
+    const neighborhood = await NeighborhoodCollection.findOneById(neighborhoodId);
+    if (!neighborhood) {
+        res.status(404).json({
+            error: `Neighborhood with neighborhood ID ${neighborhoodId} does not exist.`
+        });
+        return;
+    }
+    next();
+}
+
 export {
     isCreateInfoValid,
     isNeighborhoodAlreadyExists,
     isNeighborhoodExists,
     isBoundsValid,
     isUpdatedInfoValid,
+    isNeighborhoodExistsById
 };

@@ -2,6 +2,9 @@ import type { Request, Response } from 'express';
 import express from 'express';
 import NeighborhoodCollection from './collection';
 import ReviewCollection from '../review/collection';
+import StrollCollection from '../stroll/collection';
+import CertifiedResidencyCollection from '../certifiedResidency/collection';
+import { AvailabilityCollection, VibeCheckCollection } from '../vibecheck/collection';
 import * as neighborhoodValidator from './middleware';
 import * as userValidator from '../user/middleware';
 import * as util from './util';
@@ -203,6 +206,13 @@ router.delete(
 
     await NeighborhoodCollection.deleteOneByInfo(name, city, state);
     await ReviewCollection.deleteManyByLocation(neighborhoodId)
+    await CertifiedResidencyCollection.deleteManyByLocation(neighborhoodId);
+    await StrollCollection.deleteManyByLocation(neighborhoodId);
+    const availabilites = await AvailabilityCollection.findAllByNeighborhoodId(neighborhoodId);
+    await AvailabilityCollection.deleteManyByNeighborhood(neighborhoodId);
+    for (const availability of availabilites) {
+      await VibeCheckCollection.deleteOneByAvailabilityId(availability._id);
+    }
     res.status(200).json({
       message: `Neighborhood ${util.formatWord(name)}, ${util.formatWord(city)}, ${state.toUpperCase()} has been deleted successfully.`
     });

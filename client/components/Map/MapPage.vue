@@ -16,7 +16,7 @@ export default {
     return {
       map: null,
       markers: [],
-      alrets: {}
+      alerts: {}
     };
   },
   methods: {
@@ -52,6 +52,7 @@ export default {
         }
       });
       // add markers
+
       for (let i = 0; i < this.$store.state.neighborhoods.length; i++) {
         const nbhood = this.$store.state.neighborhoods[i];
         const el = document.createElement("div");
@@ -79,6 +80,7 @@ export default {
       card.append(newDiv);
 
       const button = document.createElement("button");
+
       button.index = index;
       button.addEventListener('click', this.viewNeighborhood);
       button.innerHTML = "View Neighborhood";
@@ -91,7 +93,7 @@ export default {
     },
     viewNeighborhood(e) {
       const neighborhood = this.$store.state.neighborhoods[e.target.index];
-      this.$store.commit('setNeighborhood', neighborhood);  
+      this.$store.commit('setNeighborhood', neighborhood);
 
       this.$router.push({ name: 'Neighborhood' });
     }
@@ -118,6 +120,11 @@ export default {
 
 .marker-container {
   position: absolute;
+}
+
+#vibe-button {
+  display: inline-block;
+  margin: 5px;
 }
 
 /* 
