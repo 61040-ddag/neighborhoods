@@ -19,6 +19,13 @@
         >
             <header>
                 <h2>Schedule a Vibe Check with a Resident of {{$store.state.neighborhood.name}}!</h2>
+                <br>
+                <h4>You can find your upcoming meetings in 
+                    <router-link to="/profile" class="routerLink">
+                        Profile
+                    </router-link>
+                    once you've scheduled them.</h4>
+                <br>
             </header>
             <section v-if="$store.state.availabilities.length">
                 <ResidentAvailabilityComponent 
