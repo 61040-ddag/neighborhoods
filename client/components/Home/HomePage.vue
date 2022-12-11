@@ -14,14 +14,16 @@
                     />
                 </div>
                 <div v-else>
+                    <img src="../Home/suburb-houses-beautiful-sunset-landscape-dusk_107791-9152.jpg" alt="neighborhood">
                     <header>
                         <h2>Welcome to Neighborhoods!</h2>                
                     </header>
                     <br>
                      <h4>You will have access to </h4>
-                     <li>An insider glimpse into the neighborhood through scheduling meeting with residents via <b><u>Vibecheck</u></b></li>
-                     <li>A chance to checkout other people's reviews and stroll videos</li>
-                     <li>An overall understand of the neighborhood through statistics like crime rate</li>
+                     <div class="typed-out"><li>An insider glimpse into the neighborhood through scheduling meeting with residents via <b><u>Vibecheck</u></b></li></div>
+                     <div class="typed-out"><li>A chance to checkout other people's reviews and stroll videos</li></div>
+                     <div class="typed-out"><li>An overall understand of the neighborhood through statistics like crime rate</li></div>
+                    
                      <br>
                     <article>
                         <h3>
@@ -60,7 +62,7 @@ export default {
 }
 
 .outermost-container {
-    padding-top: 18%;
+    padding-top: 5%;
 }
 
 .routerLink {
@@ -70,4 +72,22 @@ export default {
 .big-text {
     font-size: 50px;
 }
+
+img{
+    width: 100%;
+    height: auto;
+}
+
+.typed-out{
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 1.6rem;
+  width: 0;
+  animation: 
+    typing 1s steps(40, end) forwards;
+}
+@keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
 </style>
