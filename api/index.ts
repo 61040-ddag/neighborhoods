@@ -81,7 +81,7 @@ app.use('/api/neighborhoods', neighborhoodRouter);
 app.use('/api/strolls', strollRouter);
 app.use('/api/vibeCheck', vibeRouter);
 app.use('/api/reviews', reviewRouter);
-app.use('/api/certifiedresidency', certifiedresidencyRouter);
+app.use('/api/certifiedresidency', certifiedResidencyRouter);
 
 // Catch all the other routes and display error message
 app.all('*', (req: Request, res: Response) => {
