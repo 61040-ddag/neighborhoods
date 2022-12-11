@@ -17,10 +17,16 @@
                     <header>
                         <h2>Welcome to Neighborhoods!</h2>                
                     </header>
+                    <br>
+                     <h4>You will have access to </h4>
+                     <li>An insider glimpse into the neighborhood through scheduling meeting with residents via <b><u>Vibecheck</u></b></li>
+                     <li>A chance to checkout other people's reviews and stroll videos</li>
+                     <li>An overall understand of the neighborhood through statistics like crime rate</li>
+                     <br>
                     <article>
                         <h3>
                             <router-link to="/login" class="routerLink">
-                                Log in
+                                Log in/Sign Up
                             </router-link>
                             to find your dream neighborhood and start a family!
                         </h3>
