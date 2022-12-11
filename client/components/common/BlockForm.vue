@@ -251,7 +251,7 @@ form h3 {
 }
 
 button {
-  background-color: grey;
+  background-color: #ec6c6c;
   color: white;
   border: none;
   border-radius: 50px;
