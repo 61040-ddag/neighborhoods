@@ -11,7 +11,7 @@
                     <h3>@{{ $store.state.username }}</h3>
                 </header>
                 <header>
-                    <h4>Joined: {{ dateJoined }}</h4>
+                    <h4 class="styled-h4">Joined: {{ dateJoined }}</h4>
                 </header>
             </section>
         </section>
@@ -68,5 +68,11 @@ export default {
     margin-bottom: 1em;
     padding: 1em;
     position: relative;
+}
+
+.styled-h4 {
+    margin-top: 10px;
+    font-size: 20px;
+    color: grey;
 }
 </style>

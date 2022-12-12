@@ -11,15 +11,20 @@
             <div class="customContainer container row col-md-8 mx-auto">
             <h1 class="h1 text-center title">Schedule Availability for {{ $store.state.residentNeighborhood.name }}</h1>
             <div class="header">
-                <h2>Resident? Add availability!</h2>
-                <DatePicker v-model="inputtedTime" type="datetime" />
+                <h2>Resident? </h2>
+                
             </div>
-            <h3 v-if="(inputtedTime !== null)">{{ inputtedTime }}</h3>
-            <label>Enter your video link here:</label>
-            <input type="text" v-model="videoLink">
-            <button class="styledButton" type="submit" @click="addAvailability">
-                Add availability
-            </button>
+            <b-button v-b-modal.modal-center-2 class="btn btn-primary review">Add availability</b-button>
+                <b-modal id="modal-center-2" centered title="Schedule Availability">
+                    <DatePicker v-model="inputtedTime" type="datetime" class="styled-input"/>
+                    <h3>{{ inputtedTime }}</h3>
+                    <label class="styled-label">Enter your video link here:</label>
+                    <br>
+                    <input type="text" v-model="videoLink" class="styled-input form-control">
+                    <button class="btn btn-primary" type="submit" @click="addAvailability">
+                        Add availability
+                    </button>
+                </b-modal>
             <h2 class="header">Neighborhood Availabilities</h2>
             <section v-if="availabilities.length">
                 <AvailabilityComponent 
@@ -50,7 +55,7 @@ export default {
     },
     data() {
         return {
-            inputtedTime: null,
+            inputtedTime: new Date(new Date().setDate(new Date().getDate() + 1)),
             videoLink: "",
             availabilities: []
         }
@@ -105,7 +110,7 @@ export default {
 .header {
     text-align: center;
     padding-top: 50px;
-    padding-bottom: 50px;
+    padding-bottom: 30px;
 }
 
 .customContainer {
@@ -123,9 +128,18 @@ export default {
     display: inline-block;
     font-size: 16px;
     line-height: 32px;
-    margin-top: 40px;
     padding: 8px 40px;
     text-align: center;
     margin-bottom: 50px;
+    margin-top: 10%;
 }
+
+.styled-input {
+    margin-bottom: 8%;
+}
+
+.styled-label {
+    padding-top: 8%;
+}
+
 </style>
