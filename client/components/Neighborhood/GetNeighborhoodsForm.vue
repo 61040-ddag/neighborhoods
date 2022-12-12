@@ -28,15 +28,14 @@
         >
         </li>
         <li class="list">
-        <button 
-          class="input-css button-css"
-          type="submit"
-        >
-          {{ button }}
-        </button>
+          <button 
+            class="input-css button-css"
+            type="submit"
+          >
+            {{ button }}
+          </button>
         </li>
       </ul>
-
       <section class="alerts">
         <article 
           v-for="(status, alert, index) in alerts" 
@@ -47,13 +46,32 @@
         </article>
       </section>
     </form>
-</div>
+    <section v-if="isSearching">
+      <section v-if="filteredNeighborhoods.length">
+        <SearchComponent 
+          v-for="neighborhood in filteredNeighborhoods"
+          :key="neighborhood._id"
+          :neighborhood="neighborhood"
+        />
+      </section>
+      <article 
+        v-else
+      >
+        <h3 class="styled-h3">Neighborhood/Location does not exist yet. Please check again later!</h3>
+      </article>
+      </section>
+  </div>
 </template>
 
 
 <script>
+import SearchComponent from '@/components/Search/SearchComponent.vue';
+
 export default {
   name: 'GetNeighborhoodsForm',
+  components: {
+    SearchComponent
+  },
   props: {
     neighborhoodPlaceholder: {
       type: String,
@@ -74,13 +92,77 @@ export default {
   },
   data() {
     return {
+      neighborhoods: [],
       neighborhood: '',
       city: '',
       state: '',
       alerts: {}
     };
   },
+  computed: {
+    isSearching() {
+      return this.neighborhood || this.city || this.state;
+    },
+    filteredNeighborhoods() {
+      const formatCompare = (word) => {
+        return word.trim().replace(' ', '_').toLowerCase();
+      };
+
+      const formatFrontend = (word) => {
+        return word.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+      };
+
+      if (this.neighborhood || this.city || this.state) {
+        const searchNeighborhood = formatCompare(this.neighborhood);
+        const searchCity = formatCompare(this.city);
+        const searchState = formatCompare(this.state);
+
+        return this.neighborhoods
+          .map(neighborhood => {
+            return {
+              ...neighborhood,
+              name: formatCompare(neighborhood.name),
+              city: formatCompare(neighborhood.city),
+              state: formatCompare(neighborhood.state)
+            };
+          })
+          .filter(neighborhood => {
+            const includesName = neighborhood.name.includes(searchNeighborhood);
+            const includesCity = neighborhood.city.includes(searchCity);
+            const includesState = neighborhood.state.includes(searchState);
+            return includesName && includesCity && includesState; 
+          })
+          .map(neighborhood => {
+            return {
+              ...neighborhood,
+              name: formatFrontend(neighborhood.name),
+              city: formatFrontend(neighborhood.city),
+              state: neighborhood.state.toUpperCase()
+            }
+          });
+      } else {
+        return [];
+      }
+    }
+  },
+  async mounted() {
+    this.loadNeighborhoods()
+  },
   methods: {
+    async loadNeighborhoods() {
+      try {
+        const r = await fetch(`/api/neighborhoods`);
+        const res = await r.json();
+        if (!r.ok) {
+          throw new Error(res.error);
+        }
+
+        this.neighborhoods = res.neighborhoods;
+      } catch (e) {
+        this.$set(this.alerts, e, 'error');
+        setTimeout(() => this.$delete(this.alerts, e), 3000);
+      }
+    },
     async submit() {
       try {
         if (!this.state) {
@@ -131,7 +213,7 @@ export default {
             message: res.message, status: 'success'
           });
         } else {
-          throw new Error('Location does not exist yet. Check again later!')
+          throw new Error('Neighborhood/Location does not exist yet. Please check again later!')
         }
       } catch (e) {
         this.$set(this.alerts, e, 'error');
@@ -212,6 +294,10 @@ button:hover {
     padding:10px;
     min-height:30px; 
     min-width: 120px;
+}
+
+.styled-h3 {
+    padding-top: 5%;
 }
 </style>
   

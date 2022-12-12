@@ -10,7 +10,7 @@
                         neighborhoodPlaceholder="Opt: Enter neighborhood"
                         cityPlaceholder="Req: Enter city. Ex: Boston"
                         statePlaceholder="Req: Enter state. Ex: MA, NY"
-                        button="🔄 Get neighborhood(s)"
+                        button="🔎 Find neighborhoods!"
                     />
                 </div>
                 <div v-else>
