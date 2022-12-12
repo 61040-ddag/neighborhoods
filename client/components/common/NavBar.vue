@@ -1,17 +1,21 @@
 <!-- A basic navigation bar component -->
 <!-- Example of a component which is included on all pages (via App.vue) -->
 <!-- This navbar takes advantage of both flex and grid layouts for positioning elements; feel free to redesign as you see fit! -->
-
 <template>
     <nav>
         <div class="left">
             <img src="../../public/logo.svg">
+            <router-link 
+                    to="/" 
+                    class="link"
+                >
             <h1 class="title">
                 Neighborhoods
             </h1>
+        </router-link>
         </div>
         <div class="right">
-            <button>
+            <button class="btn btn-primary">
                 <router-link 
                     to="/" 
                     class="link"
@@ -40,7 +44,7 @@
                     to="/account" 
                     class="link"
                 >
-                    🔒 Account
+                    🔒 Settings
                 </router-link>
             </button>
             <button v-else>
