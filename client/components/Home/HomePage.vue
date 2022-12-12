@@ -16,13 +16,13 @@
                 <div v-else>
                     <img src="../Home/suburb-houses-beautiful-sunset-landscape-dusk_107791-9152.jpg" alt="neighborhood">
                     <header>
-                        <h2>Welcome to Neighborhoods!</h2>                
+                        <h2>Welcome to <b>Neighborhoods!</b></h2>                
                     </header>
                     <br>
                      <h4>You will have access to </h4>
                      <div class="typed-out"><li>An insider glimpse into the neighborhood through scheduling meeting with residents via <b><u>Vibecheck</u></b></li></div>
-                     <div class="typed-out"><li>A chance to checkout other people's reviews and stroll videos</li></div>
-                     <div class="typed-out"><li>An overall understand of the neighborhood through statistics like crime rate</li></div>
+                     <div class="typed-out"><li>A chance to checkout other people's <b><u>reviews</u></b> and <b><u>stroll</u></b> videos</li></div>
+                     <div class="typed-out"><li>An overall understanding of the neighborhood through <b><u>statistics</u></b> like crime rate</li></div>
                     
                      <br>
                     <article>
