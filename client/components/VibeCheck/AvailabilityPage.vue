@@ -12,7 +12,6 @@
             <h1 class="h1 text-center title">Schedule Availability for {{ $store.state.residentNeighborhood.name }}</h1>
             <div class="header">
                 <h2>Resident? </h2>
-                
             </div>
             <b-button v-b-modal.modal-center-2 class="btn btn-primary review">Add availability</b-button>
                 <b-modal id="modal-center-2" centered title="Schedule Availability">

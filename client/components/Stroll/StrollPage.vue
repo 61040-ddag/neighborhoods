@@ -3,10 +3,7 @@
 <template>
   <main>
     <section>
-      <b-button v-b-modal.modal-center-1 class="btn btn-primary review">Post a Stroll!</b-button>
-        <b-modal id="modal-center-1" centered title="Post a Stroll!">
-          <CreateStrollForm button="Upload Stroll" />
-        </b-modal>
+      <CreateStrollForm button="Upload Stroll" />
     </section>
     <section v-if="$store.state.strolls.length">
       <StrollComponent v-for="stroll in $store.state.strolls" :key="stroll.id" :stroll="stroll" />

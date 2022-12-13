@@ -1,29 +1,34 @@
 <!-- Reusable component representing a form in a block style -->
 
 <template>
-  <section>
-    <b-button v-b-modal.modal-center class="btn btn-primary review">Leave a review!</b-button>
-        <b-modal id="modal-center" centered title="Leave Neighborhood Review">
-          <form @submit.prevent="submit">
-            <h3>Post Your Review for Back Bay!</h3>
-                <star-rating
-                v-model="rating"
-                v-bind:show-rating="false"
-                v-bind:star-size="25"
-                />
-                <br />
-                <textarea 
-                  placeholder="Leave a review"
-                  v-model="review"
-                />
-            <button 
-            @submit="submit">
-              Review
-            </button>
-          </form>
-        </b-modal>
-  </section>
-</template>
+    <section>
+      <form @submit.prevent="submit">
+        <h3>Post Your Review for {{this.$store.state.neighborhood.name}}!</h3>
+            <star-rating 
+            v-model="rating"
+            v-bind:show-rating="false"
+            v-bind:star-size="25"
+            />
+            <textarea 
+              placeholder="Leave a review"
+              v-model="content"
+            />
+        <button 
+        @submit="submit">
+          Review
+        </button>
+        <section class="alerts">
+          <article 
+            v-for="(status, alert, index) in alerts" 
+            :key="index" 
+            :class="status"
+          >
+            <p>{{ alert }}</p>
+          </article>
+        </section>
+      </form>
+    </section>
+  </template>
     
 <script>
 import StarRating from 'vue-star-rating';

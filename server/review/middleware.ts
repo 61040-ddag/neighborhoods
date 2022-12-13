@@ -24,6 +24,8 @@ const isReviewExists = async (req: Request, res: Response, next: NextFunction) =
  */
 const isValidReviewContent = (req: Request, res: Response, next: NextFunction) => {
     const { content } = req.body as { content: string };
+    console.log(content);
+    console.log(content.length);
     const rating = req.body.rating;
 
     if (!content.trim()) {
