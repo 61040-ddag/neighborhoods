@@ -108,7 +108,7 @@ button {
   background-color: white;
   padding: 0px 10px;
   border-radius: 20px;
-  border: 2px solid grey;
+  border: 2px solid #ec6c6c;
 }
 button:hover {
   background-color: lightgray;
