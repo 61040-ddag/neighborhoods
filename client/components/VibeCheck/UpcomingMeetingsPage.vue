@@ -10,7 +10,7 @@
             v-else
             class="text"
         >
-            <h3>You have no upcoming meetings!</h3>
+            <h3 class="styled-h3">You have no upcoming meetings!</h3>
         </article>
     </main>
 </template>
@@ -29,5 +29,9 @@ export default {
 <style scoped>
 .text {
     text-align: center;
+}
+
+.styled-h3 {
+    padding-top: 5%;
 }
 </style>

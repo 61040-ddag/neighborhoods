@@ -49,6 +49,8 @@ export default {
   text-decoration: none;
   color: black;
   margin-top: 1em;
+  margin-top: 2%;
+  margin-bottom: 2%;
 }
 
 .routerLink {
