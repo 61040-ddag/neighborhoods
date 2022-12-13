@@ -7,9 +7,8 @@
                         <h2 class="big-text">Welcome @{{ $store.state.username }}!</h2>
                     </header>
                     <GetNeighborhoodsForm
-                        neighborhoodPlaceholder="Opt: Enter neighborhood"
-                        cityPlaceholder="Req: Enter city. Ex: Boston"
-                        statePlaceholder="Req: Enter state. Ex: MA, NY"
+                        neighborhoodPlaceholder="Search for neighborhood name"
+                        cityPlaceholder="Search for city"
                         button="🔎 Find neighborhoods!"
                     />
                 </div>

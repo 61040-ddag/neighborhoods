@@ -20,12 +20,14 @@
         >
         </li>
         <li class="list">
-        <input 
-          class="input-css"
-          v-model="state" 
-          type="text" 
-          :placeholder="statePlaceholder"
-        >
+        <div class="form-group">
+          <div class="col-sm-10">
+            <select class="form-control" id="state" name="state" v-model="state">
+              <option value="">Search for state</option>
+              <option v-for="state in filteredStates" :value="state.id">{{state.name}}</option>
+            </select>
+          </div>
+        </div>
         </li>
         <li class="list">
           <button 
@@ -47,30 +49,48 @@
       </section>
     </form>
     <section v-if="isSearching">
-      <section v-if="filteredNeighborhoods.length">
-        <SearchComponent 
-          v-for="neighborhood in filteredNeighborhoods"
-          :key="neighborhood._id"
-          :neighborhood="neighborhood"
-        />
+      <section v-if="isSearchingNeighborhoods">
+        <section v-if="filteredSearch.length">
+          <SearchNeighborhoodComponent 
+            v-for="neighborhood in filteredSearch"
+            :key="neighborhood._id"
+            :neighborhood="neighborhood"
+          />
+        </section>
+        <article 
+          v-else
+        >
+          <h3 class="styled-h3">Searched neighborhoods does not exist yet. Please check again later!</h3>
+        </article>
       </section>
-      <article 
-        v-else
-      >
-        <h3 class="styled-h3">Neighborhood/Location does not exist yet. Please check again later!</h3>
-      </article>
+      <section v-else-if="isSearchingLocation">
+        <section v-if="filteredSearch.length">
+          <SearchLocationComponent 
+            v-for="location in filteredSearch"
+            :key="location._id"
+            :location="location"
+          />
+        </section>
+        <article 
+          v-else
+        >
+          <h3 class="styled-h3">Searched locations does not exist yet. Please check again later!</h3>
+        </article>
       </section>
+    </section>
   </div>
 </template>
 
 
 <script>
-import SearchComponent from '@/components/Search/SearchComponent.vue';
+import SearchNeighborhoodComponent from '@/components/Search/SearchNeighborhoodComponent.vue';
+import SearchLocationComponent from '@/components/Search/SearchLocationComponent.vue';
 
 export default {
   name: 'GetNeighborhoodsForm',
   components: {
-    SearchComponent
+    SearchNeighborhoodComponent,
+    SearchLocationComponent
   },
   props: {
     neighborhoodPlaceholder: {
@@ -81,10 +101,6 @@ export default {
       type: String,
       default: '',
     },
-    statePlaceholder: {
-      type: String,
-      default: ''
-    },
     button: {
       type: String,
       default: 'Submit'
@@ -93,6 +109,7 @@ export default {
   data() {
     return {
       neighborhoods: [],
+      locations: [],
       neighborhood: '',
       city: '',
       state: '',
@@ -103,7 +120,71 @@ export default {
     isSearching() {
       return this.neighborhood || this.city || this.state;
     },
-    filteredNeighborhoods() {
+    isSearchingNeighborhoods() {
+      return this.neighborhood;
+    },
+    isSearchingLocation() {
+      return this.city || this.state;
+    },
+    filteredStates() {
+      const states = [
+        {id: "AL", name: "Alabama"}, 
+        {id: "AK", name: "Alaska"}, 
+        {id: "AZ", name: "Arizona"}, 
+        {id: "AR", name: "Arkansas"}, 
+        {id: "CA", name: "California"}, 
+        {id: "CO", name: "Colorado"}, 
+        {id: "CT", name: "Connecticut"}, 
+        {id: "DE", name: "Delaware"}, 
+        {id: "FL", name: "Florida"}, 
+        {id: "GA", name: "Georgia"}, 
+        {id: "HI", name: "Hawaii"}, 
+        {id: "ID", name: "Idaho"}, 
+        {id: "IL", name: "Illinois"}, 
+        {id: "IN", name: "Indiana"}, 
+        {id: "IA", name: "Iowa"}, 
+        {id: "KS", name: "Kansas"}, 
+        {id: "KY", name: "Kentucky"}, 
+        {id: "LA", name: "Louisiana"}, 
+        {id: "ME", name: "Maine"}, 
+        {id: "MD", name: "Maryland"}, 
+        {id: "MA", name: "Massachusetts"}, 
+        {id: "MI", name: "Michigan"}, 
+        {id: "MN", name: "Minnesota"}, 
+        {id: "MS", name: "Mississippi"}, 
+        {id: "MO", name: "Missouri"}, 
+        {id: "MT", name: "Montana"}, 
+        {id: "NE", name: "Nebraska"}, 
+        {id: "NV", name: "Nevada"}, 
+        {id: "NH", name: "New Hampshire"}, 
+        {id: "NJ", name: "New Jersey"}, 
+        {id: "NM", name: "New Mexico"}, 
+        {id: "NY", name: "New York"}, 
+        {id: "NC", name: "North Carolina"}, 
+        {id: "ND", name: "North Dakota"}, 
+        {id: "OH", name: "Ohio"}, 
+        {id: "OK", name: "Oklahoma"}, 
+        {id: "OR", name: "Oregon"}, 
+        {id: "PA", name: "Pennsylvania"}, 
+        {id: "RI", name: "Rhode Island"}, 
+        {id: "SC", name: "South Carolina"}, 
+        {id: "SD", name: "South Dakota"}, 
+        {id: "TN", name: "Tennessee"}, 
+        {id: "TX", name: "Texas"}, 
+        {id: "UT", name: "Utah"}, 
+        {id: "VT", name: "Vermont"}, 
+        {id: "VA", name: "Virginia"}, 
+        {id: "WA", name: "Washington"}, 
+        {id: "WV", name: "West Virginia"}, 
+        {id: "WI", name: "Wisconsin"}, 
+        {id: "WY", name: "Wyoming"}
+      ];
+      const existingStates = this.locations.map(location => location.state);
+      return states.filter(state => {
+        return existingStates.includes(state.id);
+      });
+    },
+    filteredSearch() {
       const formatCompare = (word) => {
         return word.trim().replace(' ', '_').toLowerCase();
       };
@@ -112,11 +193,11 @@ export default {
         return word.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
       };
 
-      if (this.neighborhood || this.city || this.state) {
-        const searchNeighborhood = formatCompare(this.neighborhood);
-        const searchCity = formatCompare(this.city);
-        const searchState = formatCompare(this.state);
+      const searchNeighborhood = formatCompare(this.neighborhood);
+      const searchCity = formatCompare(this.city);
+      const searchState = formatCompare(this.state);
 
+      if (this.neighborhood) {
         return this.neighborhoods
           .map(neighborhood => {
             return {
@@ -138,7 +219,26 @@ export default {
               name: formatFrontend(neighborhood.name),
               city: formatFrontend(neighborhood.city),
               state: neighborhood.state.toUpperCase()
-            }
+            };
+          });
+      } else if (this.city || this.state) {
+        return this.locations
+          .map(location => {
+            return {
+              city: formatCompare(location.city),
+              state: formatCompare(location.state)
+            };
+          })
+          .filter(location => {
+            const includesCity = location.city.includes(searchCity);
+            const includesState = location.state.includes(searchState);
+            return includesCity && includesState;
+          })
+          .map(location => {
+            return {
+              city: formatFrontend(location.city),
+              state: location.state.toUpperCase()
+            };
           });
       } else {
         return [];
@@ -158,6 +258,15 @@ export default {
         }
 
         this.neighborhoods = res.neighborhoods;
+        // Find all unique city, state pairs
+        this.locations = [...new Set(this.neighborhoods
+          .map(neighborhood => {
+            return JSON.stringify({
+              city: neighborhood.city,
+              state: neighborhood.state
+            });
+          }))]
+          .map(JSON.parse);
       } catch (e) {
         this.$set(this.alerts, e, 'error');
         setTimeout(() => this.$delete(this.alerts, e), 3000);
@@ -282,6 +391,7 @@ button:hover {
 
 .input-css {
   height: 46px;
+  width: 500px;
   margin: auto;
 }
 
