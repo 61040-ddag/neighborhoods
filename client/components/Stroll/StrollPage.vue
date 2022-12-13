@@ -4,7 +4,7 @@
   <main>
     <section>
       <b-button v-b-modal.modal-center-2 class="btn btn-primary stroll">Post a Stroll!</b-button>
-        <b-modal id="modal-center-2" centered title="Post a Stroll!">
+        <b-modal id="modal-center-2" hide-footer centered title="Post a Stroll!">
           <CreateStrollForm button="Upload Stroll" />
         </b-modal>
       <!-- <CreateStrollForm button="Upload Stroll" /> -->

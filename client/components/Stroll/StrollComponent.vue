@@ -102,7 +102,7 @@ export default {
             throw new Error(res.error);
           }
   
-          this.$store.commit('refreshStroll');
+          this.$store.commit('refreshStrolls');
   
           params.callback();
         } catch (e) {

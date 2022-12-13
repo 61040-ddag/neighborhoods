@@ -13,7 +13,7 @@
             <div class="header">
                 <h2>Resident? </h2>
             </div>
-            <b-button v-b-modal.modal-center-4 class="btn btn-primary review">Add availability</b-button>
+            <b-button v-b-modal.modal-center-4 class="btn btn-primary availability">Add availability</b-button>
                 <b-modal id="modal-center-4" hide-footer centered title="Schedule Availability">
                     <DatePicker v-model="inputtedTime" type="datetime" class="styled-input"/>
                     <h5>Schedule at: {{ inputtedTime }}</h5>
@@ -108,6 +108,8 @@ export default {
   text-decoration: none;
   color: black;
   margin-top: 1em;
+  margin-top: 2%;
+  margin-bottom: 2%;
 }
 .header {
     text-align: center;
