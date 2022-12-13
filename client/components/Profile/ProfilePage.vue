@@ -2,7 +2,7 @@
     <main>
         <section>
             <header>
-                <h2>Profile</h2>
+                <h2 class="h2-styling">Profile</h2>
             </header>
         </section>
         <section class="profile">
@@ -61,6 +61,10 @@ export default {
 </script>
 
 <style scoped>
+.h2-styling {
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
 .profile {
     border: solid 1px lightgray;
     border-style: solid;

@@ -2,7 +2,7 @@
 
 <template>
     <section>
-      <b-button v-b-modal.modal-center-1 class="btn btn-primary review">Leave a review!</b-button>
+      <button v-b-modal.modal-center-1 class="btn btn-primary review">Leave a review!</button>
         <b-modal id="modal-center-1" hide-footer centered title="Leave Neighborhood Review">
           <form @submit.prevent="submit">
             <h3>Post Your Review for {{this.$store.state.neighborhood.name}}</h3>
@@ -149,7 +149,7 @@ export default {
   }
   .review {
     margin-top: 2%;
-    margin-bottom: 5%;
+    margin-bottom: 2%;
   }
   </style>
   

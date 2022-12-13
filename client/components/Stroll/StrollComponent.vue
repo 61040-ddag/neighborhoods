@@ -126,7 +126,6 @@ export default {
 
 .stroll {
   margin: auto;
-  width: 66%;
   border: solid 1px lightgray;
   border-style: solid;
   border-radius: 15px;
