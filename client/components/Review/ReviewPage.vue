@@ -1,9 +1,7 @@
 <template>
     <main>
         <section>
-            <CreateReviewForm 
-                button="Review"
-            />
+            <CreateReviewForm />
         </section>
         <section
             v-if="$store.state.reviews.length"

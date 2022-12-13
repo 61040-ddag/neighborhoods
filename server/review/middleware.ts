@@ -47,9 +47,9 @@ const isValidReviewContent = (req: Request, res: Response, next: NextFunction) =
         return;
     }
 
-    if (rating < 0 || rating > 10) {
+    if (rating < 1 || rating > 5) {
         res.status(400).json({
-            error: "Review rating must be between 0 and 10."
+            error: "Review rating must be between 1 and 5 stars."
         });
         return;
     }

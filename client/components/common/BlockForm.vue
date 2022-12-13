@@ -80,7 +80,6 @@ export default {
       hasBody: false, // Whether or not form request has a body
       hasQueryParams: false, // Whether or not form request has query parameters
       setUsername: false, // Whether or not stored username should be updated after form submission
-      refreshReviews: false, // Whether or not stored reviews should be updated after form submission
       refreshStrolls: false, // Whether or not stored strolls should be updated after form submission
       isVideoUpload: false, // Whether or not we upload a video after form submission
       fileContent: null, // File content
@@ -184,10 +183,6 @@ export default {
           this.$store.commit('setUsername', res.user ? res.user.username : null);
           this.$store.commit('setDateJoined', res.user ? res.user.dateJoined : null);
           this.$store.commit('setIsAdmin', res.user ? res.user.isAdmin : null);
-        }
-
-        if (this.refreshReviews) {
-          this.$store.commit('refreshReviews');
         }
 
         if (this.refreshStrolls) {
