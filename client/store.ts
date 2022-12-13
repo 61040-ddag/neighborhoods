@@ -82,6 +82,9 @@ const store = new Vuex.Store({
        */
       state.neighborhoods = neighborhoods;
     },
+    sortNeighborhoods(state, compare) {
+      state.neighborhoods.sort(compare);
+    },
     updateReviews(state, reviews) {
       /**
        * Update the stored reviews to the provided reviews.

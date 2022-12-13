@@ -40,7 +40,7 @@
                     to="/account" 
                     class="link"
                 >
-                    🔒 Account
+                    ⚙️ Setting
                 </router-link>
             </button>
             <button v-else>
@@ -67,7 +67,7 @@
 <style scoped>
 nav {
     padding: 1vw 2vw;
-    background-color: grey;
+    background-color: #ec6c6c;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -108,7 +108,7 @@ button {
   background-color: white;
   padding: 0px 10px;
   border-radius: 20px;
-  border: 2px solid grey;
+  border: 2px solid #ec6c6c;
 }
 button:hover {
   background-color: lightgray;
