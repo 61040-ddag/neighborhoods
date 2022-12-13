@@ -1,9 +1,12 @@
 <template>
     <main>
         <section>
-            <AddCertifiedResidencyForm
-                button="Add Residency"
-            />
+            <button v-b-modal.modal-center-3 class="btn btn-primary residency">Add Residency</button>
+                <b-modal id="modal-center-3" hide-footer centered title="Add Residency">
+                    <AddCertifiedResidencyForm
+                        button="Add Residency"
+                    />
+                </b-modal>
         </section>
         <section v-if="$store.state.certifiedResidences.length">
             <CertifiedResidencyComponent 
@@ -36,6 +39,9 @@ export default {
 </script>
 
 <style scoped>
+.residency {
+    margin-top: 2%;
+}
 .text {
     text-align: center;
 }
