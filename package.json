@@ -11,6 +11,7 @@
     "dev": "nodemon api/index.ts -e js,ts,json"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "bootstrap": "^5.2.3",
     "bootstrap-vue": "^2.23.1",
     "connect-history-api-fallback": "^1.6.0",

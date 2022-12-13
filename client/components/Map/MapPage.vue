@@ -1,6 +1,20 @@
 <template>
   <div class="map-container">
-    <div id="map"></div>
+    <div id = "sb" class = "sideBar"> 
+      <div  @mouseover="changeColor(neighborhood)" @mouseleave="changeBack(neighborhood)" class = "ntab" v-for="neighborhood in $store.state.neighborhoods" style="box-shadow: 10px;">
+      <h4>{{ neighborhood.name }}, {{ neighborhood.city }}, {{ neighborhood.state }} </h4>
+      <ul>
+        <li> Crime Rate: {{ neighborhood.crimeRate }} </li>
+        <li> Average Price: {{ neighborhood.averagePrice }} </li>
+        <li> Average Age: {{ neighborhood.averageAge }} </li>
+      </ul>
+      <button @click="viewNeighborhood(neighborhood)"> Click to view Reviews, strolls, or schedule meeting </button>
+      </div>
+
+    </div>
+    <div  id = "map" style="width: 70%; margin-left: 30%"> 
+
+    </div>  
   </div>
 </template>
 
@@ -20,6 +34,26 @@ export default {
     };
   },
   methods: {
+    changeColor(neighborhood){
+      const mapML = document.getElementById("map");
+      const markers = [...mapML.childNodes[1].childNodes];
+      for(const marker of markers){
+        if (marker.id === neighborhood._id){
+          console.log(marker);
+          marker.style.color="red";
+        }
+      } 
+    },
+    changeBack(neighborhood){
+      const mapML = document.getElementById("map");
+      const markers = [...mapML.childNodes[1].childNodes];
+      for(const marker of markers){
+        if (marker.id === neighborhood._id){
+          console.log(marker);
+          marker.style.color="blue";
+        }
+      } 
+    },
     initMap() {
       let centerLat = 0;
       let centerLong = 0;
@@ -55,10 +89,14 @@ export default {
 
       for (let i = 0; i < this.$store.state.neighborhoods.length; i++) {
         const nbhood = this.$store.state.neighborhoods[i];
-        const el = document.createElement("div");
-        el.className = "marker";
-        const popup = this.featurePopup(i, nbhood.name, nbhood.city, nbhood.state, new Map([["Crime Rate", nbhood.crimeRate], ["Average Price", nbhood.averagePrice], ["Average Age", nbhood.averageAge]]));
-        const marker = new mapboxgl.Marker(el).setLngLat([nbhood.longitude, nbhood.latitude]).setPopup(popup).addTo(this.map);
+        const el = document.createElement("i");
+        el.id = nbhood._id;
+        el.className = "fa fa-map-marker";
+        el.style.fontSize = "40px";
+        el.style.color = "blue";
+        // const popup = this.featurePopup(i, nbhood.name, nbhood.city, nbhood.state, new Map([["Crime Rate", nbhood.crimeRate], ["Average Price", nbhood.averagePrice], ["Average Age", nbhood.averageAge]]));
+        // const marker = new mapboxgl.Marker(el).setLngLat([nbhood.longitude, nbhood.latitude]).setPopup(popup).addTo(this.map);
+        const marker = new mapboxgl.Marker(el).setLngLat([nbhood.longitude, nbhood.latitude]).addTo(this.map);
       }
     },
     featurePopup(index, name, city, state, info) {
@@ -91,18 +129,43 @@ export default {
 
       return new mapboxgl.Popup({ offset: 25 }).setDOMContent(card);
     },
-    viewNeighborhood(e) {
-      const neighborhood = this.$store.state.neighborhoods[e.target.index];
+    viewNeighborhood(neighborhood) {
+      console.log(neighborhood);
       this.$store.commit('setNeighborhood', neighborhood);
-
       this.$router.push({ name: 'Neighborhood' });
     }
+
   }
 
 }
 </script>
 
 <style>
+
+.sideBar{
+  width: 30%;  
+  float: left;  
+  overflow:auto;
+  padding: 10px;
+  z-index: 10;
+}
+.sideBar .ntab {
+      border:solid 1px lightgray;
+      border-style: solid;
+      border-radius: 15px;
+      margin-bottom: 1em;
+      padding: 1em;
+      position: relative;
+      transition: 1s ease;
+  }
+
+.ntab:hover{
+-webkit-transform: scale(1.03);
+-ms-transform: scale(1.03);
+transform: scale(1.03);
+transition: 1s ease;
+}
+
 .map-container {
   position: relative;
   width: 100%;
@@ -125,30 +188,6 @@ export default {
 #vibe-button {
   display: inline-block;
   margin: 5px;
-}
-
-/* 
-.marker-container .info-container{
-  position: absolute;
-  content: "Back Bay";
-  background-color: yellow;
-  width: 100px;
-  height: 100px;
-  margin-bottom: 35px;
-} */
-
-.marker:before {
-  content: "";
-  cursor: pointer;
-  position: absolute;
-  width: 25px;
-  height: 25px;
-  border: 1px solid #ccc;
-  border-radius: 75% 45% 75% 0%;
-  background: #3498db;
-  bottom: 0;
-  transform-origin: 0% 100%;
-  transform: rotate(-45deg) scale(1);
 }
 
 .mapboxgl-ctrl-zoom-in {
