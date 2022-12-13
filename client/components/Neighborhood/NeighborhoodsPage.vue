@@ -2,7 +2,7 @@
     <main>
         <section>
             <section>
-            <header>
+            <header class="header-styling">
                 <h2>Neighborhood Management</h2>
             </header>
             <CreateNeighborhoodForm
@@ -33,3 +33,10 @@ export default {
     }
 };
 </script>
+
+<style>
+.header-styling {
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+</style>
