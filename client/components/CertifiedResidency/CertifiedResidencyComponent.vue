@@ -11,6 +11,7 @@
             </button>
             <button 
                 @click="residentNeighborhood"
+                class="btn btn-primary"
             >
                 Schedule Availability
             </button>

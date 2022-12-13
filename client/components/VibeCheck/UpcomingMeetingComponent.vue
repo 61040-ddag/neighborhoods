@@ -10,7 +10,7 @@
             </div>
             <label>Link to meeting</label><br>
             <a class="btn btn-primary" v-bind:href="upcomingMeeting.availability.videoLink">Meeting Link</a><br>
-            <button @click="deleteVibeCheck">
+            <button class="btn btn-danger styled-button" @click="deleteVibeCheck">
                 Delete
             </button>
         </div>
@@ -81,3 +81,9 @@ export default {
 };
 
 </script>
+
+<style>
+.styled-button {
+    margin-bottom: 10px;
+}
+</style>
