@@ -13,10 +13,10 @@
             <div class="header">
                 <h2>Resident? </h2>
             </div>
-            <b-button v-b-modal.modal-center-2 class="btn btn-primary review">Add availability</b-button>
-                <b-modal id="modal-center-2" centered title="Schedule Availability">
+            <b-button v-b-modal.modal-center-4 class="btn btn-primary review">Add availability</b-button>
+                <b-modal id="modal-center-4" hide-footer centered title="Schedule Availability">
                     <DatePicker v-model="inputtedTime" type="datetime" class="styled-input"/>
-                    <h3>{{ inputtedTime }}</h3>
+                    <h5>Schedule at: {{ inputtedTime }}</h5>
                     <label class="styled-label">Enter your video link here:</label>
                     <br>
                     <input type="text" v-model="videoLink" class="styled-input form-control">
@@ -87,6 +87,9 @@ export default {
                 }),
                 headers: { 'Content-Type': 'application/json' }
             };
+
+            this.videoLink = '';
+            this.inputtedTime = new Date(new Date().setDate(new Date().getDate() + 1));
 
             const r = await fetch('/api/vibeCheck/availability', options);
             const response = await r.json();

@@ -15,7 +15,7 @@
         </router-link>
         </div>
         <div class="right">
-            <button class="btn btn-primary">
+            <button>
                 <router-link 
                     to="/" 
                     class="link"
@@ -44,7 +44,7 @@
                     to="/account" 
                     class="link"
                 >
-                    🔒 Settings
+                    ⚙️ Settings
                 </router-link>
             </button>
             <button v-else>

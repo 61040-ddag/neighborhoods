@@ -6,12 +6,13 @@
             </h3>
         </header>
         <section>
-            <button @click="leaveResidence">
+            <button 
+                @click="leaveResidence"
+            >
                 Leave Residence
             </button>
             <button 
                 @click="residentNeighborhood"
-                class="btn btn-primary"
             >
                 Schedule Availability
             </button>
