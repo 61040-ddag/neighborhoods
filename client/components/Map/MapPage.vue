@@ -1,29 +1,41 @@
 <template>
   <div class="map-container">
-    <div id = "sb" class = "sideBar">
-      <button @click="filter = !filter">Filter</button>
-      <div v-if="filter"> 
-      <button @click="sortByCrimeRate(true)">Sort Ascending</button><br>
-      <button @click="sortByCrimeRate(false)">Sort Descending</button><br>
-      <button @click="sortByAverageAge(true)">Sort Ascending average age</button><br>
-      <button @click="sortByAverageAge(false)">Sort Descending average age</button><br>
-      <button @click="sortByAveragePrice(true)">Sort Ascending average price</button><br>
-      <button @click="sortByAveragePrice(false)">Sort Descending average price</button><br>
+    <div id="sb" class="sideBar">
+      <div>
+        <b-dropdown id="dropdown-1" text="Filter Crime Rate" class="m-md-2" variant="primary">
+          <b-dropdown-item @click="sortByCrimeRate(true)">Sort Ascending</b-dropdown-item>
+          <b-dropdown-item @click="sortByCrimeRate(false)">Sort Descending</b-dropdown-item>
+        </b-dropdown>
       </div>
-      
-      <div  @mouseover="changeColor(neighborhood)" @mouseleave="changeBack(neighborhood)" class = "ntab" v-for="neighborhood in $store.state.neighborhoods" style="box-shadow: 10px;">
-      <h4>{{ neighborhood.name }}, {{ neighborhood.city }}, {{ neighborhood.state }} </h4>
-      <ul>
-        <li> Crime Rate: {{ neighborhood.crimeRate }} </li>
-        <li> Average Price: {{ neighborhood.averagePrice }} </li>
-        <li> Average Age: {{ neighborhood.averageAge }} </li>
-      </ul>
-      <button @click="viewNeighborhood(neighborhood)"> Click to view Reviews, strolls, or schedule meeting </button>
+
+      <div>
+        <b-dropdown id="dropdown-2" text="Filter Average Price" class="m-md-2" variant="primary">
+          <b-dropdown-item @click="sortByAveragePrice(true)">Sort Ascending</b-dropdown-item>
+          <b-dropdown-item @click="sortByAveragePrice(false)">Sort Descending</b-dropdown-item>
+        </b-dropdown>
+      </div>
+
+      <div>
+        <b-dropdown id="dropdown-3" text="Filter Average Age" class="m-md-2" variant="primary">
+          <b-dropdown-item @click="sortByAverageAge(true)">Sort Ascending</b-dropdown-item>
+          <b-dropdown-item @click="sortByAverageAge(false)">Sort Descending</b-dropdown-item>
+        </b-dropdown>
+      </div>
+
+      <div @mouseover="changeColor(neighborhood)" @mouseleave="changeBack(neighborhood)" class="ntab"
+        v-for="neighborhood in $store.state.neighborhoods" style="box-shadow: 10px;">
+        <h4>{{ neighborhood.name }}, {{ neighborhood.city }}, {{ neighborhood.state }} </h4>
+        <ul>
+          <li> <b>Crime Rate:</b> {{ neighborhood.crimeRate }} </li>
+          <li> <b>Average Price:</b> {{ neighborhood.averagePrice }} </li>
+          <li> <b>Average Age:</b> {{ neighborhood.averageAge }} </li>
+        </ul>
+        <button class="btn btn-primary" @click="viewNeighborhood(neighborhood)"> Click to view Reviews, Strolls, or Schedule a Vibe Check (Meeting) </button>
       </div>
     </div>
-    <div  id = "map" style="width: 70%; margin-left: 30%"> 
+    <div id="map" style="width: 70%; margin-left: 30%">
 
-    </div>  
+    </div>
   </div>
 </template>
 
@@ -44,104 +56,104 @@ export default {
     };
   },
   methods: {
-    sortByCrimeRate(ascending){
-      function compareAscending(a, b){
-        if (a.crimeRate < b.crimeRate){
+    sortByCrimeRate(ascending) {
+      function compareAscending(a, b) {
+        if (a.crimeRate < b.crimeRate) {
           return -1;
-        }else if (a.crimeRate > b.crimeRate){
+        } else if (a.crimeRate > b.crimeRate) {
           return 1;
-        }else{
+        } else {
           return 0;
         }
       }
-      function compareDescending(a,b){
-        if (a.crimeRate < b.crimeRate){
+      function compareDescending(a, b) {
+        if (a.crimeRate < b.crimeRate) {
           return 1;
-        }else if (a.crimeRate > b.crimeRate){
+        } else if (a.crimeRate > b.crimeRate) {
           return -1;
-        }else{
+        } else {
           return 0;
         }
 
       }
-      if(ascending){
+      if (ascending) {
         this.$store.commit('sortNeighborhoods', compareAscending);
-      }else{
+      } else {
         this.$store.commit('sortNeighborhoods', compareDescending);
       }
     },
-    sortByAveragePrice(ascending){
-      function compareAscending(a, b){
-        if (a.averagePrice < b.averagePrice){
+    sortByAveragePrice(ascending) {
+      function compareAscending(a, b) {
+        if (a.averagePrice < b.averagePrice) {
           return -1;
-        }else if (a.averagePrice > b.averagePrice){
+        } else if (a.averagePrice > b.averagePrice) {
           return 1;
-        }else{
+        } else {
           return 0;
         }
       }
-      function compareDescending(a,b){
-        if (a.averagePrice < b.averagePrice){
+      function compareDescending(a, b) {
+        if (a.averagePrice < b.averagePrice) {
           return 1;
-        }else if (a.averagePrice > b.averagePrice){
+        } else if (a.averagePrice > b.averagePrice) {
           return -1;
-        }else{
+        } else {
           return 0;
         }
 
       }
-      if(ascending){
+      if (ascending) {
         this.$store.commit('sortNeighborhoods', compareAscending);
-      }else{
+      } else {
         this.$store.commit('sortNeighborhoods', compareDescending);
       }
     },
-    sortByAverageAge(ascending){
-      function compareAscending(a, b){
-        if (a.averageAge < b.averageAge){
+    sortByAverageAge(ascending) {
+      function compareAscending(a, b) {
+        if (a.averageAge < b.averageAge) {
           return -1;
-        }else if (a.averageAge > b.averageAge){
+        } else if (a.averageAge > b.averageAge) {
           return 1;
-        }else{
+        } else {
           return 0;
         }
       }
-      function compareDescending(a,b){
-        if (a.averageAge < b.averageAge){
+      function compareDescending(a, b) {
+        if (a.averageAge < b.averageAge) {
           return 1;
-        }else if (a.averageAge > b.averageAge){
+        } else if (a.averageAge > b.averageAge) {
           return -1;
-        }else{
+        } else {
           return 0;
         }
 
       }
-      if(ascending){
+      if (ascending) {
         this.$store.commit('sortNeighborhoods', compareAscending);
-      }else{
+      } else {
         this.$store.commit('sortNeighborhoods', compareDescending);
       }
     },
 
-    changeColor(neighborhood){
+    changeColor(neighborhood) {
       const mapML = document.getElementById("map");
       const markers = [...mapML.childNodes[1].childNodes];
-      for(const marker of markers){
-        if (marker.id === neighborhood._id){
+      for (const marker of markers) {
+        if (marker.id === neighborhood._id) {
           console.log(marker);
-          marker.style.color="red";
+          marker.style.color = "red";
         }
-      } 
+      }
     },
-    changeBack(neighborhood){
+    changeBack(neighborhood) {
       const mapML = document.getElementById("map");
       const markers = [...mapML.childNodes[1].childNodes];
-      for(const marker of markers){
-        if (marker.id === neighborhood._id){
+      for (const marker of markers) {
+        if (marker.id === neighborhood._id) {
           console.log(marker);
-          marker.style.color="blue";
+          marker.style.color = "blue";
         }
-      } 
+      }
     },
     initMap() {
       let centerLat = 0;
@@ -230,39 +242,39 @@ export default {
 </script>
 
 <style>
-
-.sideBar{
+.sideBar {
   height: 81vh;
-  width: 30%;  
-  float: left;  
-  overflow-y:scroll;
+  width: 30%;
+  float: left;
+  overflow-y: scroll;
   padding: 10px;
   z-index: 10;
-  
-}
-.sideBar .ntab {
-      border:solid 1px lightgray;
-      border-style: solid;
-      border-radius: 15px;
-      margin-bottom: 1em;
-      padding: 1em;
-      position: relative;
-      transition: 1s ease;
-  }
 
-.ntab:hover{
--webkit-transform: scale(1.03);
--ms-transform: scale(1.03);
-transform: scale(1.03);
-transition: 1s ease;
+}
+
+.sideBar .ntab {
+  border: solid 1px lightgray;
+  border-style: solid;
+  border-radius: 15px;
+  margin-bottom: 1em;
+  padding: 1em;
+  position: relative;
+  transition: 1s ease;
+}
+
+.ntab:hover {
+  -webkit-transform: scale(1.03);
+  -ms-transform: scale(1.03);
+  transform: scale(1.03);
+  transition: 1s ease;
 }
 
 .map-container {
   position: relative;
   width: 100%;
-  overflow-y:hidden;
-  margin: 0; 
-  height: 100%; 
+  overflow-y: hidden;
+  margin: 0;
+  height: 100%;
 }
 
 #map {
@@ -291,20 +303,8 @@ transition: 1s ease;
 .mapboxgl-ctrl-zoom-out {
   background-image: url(data:image/svg+xml;charset=utf8,<svg%20viewBox%3D%270%200%2020%2020%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27>%0A%20%20<path%20style%3D%27fill%3A%23ff0000%3B%27%20d%3D%27m%207%2C9%20c%20-0.554%2C0%20-1%2C0.446%20-1%2C1%200%2C0.554%200.446%2C1%201%2C1%20l%206%2C0%20c%200.554%2C0%201%2C-0.446%201%2C-1%200%2C-0.554%20-0.446%2C-1%20-1%2C-1%20z%27%20%2F>%0A<%2Fsvg>%0A) !important;
 }
-button {
-  background-color: #ec6c6c;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  width: fit-content;
-  padding: 0px 10px;
-  height: 2em;
-  font-family: inherit;
-  font-size: medium;
-  font-weight: bold;
-}
-
-button:hover {
-  background-color: #6e6e6e;
+.filter {
+  margin-top: 2%;
+  margin-bottom: 2%;
 }
 </style>
