@@ -1,4 +1,4 @@
-import type { Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import express from 'express';
 import NeighborhoodCollection from './collection';
 import ReviewCollection from '../review/collection';
@@ -10,7 +10,14 @@ import * as userValidator from '../user/middleware';
 import * as util from './util';
 
 const router = express.Router();
-
+/**
+ * Get all the neighborhoods in the database
+ *
+ * @name GET /api/neighborhoods
+ *
+ * @return {NeighborhoodResponse[]} - An array of all the neighborhoods
+ * @throws {403} - If the user is not logged in
+*/
 /**
  * Get the neighborhood with given name, city, and state
  *
@@ -23,6 +30,22 @@ const router = express.Router();
  */
 router.get(
   '/',
+  [
+    userValidator.isUserLoggedIn
+  ],
+  async (req: Request, res: Response, next: NextFunction) => {
+    if (req.query.name !== undefined && req.query.city !== undefined && req.query.state !== undefined) {
+      next();
+      return;
+    }
+
+    const allNeighborhoods = await NeighborhoodCollection.findAll();
+    const response = allNeighborhoods.map(util.constructNeighborhoodResponse);
+    res.status(200).json({
+      message: 'All neighborhoods were found.',
+      neighborhoods: response
+    });
+  },
   [
     userValidator.isUserLoggedIn,
     neighborhoodValidator.isNeighborhoodExists
@@ -62,36 +85,6 @@ router.get(
     const response = neighborhoods.map(util.constructNeighborhoodResponse);
     res.status(200).json({
       message: `Neighborhoods in ${util.formatWord(city)}, ${state.toUpperCase()} was found.`,
-      neighborhoods: response
-    });
-  }
-);
-
-/**
- * Get all the neighborhoods within bounds lat1, lat2, long1, long2
- *
- * @name GET /api/neighborhoods?lat1=lat1&long1=long1&lat2=lat2&long2=long2
- *
- * @return {NeighborhoodResponse[]} - An array of the neighborhoods within the latitude and longitude bounds
- * @throws {403} - If the user is not logged in
- * @throws {400} - If any of lat1, lat2, long1, and long2 are invalid
-*/
-router.get(
-  '/',
-  [
-    userValidator.isUserLoggedIn,
-    neighborhoodValidator.isBoundsValid
-  ],
-  async (req: Request, res: Response) => {
-    const lat1 = Number(req.query.lat1);
-    const lat2 = Number(req.query.long1);
-    const long1 = Number(req.query.lat2);
-    const long2 = Number(req.query.long2);
-
-    const neighborhoods = await NeighborhoodCollection.findAllInBound(lat1, long1, lat2, long2);
-    const response = neighborhoods.map(util.constructNeighborhoodResponse);
-    res.status(200).json({
-      message: 'Neighborhoods within bound were found.',
       neighborhoods: response
     });
   }

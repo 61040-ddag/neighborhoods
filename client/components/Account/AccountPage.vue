@@ -5,7 +5,7 @@
   <main>
     <section>
       <header>
-        <h2>Account settings for @{{ $store.state.username }}</h2>
+        <h2 class="h2-styling">Account settings for @{{ $store.state.username }}</h2>
       </header>
       <ChangeUsernameForm 
         button="Change Username" 
@@ -44,4 +44,11 @@ export default {
   }
 };
 </script>
+
+<style>
+.h2-styling {
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+</style>
   

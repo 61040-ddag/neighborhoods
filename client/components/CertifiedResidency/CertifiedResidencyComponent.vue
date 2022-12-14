@@ -6,7 +6,9 @@
             </h3>
         </header>
         <section>
-            <button @click="leaveResidence">
+            <button 
+                @click="leaveResidence"
+            >
                 Leave Residence
             </button>
             <button 

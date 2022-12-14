@@ -2,31 +2,37 @@
 
 <template>
   <section>
-    <form @submit.prevent="submit">
-      <h3>Post Your Review for {{this.$store.state.neighborhood.name}}!</h3>
-          <star-rating 
-          v-model="rating"
-          v-bind:show-rating="false"
-          v-bind:star-size="25"
-          />
-          <textarea 
-            placeholder="Leave a review"
-            v-model="content"
-          />
-      <button 
-      @submit="submit">
-        Review
-      </button>
-      <section class="alerts">
-        <article 
-          v-for="(status, alert, index) in alerts" 
-          :key="index" 
-          :class="status"
-        >
-          <p>{{ alert }}</p>
-        </article>
-      </section>
-    </form>
+    <button v-b-modal.modal-center-1 class="btn btn-primary review">Leave a review!</button>
+      <b-modal id="modal-center-1" hide-footer centered title="Leave Neighborhood Review">
+        <form @submit.prevent="submit">
+          <h3>Post Your Review for {{this.$store.state.neighborhood.name}}</h3>
+              <star-rating
+              v-model="rating"
+              v-bind:show-rating="false"
+              v-bind:star-size="25"
+              />
+              <br />
+              <textarea 
+                placeholder="Leave a review"
+                v-model="content"
+              />
+          <button 
+            @submit="submit"
+            class="button"
+          >
+            Review
+          </button>
+        </form>
+        <section class="alerts">
+          <article 
+            v-for="(status, alert, index) in alerts" 
+            :key="index" 
+            :class="status"
+          >
+            <p>{{ alert }}</p>
+          </article>
+        </section>
+      </b-modal>
   </section>
 </template>
     
@@ -118,8 +124,13 @@ export default {
     margin-top: 0;
   }
   
+<<<<<<< HEAD
   button {
     background-color: grey;
+=======
+  .button {
+    background-color: #ec6c6c;
+>>>>>>> 6e5fd2e70a00146b4bddd42c5f5ce2549f4a73aa
     color: white;
     border: none;
     border-radius: 50px;
@@ -131,7 +142,11 @@ export default {
     font-weight: bold;
   }
   
+<<<<<<< HEAD
   button:hover {
+=======
+  .button:hover {
+>>>>>>> 6e5fd2e70a00146b4bddd42c5f5ce2549f4a73aa
     background-color: #6e6e6e;
   }
   
@@ -141,5 +156,12 @@ export default {
     font-family: inherit;
     font-size: inherit;
   }
+<<<<<<< HEAD
+=======
+  .review {
+    margin-top: 2%;
+    margin-bottom: 2%;
+  }
+>>>>>>> 6e5fd2e70a00146b4bddd42c5f5ce2549f4a73aa
   </style>
   

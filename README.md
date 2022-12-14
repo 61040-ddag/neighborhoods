@@ -138,17 +138,16 @@ This renders the `index.html` file that will be used to interact with the backen
 - `400` if `city` or `state` is not given
 - `403` if user is not logged in
 
-#### `GET /api/neighborhoods?lat1=lat1&long1=long1&lat2=lat2&long2=long`
+#### `GET /api/neighborhoods`
 
 **Returns**
 - A success message
-- An array of neighborhoods within latitude1, longtitude1, latitude2, longtitude2
+- An array of all the neighborhoods
 
 **Throws**
 - `403` if user is not logged in
-- `400` if any of `lat1`, `lat2`, `long1`, and `long2` are invalid
 
-#### `POST /api/neighborhoods/`
+#### `POST /api/neighborhoods`
 
 **Body**
 

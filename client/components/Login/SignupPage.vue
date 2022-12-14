@@ -48,7 +48,11 @@ export default {
 .backLink {
   text-decoration: none;
   color: black;
+  font-weight: bold;
+  font-size: 25px;
   margin-top: 1em;
+  margin-top: 2%;
+  margin-bottom: 2%;
 }
 
 .routerLink {
