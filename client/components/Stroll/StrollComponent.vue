@@ -102,7 +102,7 @@ export default {
             throw new Error(res.error);
           }
   
-          this.$store.commit('refreshStroll');
+          this.$store.commit('refreshStrolls');
   
           params.callback();
         } catch (e) {
@@ -126,7 +126,6 @@ export default {
 
 .stroll {
   margin: auto;
-  width: 66%;
   border: solid 1px lightgray;
   border-style: solid;
   border-radius: 15px;

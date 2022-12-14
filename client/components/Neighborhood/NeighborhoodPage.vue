@@ -86,8 +86,12 @@ export default {
     margin-top: 1em;
 }
 .backLink {
-    text-decoration: none;
-    color: black;
-    margin-top: 1em;
- }
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+  font-size: 25px;
+  margin-top: 1em;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
 </style>

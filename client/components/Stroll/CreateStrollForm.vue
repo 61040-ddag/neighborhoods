@@ -17,7 +17,7 @@ export default {
       isVideoUpload: true,
       refreshStrolls: true,
       callback: () => {
-        const message = 'Successfully uploaded a scroll!';
+        const message = `Successfully uploaded a scroll for ${this.$store.state.neighborhood.name}!`;
         this.$set(this.alerts, message, 'success');
         setTimeout(() => this.$delete(this.alerts, message), 3000);
       }

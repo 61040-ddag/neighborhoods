@@ -32,44 +32,6 @@ const isNeighborhoodExists = async (req: Request, res: Response, next: NextFunct
     next();
 };
 
-const isBoundsValid = async (req: Request, res: Response, next: NextFunction) => {
-    const lat1 = req.query.lat1;
-    const long1 = req.query.long1;
-    const lat2 = req.query.lat2;
-    const long2 = req.query.long2;
-
-    if (!lat1 || !lat2 || !long1 || !long2) {
-        res.status(400).json({
-            error: "Missing input coordinates."
-        });
-        return;
-    }
-
-    const coordinates = [lat1, lat2, long1, long2];
-    if (coordinates.some(coordinate => Number.isNaN(Number(coordinate)))) {
-        res.status(400).json({
-            error: "The input coordinates given are not numbers."
-        });
-        return;
-    }
-
-    if (!(lat1 < lat2)) {
-        res.status(400).json({
-            error: 'Latitude 1 must be less than Latitude 2.'
-        });
-        return;
-    }
-
-    if (!(long1 < long2)) {
-        res.status(400).json({
-            error: 'Longitude 1 must be less than Longitude 2.'
-        });
-        return;
-    }
-
-    next();
-};
-
 const isCreateInfoValid = async (req: Request, res: Response, next: NextFunction) => {
     const name = req.body.name;
     const city = req.body.city;
@@ -146,7 +108,6 @@ export {
     isCreateInfoValid,
     isNeighborhoodAlreadyExists,
     isNeighborhoodExists,
-    isBoundsValid,
     isUpdatedInfoValid,
     isNeighborhoodExistsById
 };

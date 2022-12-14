@@ -9,18 +9,21 @@
             </router-link>
         </header>
             <div class="customContainer container row col-md-8 mx-auto">
-            <h1 class="h1 text-center title">Schedule Availability for {{ $store.state.residentNeighborhood.name }}</h1>
+            <h2 class="h1 text-center title">Schedule Availability for {{ $store.state.residentNeighborhood.name }}</h2>
             <div class="header">
-                <h2>Resident? Add availability!</h2>
-                <DatePicker v-model="inputtedTime" type="datetime" />
+                <h2>Resident? Schedule your availabilities!</h2>
             </div>
-            <h3 v-if="(inputtedTime !== null)">{{ inputtedTime }}</h3>
-            <label>Enter your video link here:</label>
-            <input type="text" v-model="videoLink">
-            <button class="styledButton" type="submit" @click="addAvailability">
-                Add availability
-            </button>
-            <h2 class="header">Neighborhood Availabilities</h2>
+            <button v-b-modal.modal-center-4 class="btn btn-primary">Add Availability</button>
+                <b-modal id="modal-center-4" hide-footer centered title="Schedule Availability">
+                    <DatePicker v-model="inputtedTime" type="datetime" class="styled-input"/>
+                    <h5>Schedule at: {{ scheduledDateTime }}</h5>
+                    <label>Enter your video link here:</label>
+                    <input type="text" v-model="videoLink" class="styled-input form-control">
+                    <button class="btn btn-primary" type="submit" @click="addAvailability">
+                        Add availability
+                    </button>
+                </b-modal>
+            <h2 class="header">Your Availabilities</h2>
             <section v-if="availabilities.length">
                 <AvailabilityComponent 
                     v-for="availability in availabilities" 
@@ -37,6 +40,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 import { ref } from 'vue';
@@ -48,9 +52,15 @@ export default {
         DatePicker,
         AvailabilityComponent
     },
+    computed: {
+        scheduledDateTime() {
+            const formatDate = (date) => moment(date).format('MMMM Do YYYY, h:mm:ss a');
+            return formatDate(this.inputtedTime);
+        }
+    },
     data() {
         return {
-            inputtedTime: null,
+            inputtedTime: new Date(new Date().setDate(new Date().getDate() + 1)),
             videoLink: "",
             availabilities: []
         }
@@ -84,6 +94,9 @@ export default {
                 headers: { 'Content-Type': 'application/json' }
             };
 
+            this.videoLink = '';
+            this.inputtedTime = new Date(new Date().setDate(new Date().getDate() + 1));
+
             const r = await fetch('/api/vibeCheck/availability', options);
             const response = await r.json();
             if (!r.ok) {
@@ -100,12 +113,16 @@ export default {
 .backLink {
   text-decoration: none;
   color: black;
+  font-weight: bold;
+  font-size: 25px;
   margin-top: 1em;
+  margin-top: 2%;
+  margin-bottom: 2%;
 }
 .header {
     text-align: center;
     padding-top: 50px;
-    padding-bottom: 50px;
+    padding-bottom: 30px;
 }
 
 .customContainer {
@@ -113,19 +130,7 @@ export default {
     padding-bottom: 10%;
 }
 
-.styledButton {
-    background: #0e72ed;
-    border-radius: 12px;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    color: #fff;
-    cursor: pointer;
-    display: inline-block;
-    font-size: 16px;
-    line-height: 32px;
-    margin-top: 40px;
-    padding: 8px 40px;
-    text-align: center;
-    margin-bottom: 50px;
+.styled-input {
+    margin-bottom: 5%;
 }
 </style>

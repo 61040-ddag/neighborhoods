@@ -3,7 +3,10 @@
 <template>
   <main>
     <section>
-      <CreateStrollForm button="Upload Stroll" />
+      <button v-b-modal.modal-center-2 class="btn btn-primary stroll">Post a Stroll!</button>
+        <b-modal id="modal-center-2" hide-footer centered title="Post a Stroll!">
+          <CreateStrollForm button="Upload Stroll" />
+        </b-modal>
     </section>
     <section v-if="$store.state.strolls.length">
       <StrollComponent v-for="stroll in $store.state.strolls" :key="stroll.id" :stroll="stroll" />
@@ -26,4 +29,11 @@ export default {
   }
 };
 </script>
+
+<style>
+.stroll {
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+</style>
   

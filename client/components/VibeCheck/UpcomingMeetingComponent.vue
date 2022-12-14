@@ -5,12 +5,12 @@
                 Meeting on {{ upcomingMeeting.availability.dateTime }}
             </div>
             <div class="card-body">
-                <h5 class="card-title">Meeting between User: {{ upcomingMeeting.username }} and Resident: {{ upcomingMeeting.availability.residentname }}</h5>
+                <h5 class="card-title">Meeting between Interviewee: {{ interviewee }} and Interviewer: {{ interviewer }}</h5>
                 <h5 class="card-title">Neighborhood: {{ upcomingMeeting.availability.neighborhood.name }}</h5>
             </div>
             <label>Link to meeting</label><br>
-            <a class="btn btn-primary" v-bind:href="upcomingMeeting.availability.videoLink">Meeting Link</a><br>
-            <button @click="deleteVibeCheck">
+            <a class="btn btn-primary" target="_blank" v-bind:href="upcomingMeeting.availability.videoLink">Meeting Link</a><br>
+            <button class="btn btn-danger styled-button" @click="deleteVibeCheck">
                 Delete
             </button>
         </div>
@@ -28,7 +28,14 @@ export default {
             required: true
         },
     },
-
+    computed: {
+        interviewee() {
+            return this.upcomingMeeting.username === this.$store.state.username ? 'You' : `@${this.upcomingMeeting.username}`;
+        },
+        interviewer() {
+            return this.upcomingMeeting.availability.residentname === this.$store.state.username ? 'You' : `@${this.upcomingMeeting.availability.residentname}`;
+        }
+    },
     data() {
         return {
             alerts: {}
@@ -81,3 +88,9 @@ export default {
 };
 
 </script>
+
+<style>
+.styled-button {
+    margin-bottom: 10px;
+}
+</style>

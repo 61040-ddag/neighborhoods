@@ -10,7 +10,7 @@
                 <p class="card-text">Available at: {{ availability.dateTime }}</p>
             </div>
             <section>
-                <button @click="scheduleMeeting">
+                <button class='btn btn-primary styled-button' @click="scheduleMeeting">
                     Schedule
                 </button>
             </section>
@@ -78,3 +78,9 @@
     }
   };
   </script>
+
+<style>
+.styled-button {
+    margin-bottom: 10px;
+}
+</style>

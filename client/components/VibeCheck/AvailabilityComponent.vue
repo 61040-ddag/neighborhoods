@@ -10,11 +10,14 @@
                 <p class="card-text">Available at: {{ availability.dateTime }}</p>
             </div>
             <div>
-                <button @click="deleteAvailability">
+                <button class="btn btn-primary styled-button" @click="deleteAvailability">
                     Delete
                 </button>
             </div>
-
+            <div>
+                <a class="btn btn-primary" target="_blank" v-bind:href="availability.videoLink">Check Meeting Link</a>
+            </div>
+            <br>
         </div>
     </div>
 </template>
@@ -83,5 +86,10 @@ export default {
 .wrapper {
     padding-bottom: 100px;
     ;
+}
+
+.styled-button {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
 }
 </style>

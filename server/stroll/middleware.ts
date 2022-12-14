@@ -17,9 +17,8 @@ const areInfoValid = async (req: Request, res: Response, next: NextFunction) => 
 }
 
 const isStrollExists = async (req: Request, res: Response, next: NextFunction) => {
-    const validFormat = Types.ObjectId.isValid(req.params.scrollId);
     const strollId = req.params.strollId;
-    const stroll = validFormat ? StrollCollection.findOneById(strollId) : '';
+    const stroll = StrollCollection.findOneById(strollId);
     if (!stroll) {
         res.status(404).json({
             error: `Stroll with stroll ID ${req.params.strollId} does not exist.`
