@@ -1,22 +1,5 @@
 <template>
   <div class="map-container">
-<<<<<<< HEAD
-    <div id = "sb" class = "sideBar"> 
-      <div  @mouseover="changeColor(neighborhood)" @mouseleave="changeBack(neighborhood)" class = "ntab" v-for="neighborhood in $store.state.neighborhoods" style="box-shadow: 10px;">
-      <h4>{{ neighborhood.name }}, {{ neighborhood.city }}, {{ neighborhood.state }} </h4>
-      <ul>
-        <li> Crime Rate: {{ neighborhood.crimeRate }} </li>
-        <li> Average Price: {{ neighborhood.averagePrice }} </li>
-        <li> Average Age: {{ neighborhood.averageAge }} </li>
-      </ul>
-      <button @click="viewNeighborhood(neighborhood)"> Click to view Reviews, strolls, or schedule meeting </button>
-      </div>
-
-    </div>
-    <div  id = "map" style="width: 70%; margin-left: 30%"> 
-
-    </div>  
-=======
     <div id="sb" class="sideBar">
       <div>
         <b-dropdown id="dropdown-1" text="Filter Crime Rate" class="m-md-2" variant="primary">
@@ -43,8 +26,8 @@
         v-for="neighborhood in $store.state.neighborhoods" style="box-shadow: 10px;">
         <h4>{{ neighborhood.name }}, {{ neighborhood.city }}, {{ neighborhood.state }} </h4>
         <ul>
-          <li> <b>Crime Rate:</b> {{ neighborhood.crimeRate }} </li>
-          <li> <b>Average Price:</b> {{ neighborhood.averagePrice }} </li>
+          <li> <b>Crime Rate:</b> {{ neighborhood.crimeRate }} crimes per 100,000 people</li>
+          <li> <b>Average Price:</b> ${{ neighborhood.averagePrice }} </li>
           <li> <b>Average Age:</b> {{ neighborhood.averageAge }} </li>
         </ul>
         <button class="btn btn-primary" @click="viewNeighborhood(neighborhood)"> Click to view Reviews, Strolls, or Schedule a Vibe Check (Meeting) </button>
@@ -53,7 +36,6 @@
     <div id="map" style="width: 70%; margin-left: 30%">
 
     </div>
->>>>>>> d28b898eabe9bd7f918b098ebc62451d835709bb
   </div>
 </template>
 
@@ -74,27 +56,6 @@ export default {
     };
   },
   methods: {
-<<<<<<< HEAD
-    changeColor(neighborhood){
-      const mapML = document.getElementById("map");
-      const markers = [...mapML.childNodes[1].childNodes];
-      for(const marker of markers){
-        if (marker.id === neighborhood._id){
-          console.log(marker);
-          marker.style.color="red";
-        }
-      } 
-    },
-    changeBack(neighborhood){
-      const mapML = document.getElementById("map");
-      const markers = [...mapML.childNodes[1].childNodes];
-      for(const marker of markers){
-        if (marker.id === neighborhood._id){
-          console.log(marker);
-          marker.style.color="blue";
-        }
-      } 
-=======
     sortByCrimeRate(ascending) {
       function compareAscending(a, b) {
         if (a.crimeRate < b.crimeRate) {
@@ -193,7 +154,6 @@ export default {
           marker.style.color = "blue";
         }
       }
->>>>>>> d28b898eabe9bd7f918b098ebc62451d835709bb
     },
     initMap() {
       let centerLat = 0;
@@ -282,31 +242,6 @@ export default {
 </script>
 
 <style>
-<<<<<<< HEAD
-
-.sideBar{
-  width: 30%;  
-  float: left;  
-  overflow:auto;
-  padding: 10px;
-  z-index: 10;
-}
-.sideBar .ntab {
-      border:solid 1px lightgray;
-      border-style: solid;
-      border-radius: 15px;
-      margin-bottom: 1em;
-      padding: 1em;
-      position: relative;
-      transition: 1s ease;
-  }
-
-.ntab:hover{
--webkit-transform: scale(1.03);
--ms-transform: scale(1.03);
-transform: scale(1.03);
-transition: 1s ease;
-=======
 .sideBar {
   height: 81vh;
   width: 30%;
@@ -332,7 +267,6 @@ transition: 1s ease;
   -ms-transform: scale(1.03);
   transform: scale(1.03);
   transition: 1s ease;
->>>>>>> d28b898eabe9bd7f918b098ebc62451d835709bb
 }
 
 .map-container {
