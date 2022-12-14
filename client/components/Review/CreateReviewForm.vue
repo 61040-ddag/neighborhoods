@@ -123,14 +123,8 @@ export default {
   form h3 {
     margin-top: 0;
   }
-  
-<<<<<<< HEAD
-  button {
-    background-color: grey;
-=======
   .button {
     background-color: #ec6c6c;
->>>>>>> 6e5fd2e70a00146b4bddd42c5f5ce2549f4a73aa
     color: white;
     border: none;
     border-radius: 50px;
@@ -142,11 +136,7 @@ export default {
     font-weight: bold;
   }
   
-<<<<<<< HEAD
-  button:hover {
-=======
   .button:hover {
->>>>>>> 6e5fd2e70a00146b4bddd42c5f5ce2549f4a73aa
     background-color: #6e6e6e;
   }
   
@@ -156,12 +146,9 @@ export default {
     font-family: inherit;
     font-size: inherit;
   }
-<<<<<<< HEAD
-=======
   .review {
     margin-top: 2%;
     margin-bottom: 2%;
   }
->>>>>>> 6e5fd2e70a00146b4bddd42c5f5ce2549f4a73aa
   </style>
   
