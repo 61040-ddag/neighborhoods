@@ -13,7 +13,7 @@
                     />
                 </div>
                 <div v-else>
-                    <img src="../Home/suburb-houses-beautiful-sunset-landscape-dusk_107791-9152.jpg" alt="neighborhood">
+                    <img src="../../public/home-page-image.jpg" alt="neighborhoods">
                     <header>
                         <h2 class="welcome">Welcome to <b>Neighborhoods!</b></h2>                
                     </header>
