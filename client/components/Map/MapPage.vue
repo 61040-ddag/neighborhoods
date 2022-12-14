@@ -26,8 +26,8 @@
         v-for="neighborhood in $store.state.neighborhoods" style="box-shadow: 10px;">
         <h4>{{ neighborhood.name }}, {{ neighborhood.city }}, {{ neighborhood.state }} </h4>
         <ul>
-          <li> <b>Crime Rate:</b> {{ neighborhood.crimeRate }} </li>
-          <li> <b>Average Price:</b> {{ neighborhood.averagePrice }} </li>
+          <li> <b>Crime Rate:</b> {{ neighborhood.crimeRate }} crimes per 100,000 people</li>
+          <li> <b>Average Price:</b> ${{ neighborhood.averagePrice }} </li>
           <li> <b>Average Age:</b> {{ neighborhood.averageAge }} </li>
         </ul>
         <button class="btn btn-primary" @click="viewNeighborhood(neighborhood)"> Click to view Reviews, Strolls, or Schedule a Vibe Check (Meeting) </button>
