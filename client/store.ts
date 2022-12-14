@@ -97,7 +97,7 @@ const store = new Vuex.Store({
        * Request the server for the currently available reviews.
        */
       const formatBackend = (word) => {
-        return word.trim().replace(' ', '_').toLowerCase();
+        return word.trim().replace(/ {2,}/g, ' ').split(' ').join('_').toLowerCase();
       };
       const name = formatBackend(state.neighborhood.name);
       const city = formatBackend(state.neighborhood.city);
@@ -112,7 +112,7 @@ const store = new Vuex.Store({
        * Request the server for the currently available strolls.
        */
       const formatBackend = (word) => {
-        return word.trim().replace(' ', '_').toLowerCase();
+        return word.trim().replace(/ {2,}/g, ' ').split(' ').join('_').toLowerCase();
       };
       const name = formatBackend(state.neighborhood.name);
       const city = formatBackend(state.neighborhood.city);

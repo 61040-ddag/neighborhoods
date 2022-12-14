@@ -19,7 +19,7 @@
                     <b-tab title="Review" active>
                         <ReviewPage />
                     </b-tab>
-                    <b-tab title="Scroll">
+                    <b-tab title="Stroll">
                         <StrollPage />
                     </b-tab>
                     <b-tab title="Vibe Check">

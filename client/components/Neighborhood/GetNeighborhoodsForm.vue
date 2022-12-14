@@ -186,7 +186,7 @@ export default {
     },
     filteredSearch() {
       const formatCompare = (word) => {
-        return word.trim().replace(' ', '_').toLowerCase();
+        return word.trim().replace(/ {2,}/g, ' ').split(' ').join('_').toLowerCase();
       };
 
       const formatFrontend = (word) => {
@@ -283,7 +283,7 @@ export default {
         }
 
         const formatBackend = (word) => {
-          return word.trim().replace(' ', '_').toLowerCase();
+          return word.trim().replace(/ {2,}/g, ' ').split(' ').join('_').toLowerCase();
         };
 
         let neighborhood = formatBackend(this.neighborhood);

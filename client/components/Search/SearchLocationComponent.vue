@@ -37,7 +37,7 @@ export default {
         async goToMap() {
             try {
                 const formatBackend = (word) => {
-                    return word.trim().replace(' ', '_').toLowerCase();
+                    return word.trim().replace(/ {2,}/g, ' ').split(' ').join('_').toLowerCase();
                 };
 
                 const city = formatBackend(this.location.city);

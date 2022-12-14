@@ -132,7 +132,7 @@ export default {
           if (type === 'queryParam') {
             let val = value.trim();
             if (id === 'name' || id === 'city' || id === 'state') {
-              val = val.replace(' ', '_').toLowerCase();
+              val = val.trim().replace(/ {2,}/g, ' ').split(' ').join('_').toLowerCase();
             }
             params.push(`${id}=${val}`)
           }
@@ -147,7 +147,7 @@ export default {
             const { id, value } = field;
             let val = value;
             if (id === 'name' || id === 'city' || id === 'state') {
-              val = val.replace(' ', '_').toLowerCase();
+              val = val.trim().replace(/ {2,}/g, ' ').split(' ').join('_').toLowerCase();
             }
 
             field.value = '';
@@ -168,7 +168,7 @@ export default {
 
         options.body = JSON.stringify(bodyObject);
       }
-
+      console.log(options.body)
       try {
         const r = await fetch(url, options);
         if (!r.ok) {

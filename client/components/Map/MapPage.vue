@@ -76,11 +76,9 @@ export default {
         }
 
       }
-      if (ascending) {
-        this.$store.commit('sortNeighborhoods', compareAscending);
-      } else {
-        this.$store.commit('sortNeighborhoods', compareDescending);
-      }
+
+      const sortFunction = ascending ? compareAscending : compareDescending;
+      this.$store.commit('sortNeighborhoods', sortFunction);
     },
     sortByAveragePrice(ascending) {
       function compareAscending(a, b) {
@@ -102,11 +100,9 @@ export default {
         }
 
       }
-      if (ascending) {
-        this.$store.commit('sortNeighborhoods', compareAscending);
-      } else {
-        this.$store.commit('sortNeighborhoods', compareDescending);
-      }
+
+      const sortFunction = ascending ? compareAscending : compareDescending;
+      this.$store.commit('sortNeighborhoods', sortFunction);
     },
     sortByAverageAge(ascending) {
       function compareAscending(a, b) {
@@ -128,11 +124,9 @@ export default {
         }
 
       }
-      if (ascending) {
-        this.$store.commit('sortNeighborhoods', compareAscending);
-      } else {
-        this.$store.commit('sortNeighborhoods', compareDescending);
-      }
+      
+      const sortFunction = ascending ? compareAscending : compareDescending;
+      this.$store.commit('sortNeighborhoods', sortFunction);
     },
 
     changeColor(neighborhood) {
@@ -140,7 +134,6 @@ export default {
       const markers = [...mapML.childNodes[1].childNodes];
       for (const marker of markers) {
         if (marker.id === neighborhood._id) {
-          console.log(marker);
           marker.style.color = "red";
         }
       }
@@ -150,7 +143,6 @@ export default {
       const markers = [...mapML.childNodes[1].childNodes];
       for (const marker of markers) {
         if (marker.id === neighborhood._id) {
-          console.log(marker);
           marker.style.color = "blue";
         }
       }
@@ -171,7 +163,7 @@ export default {
         container: "map",
         style: "mapbox://styles/mapbox/streets-v11",
         center: [centerLong, centerLat],
-        zoom: 12,
+        zoom: 10,
       });
       this.map.on("load", () => {
         this.map.addControl(new mapboxgl.NavigationControl({
@@ -231,7 +223,6 @@ export default {
       return new mapboxgl.Popup({ offset: 25 }).setDOMContent(card);
     },
     viewNeighborhood(neighborhood) {
-      console.log(neighborhood);
       this.$store.commit('setNeighborhood', neighborhood);
       this.$router.push({ name: 'Neighborhood' });
     }
