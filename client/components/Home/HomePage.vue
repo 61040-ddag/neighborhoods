@@ -7,14 +7,13 @@
                         <h2 class="big-text">Welcome @{{ $store.state.username }}!</h2>
                     </header>
                     <GetNeighborhoodsForm
-                        neighborhoodPlaceholder="Opt: Enter neighborhood"
-                        cityPlaceholder="Req: Enter city. Ex: Boston"
-                        statePlaceholder="Req: Enter state. Ex: MA, NY"
-                        button="🔄 Get neighborhood(s)"
+                        neighborhoodPlaceholder="Search for neighborhood name"
+                        cityPlaceholder="Search for city"
+                        button="🔎 Find neighborhoods!"
                     />
                 </div>
                 <div v-else>
-                    <img src="../Home/suburb-houses-beautiful-sunset-landscape-dusk_107791-9152.jpg" alt="neighborhood">
+                    <img src="../../public/home-page-image.jpg" alt="neighborhoods">
                     <header>
                         <h2 class="welcome">Welcome to <b>Neighborhoods!</b></h2>                
                     </header>

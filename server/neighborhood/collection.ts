@@ -56,17 +56,12 @@ class NeighborhoodCollection {
   }
 
   /**
-   * Find all neighborhoods whose latitude and longitude coordinates are within lat1 < lat2 and long1 < long2
+   * Find all neighborhoods in the database
    * 
-   * @param {number} lat1 - The lower latitude bound
-   * @param {number} long1 - The lower longitude bound
-   * @param {number} lat2 - The upper latitude bound
-   * @param {number} long2 - The upper longitude bound
-   * @returns {Promise<HydratedDocument<Neighborhood>[]>} - An array of the neighborhoods within the latitude and longitude bounds
+   * @returns {Promise<HydratedDocument<Neighborhood>[]>} - An array of all the neighborhoods
    */
-  static async findAllInBound(lat1: number, long1: number, lat2: number, long2: number): Promise<Array<HydratedDocument<Neighborhood>>> {
-    const neighborhoods = await NeighborhoodModel.find({});
-    return neighborhoods.filter(neighborhood => (lat1 < neighborhood.latitude && neighborhood.latitude < lat2) && (long1 < neighborhood.longitude && neighborhood.longitude < long2));
+  static async findAll(): Promise<Array<HydratedDocument<Neighborhood>>> {
+    return await NeighborhoodModel.find({});
   }
 
   /**

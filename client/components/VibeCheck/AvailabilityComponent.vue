@@ -14,7 +14,10 @@
                     Delete
                 </button>
             </div>
-
+            <div>
+                <a class="btn btn-primary" target="_blank" v-bind:href="availability.videoLink">Check Meeting Link</a>
+            </div>
+            <br>
         </div>
     </div>
 </template>
